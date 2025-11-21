@@ -1,0 +1,185 @@
+/* === ANIMACIONES === */
+/* Keyframes para el temblor (error) */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translatex(-10px); }
+    40%, 80% { transform: translatex(10px); }
+}
+
+/* Keyframes para el éxito (pulso suave) */
+@keyframes pulse-success {
+    0% { box-shadow: 0 0 0 0 rgba(100, 221, 237, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(100, 221, 237, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(100, 221, 237, 0); }
+}
+
+/* Keyframes para que la tabla aparezca suavemente */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Clases aplicadas por JS */
+.shake-animation {
+    animation: shake 0.5s ease-in-out;
+    border-color: #ff8c8c !important;
+}
+
+.success-animation {
+    animation: pulse-success 0.8s;
+    border-color: #64dded !important;
+}
+/* === FIN DE ANIMACIONES === */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #2a3a4a; /* Fondo azul oscuro suave */
+    color: #f0f0f0; /* Texto claro */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alineado arriba */
+    padding: 50px 20px;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #3b4e60; /* Contenedor más claro */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+h1 {
+    text-align: center;
+    color: #64dded; /* Azul cian brillante */
+    font-size: 1.8em;
+    margin-bottom: 5px;
+}
+
+p.subtitle {
+    text-align: center;
+    color: #a8b8c5;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #c0d0e0;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #5a7082; /* Borde más oscuro */
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #485c70; /* Fondo del input oscuro */
+    color: #f0f0f0;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #64dded;
+    outline: none;
+    box-shadow: 0 0 5px rgba(100, 221, 237, 0.5);
+}
+
+button {
+    background-color: #64dded; /* Color principal del botón */
+    color: #2a3a4a; /* Texto oscuro */
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 700;
+    width: 100%;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+button:hover {
+    background-color: #4dc4d4; /* Color al pasar el ratón */
+}
+
+button:active {
+    transform: scale(0.99);
+}
+
+/* Sección de Detalle del Recibo */
+#detalle-recibo {
+    background-color: #485c70; /* Fondo del detalle */
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+    min-height: 100px;
+    border: 2px solid #5a7082;
+    transition: border-color 0.3s;
+}
+
+#detalle-recibo h2 {
+    color: #c0d0e0;
+    margin-top: 0;
+    font-size: 1.2em;
+    border-bottom: 1px solid #5a7082;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+/* Estilos de la Tabla */
+.recibo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    opacity: 0; /* Oculto por defecto para la animación */
+    animation: fadeIn 0.5s ease-out 0.2s forwards; /* Aplica animación */
+}
+
+.recibo-table th, .recibo-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #5a7082;
+}
+
+.recibo-table th {
+    background-color: #5a7082;
+    color: #64dded;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+/* Fila de Totales */
+.total-row td {
+    background-color: #5a7082;
+    font-weight: 700;
+    color: #64dded;
+    border-top: 2px solid #64dded;
+}
+
+/* Mensajes de Estado */
+.message {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.error-message {
+    background-color: #d9534f40; /* Fondo rojo suave */
+    color: #d9534f;
+}
+
+.success-message {
+    background-color: #5cb85c40; /* Fondo verde suave */
+    color: #5cb85c;
+}
