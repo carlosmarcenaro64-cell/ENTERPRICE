@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Consulta de Recibos</title>
+    <title>Consulta de Recibos - Enterprice</title>
     <link rel="stylesheet" type="text/css" href="diseño.css">
 </head>
 <body>
     <div class="container">
-        <h1>Consulta tu Recibo</h1>
+        <h1>Consulta tu Recibo <span class="company-name">Enterprice</span></h1>
         <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
         
         <div class="input-section">
@@ -27,7 +27,6 @@
 
     <script>
         // --- BASE DE DATOS SIMULADA EN JAVASCRIPT ---
-        // ESTO NO ES SEGURO PARA DATOS REALES EN PRODUCCIÓN, ES SOLO PARA DEMOSTRACIÓN.
         const recibosSimulados = {
             "78991675": {
                 nombre: "César",
@@ -45,7 +44,7 @@
                     { servicio: "youtube", precio: 4.25, cantidad: 1, total: 4.25 }
                 ],
                 totalPagar: 4.25,
-                pendiente: 8.25 // Basado en el total pendiente que me diste
+                pendiente: 8.25
             },
             "76470201": {
                 nombre: "Adriana",
@@ -60,7 +59,7 @@
         function buscarRecibo() {
             const telefono = document.getElementById('telefonoInput').value.trim();
             const reciboDetalleDiv = document.getElementById('reciboDetalle');
-            reciboDetalleDiv.innerHTML = ''; // Limpiar resultados anteriores
+            reciboDetalleDiv.innerHTML = ''; 
 
             const data = recibosSimulados[telefono];
 
@@ -89,19 +88,4 @@
                             <td>$${data.totalPagar.toFixed(2)}</td>
                         </tr>
                         <tr class="pendiente-row">
-                            <td colspan="3" style="text-align:right;">PENDIENTE:</td>
-                            <td>$${data.pendiente.toFixed(2)}</td>
-                        </tr>
-                    </table>
-                `;
-                reciboDetalleDiv.innerHTML = htmlContent;
-                reciboDetalleDiv.classList.remove('error');
-
-            } else {
-                reciboDetalleDiv.innerHTML = `<p class="error">El número de teléfono **${telefono}** no fue encontrado.</p>`;
-                reciboDetalleDiv.classList.add('error');
-            }
-        }
-    </script>
-</body>
-</html>
+                            <td colspan="3" style="text-align:right;">PENDIENTE
