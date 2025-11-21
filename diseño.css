@@ -145,3 +145,33 @@ label {
 
 .recibo-content th {
     background-color: #a5c3d4; /* Encabezado de tabla Azul metálico claro */
+    color: #2b5876; /* Texto Azul metálico */
+    font-weight: 700;
+}
+
+.recibo-content tr:nth-child(even) { /* Filas alternas */
+    background-color: #f0f8fa;
+}
+
+/* Estilos específicos para las filas de totales */
+.total-row {
+    font-weight: bold;
+    background-color: #d8edf3; /* Fondo Aqua para el total */
+    color: #2b5876;
+}
+
+.pendiente-row {
+    font-weight: bold;
+    background-color: #ffdce0; /* Fondo rosa claro para destacar la deuda */
+    color: #c0392b; /* Texto rojo para el pendiente */
+    border-top: 2px solid #f9c0c0;
+}
+
+.error {
+    color: #c0392b; /* Texto rojo para mensajes de error */
+    font-weight: bold;
+    background-color: #ffebeb;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
