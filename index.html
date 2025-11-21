@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta tu Recibo Enterprice</title>
+    <link rel="stylesheet" href="diseño.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta tu Recibo <span style="color: #64dded;">Enterprice</span></h1>
+        <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
+
+        <label for="numero-telefono">Número de Teléfono (Ej: 98765432):</label>
+        <input type="text" id="numero-telefono" placeholder="Ej: 78991675">
+        
+        <button id="buscar-recibo">Buscar Recibo</button>
+
+        <div id="detalle-recibo">
+            <h2>Detalle del Recibo:</h2>
+            <p id="mensaje-estado">Ingresa un número para buscar.</p>
+        </div>
+    </div>
+
+    <script>
+        // *************************************************************************
+        // *** CRÍTICO: PEGA AQUÍ TU URL DE LA API DE GOOGLE APPS SCRIPT ***
+        // *************************************************************************
+        const URL_GOOGLE_API = "PEGA_TU_URL_AQUÍ"; 
+        // Ejemplo: "https://script.google.com/macros/s/AKfycbz.../exec";
+        // *************************************************************************
+        
+        const inputTelefono = document.getElementById('numero-telefono');
+        const btnBuscar = document.getElementById('buscar-recibo');
+        const detalleReciboDiv = document.getElementById('detalle-recibo');
+        const mensajeEstado = document.getElementById('mensaje-estado');
+
+        btnBuscar.addEventListener('click', buscarRecibo);
+        inputTelefono.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                buscarRecibo();
+            }
+        });
+
+        function mostrarMensaje(mensaje, tipo) {
+            mensajeEstado.className = `message ${tipo}-message`;
+            mensajeEstado.textContent = mensaje;
+            // Limpia mensajes de error al buscar de nuevo
+            detalleReciboDiv.querySelector('table')?.remove(); 
+            // Limpia el borde de animación si existe
+            detalleReciboDiv.classList.remove('shake-animation', 'success-animation');
+        }
+
+        async function buscarRecibo() {
+            const telefono = inputTelefono.value.trim();
+            detalleReciboDiv.classList.remove('shake-animation', 'success-animation');
+
+            if (!telefono) {
+                mostrarMensaje('Por favor, ingresa un número de teléfono.', 'error');
+                detalleReciboDiv.classList.add('shake-animation');
+                return;
+            }
+
+            mostrarMensaje('Buscando recibo, por favor espera...', 'loading');
+
+            try {
+                const response = await fetch(`${URL_GOOGLE_API}?telefono=${telefono}`);
+                const result = await response.json();
+
+                if (result.error) {
+                    mostrarMensaje(`Error del servidor: ${result.error}`, 'error');
+                    detalleReciboDiv.classList.add('shake-animation');
+                    return;
+                }
+
+                const data = result.data;
+
+                if (data) {
+                    renderizarRecibo(data);
+                    mostrarMensaje(`Recibo encontrado para ${data.NombreCliente}.`, 'success');
+                    detalleReciboDiv.classList.add('success-animation');
+                } else {
+                    mostrarMensaje(`No se encontró un recibo para el número ${telefono}.`, 'error');
+                    detalleReciboDiv.classList.add('shake-animation');
+                }
+
+            } catch (error) {
+                console.error("Fallo al conectar con la API:", error);
+                mostrarMensaje('Fallo de conexión. Asegúrate de que la URL de la API es correcta y los permisos están en "Cualquiera".', 'error');
+                detalleReciboDiv.classList.add('shake-animation');
+            }
+        }
+
+        function renderizarRecibo(data) {
+            let html = `
+                <p><strong>Cliente:</strong> ${data.NombreCliente}</p>
+                <p><strong>Fecha de Emisión:</strong> ${data.FechaEmision}</p>
+                <p><strong>Estado de Pago:</strong> <span style="font-weight: bold; color: ${data.Pagado ? '#5cb85c' : '#d9534f'};">${data.Pagado ? 'PAGADO' : 'PENDIENTE'}</span></p>
+                <p><strong>Pendiente Anterior:</strong> $${data.PendienteAnterior.toFixed(2)}</p>
+                
+                <h3 style="color: #64dded; margin-top: 20px;">Detalle de Servicios</h3>
+                <table class="recibo-table">
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Precio</th>
+                            <th>Cant.</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.ServiciosJSON.forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.servicio}</td>
+                        <td>$${item.precio.toFixed(2)}</td>
+                        <td>${item.cantidad}</td>
+                        <td>$${item.total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            const totalFinal = data.TotalServicios + data.PendienteAnterior;
+
+            html += `
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align: right;">TOTAL SERVICIOS DEL MES:</td>
+                            <td>$${data.TotalServicios.toFixed(2)}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align: right;">SALDO PENDIENTE ANTERIOR:</td>
+                            <td>$${data.PendienteAnterior.toFixed(2)}</td>
+                        </tr>
+                        <tr class="total-row" style="background-color: #64dded; color: #2a3a4a;">
+                            <td colspan="3" style="text-align: right;">TOTAL A PAGAR:</td>
+                            <td>$${totalFinal.toFixed(2)}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            `;
+
+            mensajeEstado.innerHTML = html;
+        }
+
+    </script>
+</body>
+</html>
