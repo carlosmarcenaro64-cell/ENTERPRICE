@@ -1,34 +1,31 @@
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Recibos.aspx.vb" Inherits="Recibos" %>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Consulta de Recibos</title>
+    <title>Consulta de Recibos - Demo</title>
     <link rel="stylesheet" type="text/css" href="diseño.css">
 </head>
 <body>
     <div class="container">
-        <h1>Consulta tu Recibo</h1>
-        <form id="form1" runat="server">
+        <h1>Consulta de Recibos (DEMO ESTÁTICO)</h1>
+        <p>⚠️ **Advertencia:** Esta página no busca datos porque GitHub Pages no ejecuta código VB.NET. Muestra un recibo fijo como ejemplo.</p>
+        
+        <hr />
+        
+        <div class="resultado-area">
+            <h2>Resultado de la Búsqueda para 78991675:</h2>
             
-            <label for="txtReciboID">Ingrese su Número de Teléfono:</label>
-            
-            <%-- Usamos un control TextBox de ASP.NET --%>
-            <asp:TextBox ID="txtReciboID" runat="server" CssClass="input-text"></asp:TextBox>
-            
-            <%-- El botón que llama a la lógica de VB.NET --%>
-            <asp:Button ID="btnConsultar" runat="server" Text="Buscar Recibo" OnClick="btnConsultar_Click" CssClass="button" />
-            
-            <hr />
-            
-            <div class="resultado-area">
-                <h2>Resultado de la Búsqueda:</h2>
-                
-                <%-- El control Literal donde VB.NET inyecta la tabla HTML del recibo --%>
-                <asp:Literal ID="litRecibo" runat="server"></asp:Literal>
-            </div>
+            <h3>Detalle de Recibo</h3>
+            <p><strong>Cliente:</strong> César</p>
+            <table>
+                <tr><th>Servicio</th><th>Precio</th><th>Cantidad</th><th>Total</th></tr>
+                <tr><td>spotify</td><td>4.00</td><td>2</td><td>8.00</td></tr>
+                <tr><td>youtube</td><td>4.25</td><td>1</td><td>4.25</td></tr>
+                <tr><td>app</td><td>3.51</td><td>1</td><td>3.51</td></tr>
+                <tr class='total-row'><td colspan='3' style='text-align:right;'>TOTAL A PAGAR:</td><td>$15.76</td></tr>
+                <tr class='pendiente-row'><td colspan='3' style='text-align:right;'>PENDIENTE:</td><td>$15.76</td></tr>
+            </table>
+        </div>
 
-        </form>
     </div>
 </body>
 </html>
