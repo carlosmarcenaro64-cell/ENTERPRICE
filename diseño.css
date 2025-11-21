@@ -6,7 +6,7 @@
     40%, 80% { transform: translateX(10px); }
 }
 
-/* Keyframes para el éxito (verde/aqua suave) */
+/* Keyframes para el éxito (pulso aqua) */
 @keyframes pulse-success {
     0% { box-shadow: 0 0 0 0 rgba(100, 221, 237, 0.7); }
     70% { box-shadow: 0 0 0 10px rgba(100, 221, 237, 0); }
@@ -262,7 +262,6 @@ label {
     max-width: 250px;
 }
 
-/* Bancoagrícola: Rojo/Blanco */
 .bank-agricola {
     background-color: #c0392b; 
     color: #e0f2f7; 
@@ -272,7 +271,6 @@ label {
     background-color: #9d2e23;
 }
 
-/* N1co App: Un tono de Aqua/Verde más fuerte */
 .n1co-app {
     background-color: #3b8d99; 
     color: #ffffff;
