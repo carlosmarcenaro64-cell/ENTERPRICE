@@ -1,0 +1,12 @@
+<div class="container">
+    <h2>🔎 Consultar Recibo</h2>
+    <form id="receiptForm" runat="server">
+        <label for="txtReciboID">Ingrese su ID de Cliente o Número de Recibo:</label>
+        <input type="text" id="txtReciboID" name="ReciboID" required />
+        <asp:Button ID="btnConsultar" runat="server" Text="Buscar Recibo" OnClick="btnConsultar_Click" CssClass="button" />
+    </form>
+    
+    <div id="receiptResult" class="result">
+        <asp:Literal ID="litRecibo" runat="server"></asp:Literal>
+    </div>
+</div>
