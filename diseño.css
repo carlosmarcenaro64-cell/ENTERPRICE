@@ -1,6 +1,41 @@
+/* === ANIMACIONES === */
+/* Keyframes para el temblor (error) */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-10px); }
+    40%, 80% { transform: translateX(10px); }
+}
+
+/* Keyframes para el éxito (verde/aqua suave) */
+@keyframes pulse-success {
+    0% { box-shadow: 0 0 0 0 rgba(100, 221, 237, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(100, 221, 237, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(100, 221, 237, 0); }
+}
+
+/* Keyframes para que la tabla aparezca suavemente */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Clases aplicadas por JS */
+.shake-animation {
+    animation: shake 0.5s ease-in-out;
+    border-color: #ffb6c1 !important; /* Resalta el borde en color error */
+}
+
+.success-animation {
+    animation: pulse-success 0.8s;
+    border-color: #64dded !important; /* Resalta el borde en color success */
+}
+/* === FIN DE ANIMACIONES === */
+
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #e0f2f7; /* Fondo general Aqua claro */
+    background-color: #1a2a3a; /* Fondo oscuro (azul metálico oscuro) */
+    color: #e0f2f7; /* Color de texto claro */
     margin: 0;
     padding: 40px;
     display: flex;
@@ -12,15 +47,15 @@ body {
 .container {
     max-width: 700px;
     width: 100%;
-    background: #ffffff;
+    background: #2b3e50; /* Fondo del contenedor (azul metálico) */
     padding: 30px;
     border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    border: 1px solid #c0e0eb; /* Borde suave */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
+    border: 1px solid #3b506b; 
 }
 
 h1 {
-    color: #2b5876; /* Azul metálico oscuro */
+    color: #87ceeb; 
     text-align: center;
     margin-bottom: 10px;
     display: flex;
@@ -30,17 +65,17 @@ h1 {
 }
 
 .company-name {
-    font-size: 0.7em; /* Más pequeño para el nombre de la empresa */
+    font-size: 0.7em; 
     font-weight: normal;
-    color: #3b8d99; /* Aqua */
-    border: 1px solid #3b8d99;
+    color: #64dded; 
+    border: 1px solid #64dded;
     padding: 5px 10px;
     border-radius: 5px;
 }
 
 .subtitle {
     text-align: center;
-    color: #555;
+    color: #b0c4de; 
     margin-bottom: 30px;
     font-size: 0.95em;
 }
@@ -48,7 +83,7 @@ h1 {
 .divider {
     border: 0;
     height: 1px;
-    background: linear-gradient(to right, transparent, #a5c3d4, transparent); /* Divisor degradado */
+    background: linear-gradient(to right, transparent, #5b799b, transparent); 
     margin: 30px 0;
 }
 
@@ -63,30 +98,33 @@ label {
     display: block;
     margin-bottom: 10px;
     font-weight: 600;
-    color: #2b5876; /* Azul metálico */
+    color: #a5c3d4; 
     font-size: 1.1em;
 }
 
 .input-text {
-    width: 80%; /* Un poco más estrecho para centrar */
+    width: 80%; 
     max-width: 300px;
     padding: 12px;
     margin-bottom: 20px;
-    border: 2px solid #a5c3d4; /* Borde aqua metálico */
+    border: 2px solid #5b799b; 
     border-radius: 8px;
     box-sizing: border-box;
     font-size: 1em;
     text-align: center;
+    background-color: #3f546a; 
+    color: #e0f2f7; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
 .input-text:focus {
-    border-color: #3b8d99; /* Aqua más intenso al enfocar */
+    border-color: #64dded; 
     outline: none;
-    box-shadow: 0 0 8px rgba(59, 141, 153, 0.3);
+    box-shadow: 0 0 8px rgba(100, 221, 237, 0.5); 
 }
 
 .button {
-    background-color: #3b8d99; /* Botón Aqua */
+    background-color: #3b8d99; 
     color: white;
     padding: 12px 25px;
     border: none;
@@ -95,11 +133,11 @@ label {
     font-size: 1.1em;
     font-weight: 600;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .button:hover {
-    background-color: #2a6f7b; /* Aqua más oscuro al pasar el ratón */
+    background-color: #2a6f7b; 
     transform: translateY(-2px);
 }
 
@@ -110,68 +148,136 @@ label {
 .resultado-area {
     margin-top: 30px;
     padding: 20px;
-    border: 1px solid #d0e8f0; /* Borde suave */
+    border: 1px solid #3f546a; 
     border-radius: 10px;
-    background-color: #f7fcff; /* Fondo muy claro */
-    min-height: 150px; /* Para que no se vea vacío */
+    background-color: #344a60; 
+    min-height: 150px; 
 }
 
 .resultado-area h2 {
-    color: #2b5876; /* Azul metálico */
+    color: #87ceeb; 
     margin-top: 0;
-    border-bottom: 1px solid #e0f2f7;
+    border-bottom: 1px solid #4a637a;
     padding-bottom: 10px;
 }
 
-/* Estilo para el contenido del recibo */
-.recibo-content p {
-    color: #444;
-    line-height: 1.6;
-}
-
-/* Estilos para las tablas de recibos generadas en JavaScript */
+/* Estilos de tabla */
 .recibo-content table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    animation: fadeIn 1s ease-out; 
 }
 
 .recibo-content th, .recibo-content td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #eaf6fa; /* Borde aqua muy claro */
+    border-bottom: 1px solid #4a637a; 
+    color: #e0f2f7; 
 }
 
 .recibo-content th {
-    background-color: #a5c3d4; /* Encabezado de tabla Azul metálico claro */
-    color: #2b5876; /* Texto Azul metálico */
+    background-color: #5b799b; 
+    color: #e0f2f7; 
     font-weight: 700;
 }
 
-.recibo-content tr:nth-child(even) { /* Filas alternas */
-    background-color: #f0f8fa;
+.recibo-content tr:nth-child(even) { 
+    background-color: #3f546a; 
 }
 
-/* Estilos específicos para las filas de totales */
+.pendiente-anterior-row {
+    font-weight: 500;
+    background-color: #3b506a; 
+    color: #b0c4de;
+}
+
 .total-row {
     font-weight: bold;
-    background-color: #d8edf3; /* Fondo Aqua para el total */
-    color: #2b5876;
+    background-color: #4a637a; 
+    color: #e0f2f7;
 }
 
 .pendiente-row {
     font-weight: bold;
-    background-color: #ffdce0; /* Fondo rosa claro para destacar la deuda */
-    color: #c0392b; /* Texto rojo para el pendiente */
-    border-top: 2px solid #f9c0c0;
+    background-color: #7b2c3d; 
+    color: #ffb6c1; 
+    border-top: 2px solid #a84f63;
 }
 
-.error {
-    color: #c0392b; /* Texto rojo para mensajes de error */
+.error, .loading-message {
+    color: #ffb6c1; 
     font-weight: bold;
-    background-color: #ffebeb;
+    background-color: #5e1c2a; 
     padding: 10px;
     border-radius: 5px;
     text-align: center;
+}
+
+/* Nuevo estilo para mensaje de éxito (Pago Realizado) */
+.success-message {
+    font-weight: bold;
+    color: #64dded; /* Aqua */
+    background-color: #3b506a; /* Fondo azul metálico suave */
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #64dded;
+    margin-top: 20px;
+}
+
+/* --- ESTILOS DE PAGO --- */
+.payment-details {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px dashed #5b799b;
+    border-radius: 8px;
+    background-color: #3f546a;
+    color: #b0c4de;
+    font-size: 0.9em;
+}
+
+.payment-details p {
+    margin: 5px 0;
+}
+
+.payment-buttons-container {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.payment-button {
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    flex-grow: 1;
+    max-width: 250px;
+}
+
+/* Bancoagrícola: Rojo/Blanco */
+.bank-agricola {
+    background-color: #c0392b; 
+    color: #e0f2f7; 
+}
+
+.bank-agricola:hover {
+    background-color: #9d2e23;
+}
+
+/* N1co App: Un tono de Aqua/Verde más fuerte */
+.n1co-app {
+    background-color: #3b8d99; 
+    color: #ffffff;
+}
+
+.n1co-app:hover {
+    background-color: #2a6f7b;
 }
