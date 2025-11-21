@@ -9,11 +9,13 @@
         <h1>Consulta tu Recibo <span class="company-name">Enterprice</span></h1>
         <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
         
-        <div class="input-section">
-            <label for="telefonoInput">Número de Teléfono:</label>
-            <input type="text" id="telefonoInput" placeholder="Ej: 78991675" class="input-text">
-            <button onclick="buscarRecibo()" class="button">Buscar Recibo</button>
-        </div>
+        <form onsubmit="return buscarRecibo()">
+            <div class="input-section">
+                <label for="telefonoInput">Número de Teléfono:</label>
+                <input type="text" id="telefonoInput" placeholder="Ej: 78991675" class="input-text">
+                <button type="submit" class="button">Buscar Recibo</button>
+            </div>
+        </form>
         
         <hr class="divider">
         
@@ -57,9 +59,10 @@
         };
 
         function buscarRecibo() {
+            // Obtiene el valor del campo de texto
             const telefono = document.getElementById('telefonoInput').value.trim();
             const reciboDetalleDiv = document.getElementById('reciboDetalle');
-            reciboDetalleDiv.innerHTML = ''; 
+            reciboDetalleDiv.innerHTML = ''; // Limpia resultados anteriores
 
             const data = recibosSimulados[telefono];
 
@@ -71,6 +74,7 @@
                         <tr><th>Servicio</th><th>Precio</th><th>Cantidad</th><th>Total</th></tr>
                 `;
 
+                // Construye las filas de servicios
                 data.servicios.forEach(item => {
                     htmlContent += `
                         <tr>
@@ -82,10 +86,29 @@
                     `;
                 });
 
+                // Agrega las filas de totales
                 htmlContent += `
                         <tr class="total-row">
                             <td colspan="3" style="text-align:right;">TOTAL A PAGAR:</td>
                             <td>$${data.totalPagar.toFixed(2)}</td>
                         </tr>
                         <tr class="pendiente-row">
-                            <td colspan="3" style="text-align:right;">PENDIENTE
+                            <td colspan="3" style="text-align:right;">PENDIENTE:</td>
+                            <td>$${data.pendiente.toFixed(2)}</td>
+                        </tr>
+                    </table>
+                `;
+                reciboDetalleDiv.innerHTML = htmlContent;
+                reciboDetalleDiv.classList.remove('error');
+
+            } else {
+                reciboDetalleDiv.innerHTML = `<p class="error">El número de teléfono **${telefono}** no fue encontrado.</p>`;
+                reciboDetalleDiv.classList.add('error');
+            }
+            
+            // Esto es crucial para que GitHub Pages (HTML) no recargue la página
+            return false; 
+        }
+    </script>
+</body>
+</html>
