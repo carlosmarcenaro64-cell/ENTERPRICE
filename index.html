@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consulta de Recibos - Enterprice</title>
+    <link rel="stylesheet" type="text/css" href="diseño.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta tu Recibo <span class="company-name">Enterprice</span></h1>
+        <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
+        
+        <div class="input-section">
+            <label for="telefonoInput">Número de Teléfono:</label>
+            <input type="text" id="telefonoInput" placeholder="Ej: 78991675" class="input-text">
+            <button onclick="buscarRecibo()" class="button">Buscar Recibo</button>
+        </div>
+        
+        <hr class="divider">
+        
+        <div class="resultado-area">
+            <h2>Detalle del Recibo:</h2>
+            <div id="reciboDetalle" class="recibo-content">
+                <p>Ingresa un número para buscar.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- BASE DE DATOS SIMULADA EN JAVASCRIPT ---
+        const recibosSimulados = {
+            "78991675": {
+                nombre: "César",
+                servicios: [
+                    { servicio: "spotify", precio: 4.00, cantidad: 2, total: 8.00 },
+                    { servicio: "youtube", precio: 4.25, cantidad: 1, total: 4.25 },
+                    { servicio: "app", precio: 3.51, cantidad: 1, total: 3.51 }
+                ],
+                totalPagar: 15.76,
+                pendiente: 15.76
+            },
+            "73179224": {
+                nombre: "Daisy",
+                servicios: [
+                    { servicio: "youtube", precio: 4.25, cantidad: 1, total: 4.25 }
+                ],
+                totalPagar: 4.25,
+                pendiente: 8.25
+            },
+            "76470201": {
+                nombre: "Adriana",
+                servicios: [
+                    { servicio: "youtube", precio: 4.25, cantidad: 3, total: 12.75 }
+                ],
+                totalPagar: 12.75,
+                pendiente: 12.75
+            }
+        };
+
+        function buscarRecibo() {
+            const telefono = document.getElementById('telefonoInput').value.trim();
+            const reciboDetalleDiv = document.getElementById('reciboDetalle');
+            reciboDetalleDiv.innerHTML = ''; 
+
+            const data = recibosSimulados[telefono];
+
+            if (data) {
+                let htmlContent = `
+                    <h3>Detalle de Recibo</h3>
+                    <p><strong>Cliente:</strong> ${data.nombre}</p>
+                    <table>
+                        <tr><th>Servicio</th><th>Precio</th><th>Cantidad</th><th>Total</th></tr>
+                `;
+
+                data.servicios.forEach(item => {
+                    htmlContent += `
+                        <tr>
+                            <td>${item.servicio}</td>
+                            <td>$${item.precio.toFixed(2)}</td>
+                            <td>${item.cantidad}</td>
+                            <td>$${item.total.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                htmlContent += `
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align:right;">TOTAL A PAGAR:</td>
+                            <td>$${data.totalPagar.toFixed(2)}</td>
+                        </tr>
+                        <tr class="pendiente-row">
+                            <td colspan="3" style="text-align:right;">PENDIENTE
