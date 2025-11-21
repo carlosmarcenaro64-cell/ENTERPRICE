@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Consulta de Recibos - Enterprice</title>
-    <link rel="stylesheet" type="text/css" href="diseño.css">
+    <link rel="stylesheet" type="text/css" href="diseño.css"> 
 </head>
 <body>
     <div class="container">
@@ -48,7 +48,7 @@
 
     <script>
         // ==========================================================
-        //  TU URL DE GOOGLE APPS SCRIPT (¡CRUCIAL!)
+        //  TU URL DE GOOGLE APPS SCRIPT
         // ==========================================================
         const URL_GOOGLE_API = "https://script.google.com/macros/s/AKfycbzbTqLsYh2k8av-2ReC7GzAn-orKNFhsgT8USGBetSp6RCjo8F5mYO3M4wWJsJKsCb9Jg/exec";
         const telefonoInput = document.getElementById('telefonoInput');
@@ -60,7 +60,7 @@
         async function buscarRecibo() {
             const telefono = telefonoInput.value.trim();
 
-            // Limpiar y resetear animaciones
+            // Limpiar animaciones y botones
             telefonoInput.classList.remove('shake-animation', 'success-animation');
             paymentMethodsDiv.style.display = 'none';
             reciboDetalleDiv.innerHTML = `<p class="loading-message">Buscando...</p>`;
@@ -80,12 +80,12 @@
                 const result = await response.json();
                 const data = result.data;
 
-                // Simulación de pequeña espera para la animación
+                // Simulación de pequeña espera para la animación (300ms)
                 setTimeout(() => {
-                    if (data && data.Telefono) { // Verifica si se encontró el cliente
+                    if (data && data.Telefono) { // Cliente encontrado
                         telefonoInput.classList.add('success-animation'); 
 
-                        // Convertir strings de la hoja a números/booleanos
+                        // Conversión de datos
                         const pagado = data.Pagado;
                         const totalServicios = parseFloat(data.TotalServicios);
                         const pendienteAnterior = parseFloat(data.PendienteAnterior);
@@ -100,7 +100,7 @@
                         }
                         // --- FIN LÓGICA DE PAGO ---
 
-                        // Si no ha pagado, calcula y muestra el detalle
+                        // Si no ha pagado:
                         const totalPendienteFinal = totalServicios + pendienteAnterior; 
 
                         let htmlContent = `
@@ -147,15 +147,16 @@
                         paymentMethodsDiv.style.display = 'block'; 
 
                     } else {
-                        // El teléfono no fue encontrado
+                        // Teléfono no encontrado
                         telefonoInput.classList.add('shake-animation');
                         reciboDetalleDiv.innerHTML = `<p class="error">El número de teléfono **${telefono}** no fue encontrado.</p>`;
                     }
                 }, 300);
 
             } catch (error) {
+                // Error de conexión con la API de Google
                 console.error("Error en la consulta de la Hoja de Cálculo:", error);
-                reciboDetalleDiv.innerHTML = `<p class="error">Error interno al conectar. Verifique su Hoja de Cálculo y el Despliegue de la API.</p>`;
+                reciboDetalleDiv.innerHTML = `<p class="error">Error interno: Falla al conectar con la base de datos de Google. Verifique su Despliegue.</p>`;
             }
 
             return false; 
