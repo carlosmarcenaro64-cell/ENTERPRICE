@@ -24,7 +24,7 @@
 
     <script>
         // ==========================================================
-        //  ÁREA DE DATOS (Modificar aquí para actualizar recibos)
+        //  ÁREA DE DATOS (Sin estado de pago 'pagado')
         // ==========================================================
         const datosDeRecibos = {
             "78991675": {
@@ -154,7 +154,7 @@
                     </tbody>
                     <tfoot>
                         <tr class="pendiente-anterior-row">
-                            <td colspan="3" style="text-align: right;">PENDIENTE ANTERIOR:</td>
+                            <td colspan="3" style="text-align: right;">SALDO ANTERIOR:</td>
                             <td>$${pendienteAnterior.toFixed(2)}</td>
                         </tr>
                         <tr class="total-row">
@@ -162,7 +162,7 @@
                             <td>$${data.totalServicios.toFixed(2)}</td>
                         </tr>
                         <tr class="total-row final-pendiente-row">
-                            <td colspan="3" style="text-align: right;">TOTAL PENDIENTE A PAGAR:</td>
+                            <td colspan="3" style="text-align: right;">TOTAL A CUBRIR:</td>
                             <td>$${totalFinal.toFixed(2)}</td>
                         </tr>
                     </tfoot>
