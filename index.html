@@ -1,46 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Consulta de Recibos - Enterprice</title>
-    <link rel="stylesheet" type="text/css" href="diseño.css"> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta tu Recibo Enterprice</title>
+    <link rel="stylesheet" href="diseño.css">
 </head>
 <body>
     <div class="container">
-        <h1>Consulta tu Recibo <span class="company-name">Enterprice</span></h1>
+        <h1>Consulta tu Recibo <span style="color: #64dded;">Enterprice</span></h1>
         <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
+
+        <label for="numero-telefono">Número de Teléfono (Ej: 98765432):</label>
+        <input type="text" id="numero-telefono" placeholder="Ej: 98765432">
         
-        <form onsubmit="return buscarRecibo()">
-            <div class="input-section">
-                <label for="telefonoInput">Número de Teléfono:</label>
-                <input type="text" id="telefonoInput" placeholder="Ej: 98765432" class="input-text">
-                <button type="submit" class="button">Buscar Recibo</button>
-            </div>
-        </form>
-        
-        <hr class="divider">
-        
-        <div class="resultado-area">
+        <button id="buscar-recibo">Buscar Recibo</button>
+
+        <div id="detalle-recibo">
             <h2>Detalle del Recibo:</h2>
-            <div id="reciboDetalle" class="recibo-content">
-                <p>Ingresa un número para buscar.</p>
-            </div>
+            <p id="mensaje-estado">Ingresa un número para buscar.</p>
         </div>
         
-        <div id="paymentMethods" style="display: none;">
+        <div id="paymentMethods" style="display: none; margin-top: 30px;">
             <h3>Opciones de Pago Rápido 💸</h3>
-            <p class="payment-info">Fecha límite de pago: **Día 22 de cada mes**.</p>
+            <p class="payment-info" style="color:#e0f2f7;">Fecha límite de pago: **Día 22 de cada mes**.</p>
             <div class="payment-buttons-container">
-                <a href="https://ejemplo.com/bancoagricola" target="_blank" class="payment-button bank-agricola">
+                <a href="#" class="payment-button bank-agricola">
                     Pagar por **Bancoagrícola**
                 </a>
-                <a href="https://ejemplo.com/n1coapp" target="_blank" class="payment-button n1co-app">
+                <a href="#" class="payment-button n1co-app">
                     Pagar por **N1co App**
                 </a>
             </div>
             <div class="payment-details">
                 <p>**Bancoagrícola:** Carlos Panameño - Cuenta de Ahorro 3113009677</p>
                 <p>**N1co App:** Número 77190952</p>
-                <p style="font-size:0.8em; margin-top:10px;">(Nota: los enlaces de pago son de ejemplo y deben configurarse con las URL de tu banco/app).</p>
             </div>
         </div>
         
@@ -48,119 +42,183 @@
 
     <script>
         // ==========================================================
-        //  TU URL DE GOOGLE APPS SCRIPT (¡CRUCIAL!)
+        //  AREA DE MODIFICACIÓN MENSUAL (Modificar solo esta sección)
         // ==========================================================
-        const URL_GOOGLE_API = "https://script.google.com/macros/s/AKfycbzbTqLsYh2k8av-2ReC7GzAn-orKNFhsgT8USGBetSp6RCjo8F5mYO3M4wWJsJKsCb9Jg/exec";
-        const telefonoInput = document.getElementById('telefonoInput');
-        const reciboDetalleDiv = document.getElementById('reciboDetalle');
+        const datosDeRecibos = {
+            "78991675": {
+                "nombre": "César",
+                "servicios": [
+                    { "servicio": "spotify", "precio": 4.00, "cantidad": 2, "total": 8.00 },
+                    { "servicio": "youtube", "precio": 4.25, "cantidad": 1, "total": 4.25 },
+                    { "servicio": "app", "precio": 3.51, "cantidad": 1, "total": 3.51 }
+                ],
+                "totalServicios": 15.76, 
+                "pendienteAnterior": 0.00,
+                "pagado": true, // Cambiar a FALSE si debe
+                "fechaEmision": "2025-11-20"
+            },
+            "73179224": {
+                "nombre": "Daisy",
+                "servicios": [
+                    { "servicio": "youtube", "precio": 4.25, "cantidad": 1, "total": 4.25 }
+                ],
+                "totalServicios": 4.25, 
+                "pendienteAnterior": 4.00,
+                "pagado": false,
+                "fechaEmision": "2025-11-20"
+            },
+            "76470201": {
+                "nombre": "Adriana",
+                "servicios": [
+                    { "servicio": "youtube", "precio": 4.25, "cantidad": 3, "total": 12.75 }
+                ],
+                "totalServicios": 12.75,
+                "pendienteAnterior": 5.00,
+                "pagado": false,
+                "fechaEmision": "2025-11-20"
+            },
+            "98765432": { // Número de ejemplo
+                "nombre": "Invitado",
+                "servicios": [
+                    { "servicio": "Demo", "precio": 10.00, "cantidad": 1, "total": 10.00 }
+                ],
+                "totalServicios": 10.00, 
+                "pendienteAnterior": 0.00,
+                "pagado": false,
+                "fechaEmision": "2025-11-20"
+            }
+        };
+        // ==========================================================
+        //  FIN DE LA AREA DE MODIFICACIÓN
+        // ==========================================================
+        
+        const inputTelefono = document.getElementById('numero-telefono');
+        const btnBuscar = document.getElementById('buscar-recibo');
+        const detalleReciboDiv = document.getElementById('detalle-recibo');
+        const mensajeEstado = document.getElementById('mensaje-estado');
         const paymentMethodsDiv = document.getElementById('paymentMethods');
-        // ==========================================================
 
+        btnBuscar.addEventListener('click', buscarRecibo);
+        inputTelefono.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                buscarRecibo();
+            }
+        });
 
-        async function buscarRecibo() {
-            const telefono = telefonoInput.value.trim();
-
-            // Limpiar y resetear
-            telefonoInput.classList.remove('shake-animation', 'success-animation');
+        function mostrarMensaje(mensaje, tipo) {
+            mensajeEstado.className = `message ${tipo}-message`;
+            mensajeEstado.textContent = mensaje;
+            detalleReciboDiv.querySelector('table')?.remove();
             paymentMethodsDiv.style.display = 'none';
-            reciboDetalleDiv.innerHTML = `<p class="loading-message">Buscando...</p>`;
-
-            if (telefono === "") {
-                reciboDetalleDiv.innerHTML = `<p class="error">Por favor, ingrese su número de teléfono.</p>`;
-                return false;
-            }
-
-            try {
-                // 1. LLAMADA A GOOGLE APPS SCRIPT
-                const response = await fetch(`${URL_GOOGLE_API}?telefono=${telefono}`);
-                if (!response.ok) {
-                    throw new Error(`Error de red al consultar la API: ${response.status}`);
-                }
-                
-                const result = await response.json();
-                const data = result.data; // Los datos reales están en la propiedad 'data'
-
-                // Simulación de pequeña espera para la animación
-                setTimeout(() => {
-                    if (data && data.Telefono) { // Verifica si se encontró el cliente
-                        telefonoInput.classList.add('success-animation'); 
-
-                        // Convertir strings a números/booleanos para los cálculos
-                        const pagado = data.Pagado;
-                        const totalServicios = parseFloat(data.TotalServicios);
-                        const pendienteAnterior = parseFloat(data.PendienteAnterior);
-                        const servicios = data.ServiciosJSON; // Ya es un array gracias al Apps Script
-
-                        // --- LÓGICA DE PAGO ---
-                        if (pagado === true) {
-                            htmlContent = `<h3>Recibo emitido el: **${data.FechaEmision}**</h3>`;
-                            htmlContent += `<p class="success-message">🎉 **¡PAGO REALIZADO!** No tienes saldos pendientes para este periodo.</p>`;
-                            reciboDetalleDiv.innerHTML = htmlContent;
-                            return; 
-                        }
-                        // --- FIN LÓGICA DE PAGO ---
-
-                        // Si no ha pagado, calcula y muestra el detalle normal
-                        const totalPendienteFinal = totalServicios + pendienteAnterior; 
-
-                        let htmlContent = `
-                            <h3>Recibo emitido el: **${data.FechaEmision}**</h3>
-                            <p><strong>Cliente:</strong> ${data.NombreCliente}</p>
-                            <table class="animated-table">
-                                <tr><th>Servicio</th><th>Precio</th><th>Cantidad</th><th>Total</th></tr>
-                        `;
-
-                        servicios.forEach(item => {
-                            htmlContent += `
-                                <tr>
-                                    <td>${item.servicio}</td>
-                                    <td>$${item.precio.toFixed(2)}</td>
-                                    <td>${item.cantidad}</td>
-                                    <td>$${item.total.toFixed(2)}</td>
-                                </tr>
-                            `;
-                        });
-                        
-                        if (pendienteAnterior > 0) {
-                            htmlContent += `
-                                <tr class="pendiente-anterior-row">
-                                    <td colspan="3" style="text-align:right;">PENDIENTE ANTERIOR:</td>
-                                    <td>$${pendienteAnterior.toFixed(2)}</td>
-                                </tr>
-                            `;
-                        }
-
-                        htmlContent += `
-                            <tr class="total-row">
-                                <td colspan="3" style="text-align:right;">TOTAL SERVICIOS DEL MES:</td>
-                                <td>$${totalServicios.toFixed(2)}</td>
-                            </tr>
-                            <tr class="pendiente-row">
-                                <td colspan="3" style="text-align:right;">TOTAL PENDIENTE A PAGAR:</td>
-                                <td>$${totalPendienteFinal.toFixed(2)}</td>
-                            </tr>
-                            </table>
-                        `;
-                        reciboDetalleDiv.innerHTML = htmlContent;
-                        
-                        // Mostrar los botones de pago
-                        paymentMethodsDiv.style.display = 'block'; 
-
-                    } else {
-                        // El teléfono no fue encontrado en la hoja de cálculo
-                        telefonoInput.classList.add('shake-animation');
-                        reciboDetalleDiv.innerHTML = `<p class="error">El número de teléfono **${telefono}** no fue encontrado.</p>`;
-                    }
-                }, 300);
-
-            } catch (error) {
-                console.error("Error en la consulta de la Hoja de Cálculo:", error);
-                reciboDetalleDiv.innerHTML = `<p class="error">Error interno al conectar. Verifique su Hoja de Cálculo y el Despliegue de la API.</p>`;
-            }
-
-            return false; 
         }
+
+        function buscarRecibo() {
+            const telefono = inputTelefono.value.trim();
+            detalleReciboDiv.classList.remove('shake-animation', 'success-animation');
+            paymentMethodsDiv.style.display = 'none';
+
+            if (!telefono) {
+                mostrarMensaje('Por favor, ingresa un número de teléfono.', 'error');
+                detalleReciboDiv.classList.add('shake-animation');
+                return;
+            }
+
+            // 1. Mostrar pantalla de carga
+            mensajeEstado.className = 'message loading'; 
+            mensajeEstado.textContent = 'Buscando el número...'; 
+
+            // Simulación de carga (solo para que se vea la animación)
+            setTimeout(() => {
+                
+                const data = datosDeRecibos[telefono];
+
+                if (data) {
+                    inputTelefono.classList.add('success-animation');
+                    
+                    // --- LÓGICA DE PAGO ---
+                    if (data.pagado === true) {
+                        renderizarMensajePago(data);
+                        detalleReciboDiv.classList.add('success-animation');
+                        return;
+                    }
+
+                    // --- Renderizar Recibo Pendiente ---
+                    renderizarRecibo(data);
+                    detalleReciboDiv.classList.add('success-animation');
+                    paymentMethodsDiv.style.display = 'block';
+
+                } else {
+                    inputTelefono.classList.add('shake-animation');
+                    mostrarMensaje(`No se encontró un recibo para el número ${telefono}.`, 'error');
+                    detalleReciboDiv.classList.add('shake-animation');
+                }
+            }, 500); // 500ms de simulación de espera
+        }
+
+        function renderizarMensajePago(data) {
+            const html = `
+                <p class="success-message" style="margin-bottom: 10px;">🎉 **¡PAGO REALIZADO!**</p>
+                <p style="color: #c0d0e0; text-align: center;">No tienes saldos pendientes para el recibo emitido el **${data.fechaEmision}**.</p>
+            `;
+            mensajeEstado.innerHTML = html;
+        }
+
+
+        function renderizarRecibo(data) {
+            const totalServicios = data.totalServicios; 
+            const pendienteAnterior = data.pendienteAnterior;
+            const totalFinal = totalServicios + pendienteAnterior;
+
+            let html = `
+                <p style="margin-bottom: 5px;"><strong>Cliente:</strong> ${data.nombre}</p>
+                <p style="margin-bottom: 15px;"><strong>Fecha de Emisión:</strong> ${data.fechaEmision}</p>
+                
+                <h3 style="color: #64dded; margin-top: 10px;">Detalle de Servicios</h3>
+                <table class="recibo-table">
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th>Precio</th>
+                            <th>Cant.</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.servicios.forEach(item => {
+                html += `
+                    <tr>
+                        <td>${item.servicio}</td>
+                        <td>$${item.precio.toFixed(2)}</td>
+                        <td>${item.cantidad}</td>
+                        <td>$${item.total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                    <tfoot>
+                        <tr class="pendiente-anterior-row">
+                            <td colspan="3" style="text-align: right;">PENDIENTE ANTERIOR:</td>
+                            <td>$${pendienteAnterior.toFixed(2)}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align: right;">TOTAL SERVICIOS DEL MES:</td>
+                            <td>$${data.totalServicios.toFixed(2)}</td>
+                        </tr>
+                        <tr class="total-row final-pendiente-row">
+                            <td colspan="3" style="text-align: right;">TOTAL PENDIENTE A PAGAR:</td>
+                            <td>$${totalFinal.toFixed(2)}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            `;
+
+            mensajeEstado.innerHTML = html;
+        }
+
     </script>
 </body>
-
 </html>
