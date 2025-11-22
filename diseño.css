@@ -19,19 +19,26 @@
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Keyframes para mensaje de carga */
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
 /* Clases aplicadas por JS */
 .shake-animation {
     animation: shake 0.5s ease-in-out;
-    border-color: #ffb6c1 !important; /* Resalta el borde en color error */
+    border-color: #ffb6c1 !important; /* Borde rojo claro para error */
 }
 
 .success-animation {
     animation: pulse-success 0.8s;
-    border-color: #64dded !important; /* Resalta el borde en color success */
+    border-color: #64dded !important; /* Borde aqua para éxito */
 }
 /* === FIN DE ANIMACIONES === */
 
-
+/* --- ESTILOS BASE --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #1a2a3a; /* Fondo oscuro (azul metálico oscuro) */
@@ -80,20 +87,7 @@ h1 {
     font-size: 0.95em;
 }
 
-.divider {
-    border: 0;
-    height: 1px;
-    background: linear-gradient(to right, transparent, #5b799b, transparent); 
-    margin: 30px 0;
-}
-
-.input-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
+/* --- ELEMENTOS DE FORMULARIO --- */
 label {
     display: block;
     margin-bottom: 10px;
@@ -102,7 +96,7 @@ label {
     font-size: 1.1em;
 }
 
-.input-text {
+#numero-telefono { /* Usamos el ID del input */
     width: 80%; 
     max-width: 300px;
     padding: 12px;
@@ -117,13 +111,13 @@ label {
     transition: border-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
-.input-text:focus {
+#numero-telefono:focus {
     border-color: #64dded; 
     outline: none;
     box-shadow: 0 0 8px rgba(100, 221, 237, 0.5); 
 }
 
-.button {
+#buscar-recibo { /* Usamos el ID del botón */
     background-color: #3b8d99; 
     color: white;
     padding: 12px 25px;
@@ -134,18 +128,20 @@ label {
     font-weight: 600;
     transition: background-color 0.3s ease, transform 0.2s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%; /* Opcional: para que ocupe todo el ancho */
 }
 
-.button:hover {
+#buscar-recibo:hover {
     background-color: #2a6f7b; 
     transform: translateY(-2px);
 }
 
-.button:active {
+#buscar-recibo:active {
     transform: translateY(0);
 }
 
-.resultado-area {
+/* --- RESULTADO Y MENSAJES --- */
+#detalle-recibo { /* Sección donde se muestra el resultado */
     margin-top: 30px;
     padding: 20px;
     border: 1px solid #3f546a; 
@@ -154,15 +150,37 @@ label {
     min-height: 150px; 
 }
 
-.resultado-area h2 {
+#detalle-recibo h2 {
     color: #87ceeb; 
     margin-top: 0;
     border-bottom: 1px solid #4a637a;
     padding-bottom: 10px;
 }
 
-/* Estilos de tabla */
-.recibo-content table {
+/* Estilos de mensajes de estado usados en JS (mensajeEstado) */
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.error-message { 
+    color: #ffb6c1;
+    background-color: #5e1c2a;
+    border: 1px solid #ffb6c1;
+}
+
+.loading { 
+    color: #64dded;
+    background-color: #3f546a;
+    border: 1px solid #64dded;
+    animation: pulse 1.5s infinite;
+}
+
+/* --- TABLA DE RECIBO --- */
+.recibo-table { /* Usamos la clase que creaste en el HTML/JS */
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
@@ -170,64 +188,46 @@ label {
     animation: fadeIn 1s ease-out; 
 }
 
-.recibo-content th, .recibo-content td {
+.recibo-table th, .recibo-table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #4a637a; 
     color: #e0f2f7; 
 }
 
-.recibo-content th {
+.recibo-table th {
     background-color: #5b799b; 
     color: #e0f2f7; 
     font-weight: 700;
 }
 
-.recibo-content tr:nth-child(even) { 
+.recibo-table tr:nth-child(even) { 
     background-color: #3f546a; 
 }
 
+/* Filas de Totales */
 .pendiente-anterior-row {
     font-weight: 500;
     background-color: #3b506a; 
     color: #b0c4de;
 }
 
-.total-row {
+.total-servicios-row { /* Total de servicios del mes (subtotal) */
     font-weight: bold;
     background-color: #4a637a; 
     color: #e0f2f7;
+    border-top: 1px solid #5b799b;
 }
 
-.pendiente-row {
+.total-final-row { /* Total Pendiente a Pagar (el más importante) */
     font-weight: bold;
-    background-color: #7b2c3d; 
-    color: #ffb6c1; 
-    border-top: 2px solid #a84f63;
+    background-color: #7b2c3d; /* Fondo color de error/alerta */
+    color: #ffb6c1; /* Texto rojo claro */
+    font-size: 1.2em;
+    border-top: 3px solid #ffb6c1; 
 }
 
-.error, .loading-message {
-    color: #ffb6c1; 
-    font-weight: bold;
-    background-color: #5e1c2a; 
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-/* Nuevo estilo para mensaje de éxito (Pago Realizado) */
-.success-message {
-    font-weight: bold;
-    color: #64dded; /* Aqua */
-    background-color: #3b506a; /* Fondo azul metálico suave */
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    border: 1px solid #64dded;
-    margin-top: 20px;
-}
-
-/* --- ESTILOS DE PAGO --- */
+/* --- ESTILOS DE PAGO (Si decides implementarlos) --- */
 .payment-details {
     margin-top: 15px;
     padding: 10px;
@@ -262,7 +262,6 @@ label {
     max-width: 250px;
 }
 
-/* Bancoagrícola: Rojo/Blanco */
 .bank-agricola {
     background-color: #c0392b; 
     color: #e0f2f7; 
@@ -272,7 +271,6 @@ label {
     background-color: #9d2e23;
 }
 
-/* N1co App: Un tono de Aqua/Verde más fuerte */
 .n1co-app {
     background-color: #3b8d99; 
     color: #ffffff;
