@@ -23,9 +23,8 @@
     </div>
 
     <script>
-        // ==========================================================
-        //  ÁREA DE DATOS (Sin estado de pago 'pagado')
-        // ==========================================================
+        const URL_GOOGLE_API = "https://script.google.com/macros/s/AKfycbychtDezOXT2Dzp8Jn-mLf4juQHJ-b58TTd0RQp3WAK5U8wdL6BNOdGrf46vAYqZ9KZ/exec";
+
         const datosDeRecibos = {
             "78991675": {
                 "nombre": "César",
@@ -154,7 +153,7 @@
                     </tbody>
                     <tfoot>
                         <tr class="pendiente-anterior-row">
-                            <td colspan="3" style="text-align: right;">SALDO ANTERIOR:</td>
+                            <td colspan="3" style="text-align: right;">PENDIENTE ANTERIOR:</td>
                             <td>$${pendienteAnterior.toFixed(2)}</td>
                         </tr>
                         <tr class="total-row">
@@ -162,7 +161,7 @@
                             <td>$${data.totalServicios.toFixed(2)}</td>
                         </tr>
                         <tr class="total-row final-pendiente-row">
-                            <td colspan="3" style="text-align: right;">TOTAL A CUBRIR:</td>
+                            <td colspan="3" style="text-align: right;">TOTAL PENDIENTE A PAGAR:</td>
                             <td>$${totalFinal.toFixed(2)}</td>
                         </tr>
                     </tfoot>
