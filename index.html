@@ -48,7 +48,7 @@
 
     <script>
         // ==========================================================
-        //  TU URL DE GOOGLE APPS SCRIPT
+        //  TU URL DE GOOGLE APPS SCRIPT (¡CRUCIAL!)
         // ==========================================================
         const URL_GOOGLE_API = "https://script.google.com/macros/s/AKfycbzbTqLsYh2k8av-2ReC7GzAn-orKNFhsgT8USGBetSp6RCjo8F5mYO3M4wWJsJKsCb9Jg/exec";
         const telefonoInput = document.getElementById('telefonoInput');
@@ -60,7 +60,7 @@
         async function buscarRecibo() {
             const telefono = telefonoInput.value.trim();
 
-            // Limpiar animaciones y botones
+            // Limpiar y resetear
             telefonoInput.classList.remove('shake-animation', 'success-animation');
             paymentMethodsDiv.style.display = 'none';
             reciboDetalleDiv.innerHTML = `<p class="loading-message">Buscando...</p>`;
@@ -71,25 +71,25 @@
             }
 
             try {
-                // LLAMADA A GOOGLE APPS SCRIPT
+                // 1. LLAMADA A GOOGLE APPS SCRIPT
                 const response = await fetch(`${URL_GOOGLE_API}?telefono=${telefono}`);
                 if (!response.ok) {
                     throw new Error(`Error de red al consultar la API: ${response.status}`);
                 }
                 
                 const result = await response.json();
-                const data = result.data;
+                const data = result.data; // Los datos reales están en la propiedad 'data'
 
-                // Simulación de pequeña espera para la animación (300ms)
+                // Simulación de pequeña espera para la animación
                 setTimeout(() => {
-                    if (data && data.Telefono) { // Cliente encontrado
+                    if (data && data.Telefono) { // Verifica si se encontró el cliente
                         telefonoInput.classList.add('success-animation'); 
 
-                        // Conversión de datos
+                        // Convertir strings a números/booleanos para los cálculos
                         const pagado = data.Pagado;
                         const totalServicios = parseFloat(data.TotalServicios);
                         const pendienteAnterior = parseFloat(data.PendienteAnterior);
-                        const servicios = data.ServiciosJSON; 
+                        const servicios = data.ServiciosJSON; // Ya es un array gracias al Apps Script
 
                         // --- LÓGICA DE PAGO ---
                         if (pagado === true) {
@@ -100,7 +100,7 @@
                         }
                         // --- FIN LÓGICA DE PAGO ---
 
-                        // Si no ha pagado:
+                        // Si no ha pagado, calcula y muestra el detalle normal
                         const totalPendienteFinal = totalServicios + pendienteAnterior; 
 
                         let htmlContent = `
@@ -147,16 +147,15 @@
                         paymentMethodsDiv.style.display = 'block'; 
 
                     } else {
-                        // Teléfono no encontrado
+                        // El teléfono no fue encontrado en la hoja de cálculo
                         telefonoInput.classList.add('shake-animation');
                         reciboDetalleDiv.innerHTML = `<p class="error">El número de teléfono **${telefono}** no fue encontrado.</p>`;
                     }
                 }, 300);
 
             } catch (error) {
-                // Error de conexión con la API de Google
                 console.error("Error en la consulta de la Hoja de Cálculo:", error);
-                reciboDetalleDiv.innerHTML = `<p class="error">Error interno: Falla al conectar con la base de datos de Google. Verifique su Despliegue.</p>`;
+                reciboDetalleDiv.innerHTML = `<p class="error">Error interno al conectar. Verifique su Hoja de Cálculo y el Despliegue de la API.</p>`;
             }
 
             return false; 
