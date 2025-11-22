@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta tu Recibo Enterprice</title>
-    <link rel="stylesheet" href="diseño.css">
+    <title>Consulta de Recibos Enterprice</title>
+    <link rel="stylesheet" href="diseño.css"> 
 </head>
 <body>
     <div class="container">
@@ -20,29 +20,11 @@
             <h2>Detalle del Recibo:</h2>
             <p id="mensaje-estado">Ingresa un número para buscar.</p>
         </div>
-        
-        <div id="paymentMethods" style="display: none; margin-top: 30px;">
-            <h3>Opciones de Pago Rápido 💸</h3>
-            <p class="payment-info" style="color:#e0f2f7;">Fecha límite de pago: **Día 22 de cada mes**.</p>
-            <div class="payment-buttons-container">
-                <a href="#" class="payment-button bank-agricola">
-                    Pagar por **Bancoagrícola**
-                </a>
-                <a href="#" class="payment-button n1co-app">
-                    Pagar por **N1co App**
-                </a>
-            </div>
-            <div class="payment-details">
-                <p>**Bancoagrícola:** Carlos Panameño - Cuenta de Ahorro 3113009677</p>
-                <p>**N1co App:** Número 77190952</p>
-            </div>
-        </div>
-        
     </div>
 
     <script>
         // ==========================================================
-        //  AREA DE MODIFICACIÓN MENSUAL (Modificar solo esta sección)
+        //  ÁREA DE DATOS (Modificar aquí para actualizar recibos)
         // ==========================================================
         const datosDeRecibos = {
             "78991675": {
@@ -54,7 +36,6 @@
                 ],
                 "totalServicios": 15.76, 
                 "pendienteAnterior": 0.00,
-                "pagado": true, // Cambiar a FALSE si debe
                 "fechaEmision": "2025-11-20"
             },
             "73179224": {
@@ -64,7 +45,6 @@
                 ],
                 "totalServicios": 4.25, 
                 "pendienteAnterior": 4.00,
-                "pagado": false,
                 "fechaEmision": "2025-11-20"
             },
             "76470201": {
@@ -74,7 +54,6 @@
                 ],
                 "totalServicios": 12.75,
                 "pendienteAnterior": 5.00,
-                "pagado": false,
                 "fechaEmision": "2025-11-20"
             },
             "98765432": { // Número de ejemplo
@@ -84,19 +63,15 @@
                 ],
                 "totalServicios": 10.00, 
                 "pendienteAnterior": 0.00,
-                "pagado": false,
                 "fechaEmision": "2025-11-20"
             }
         };
-        // ==========================================================
-        //  FIN DE LA AREA DE MODIFICACIÓN
         // ==========================================================
         
         const inputTelefono = document.getElementById('numero-telefono');
         const btnBuscar = document.getElementById('buscar-recibo');
         const detalleReciboDiv = document.getElementById('detalle-recibo');
         const mensajeEstado = document.getElementById('mensaje-estado');
-        const paymentMethodsDiv = document.getElementById('paymentMethods');
 
         btnBuscar.addEventListener('click', buscarRecibo);
         inputTelefono.addEventListener('keypress', function(e) {
@@ -108,14 +83,12 @@
         function mostrarMensaje(mensaje, tipo) {
             mensajeEstado.className = `message ${tipo}-message`;
             mensajeEstado.textContent = mensaje;
-            detalleReciboDiv.querySelector('table')?.remove();
-            paymentMethodsDiv.style.display = 'none';
+            detalleReciboDiv.querySelector('table')?.remove(); 
         }
 
         function buscarRecibo() {
             const telefono = inputTelefono.value.trim();
             detalleReciboDiv.classList.remove('shake-animation', 'success-animation');
-            paymentMethodsDiv.style.display = 'none';
 
             if (!telefono) {
                 mostrarMensaje('Por favor, ingresa un número de teléfono.', 'error');
@@ -123,46 +96,26 @@
                 return;
             }
 
-            // 1. Mostrar pantalla de carga
+            // Muestra pantalla de carga
             mensajeEstado.className = 'message loading'; 
             mensajeEstado.textContent = 'Buscando el número...'; 
 
-            // Simulación de carga (solo para que se vea la animación)
+            // Simulación de carga (espera breve)
             setTimeout(() => {
-                
                 const data = datosDeRecibos[telefono];
 
                 if (data) {
                     inputTelefono.classList.add('success-animation');
-                    
-                    // --- LÓGICA DE PAGO ---
-                    if (data.pagado === true) {
-                        renderizarMensajePago(data);
-                        detalleReciboDiv.classList.add('success-animation');
-                        return;
-                    }
-
-                    // --- Renderizar Recibo Pendiente ---
                     renderizarRecibo(data);
                     detalleReciboDiv.classList.add('success-animation');
-                    paymentMethodsDiv.style.display = 'block';
 
                 } else {
                     inputTelefono.classList.add('shake-animation');
                     mostrarMensaje(`No se encontró un recibo para el número ${telefono}.`, 'error');
                     detalleReciboDiv.classList.add('shake-animation');
                 }
-            }, 500); // 500ms de simulación de espera
+            }, 500);
         }
-
-        function renderizarMensajePago(data) {
-            const html = `
-                <p class="success-message" style="margin-bottom: 10px;">🎉 **¡PAGO REALIZADO!**</p>
-                <p style="color: #c0d0e0; text-align: center;">No tienes saldos pendientes para el recibo emitido el **${data.fechaEmision}**.</p>
-            `;
-            mensajeEstado.innerHTML = html;
-        }
-
 
         function renderizarRecibo(data) {
             const totalServicios = data.totalServicios; 
