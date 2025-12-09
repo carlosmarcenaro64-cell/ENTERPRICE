@@ -82,9 +82,14 @@
         .recibo-table tbody tr td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
         .recibo-table tbody tr td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
         .text-right { text-align: right; }
+        
+        /* Filas de totales y estados */
         .total-final-row td { padding-top: 15px; font-size: 1.1em; border-top: 1px solid rgba(255,255,255,0.1); }
         .estado-deuda .total-amount { color: var(--danger-red); font-weight: 900; font-size: 1.4em; }
-        .estado-pagado .total-amount { color: var(--success-green); font-weight: 900; font-size: 1.4em; }
+        
+        /* ESTADO PAGADO (VERDE) */
+        .estado-pagado .total-amount { color: var(--success-green); font-weight: 900; font-size: 1.4em; text-shadow: 0 0 10px rgba(46, 213, 115, 0.4); }
+        .estado-pagado .total-label { color: var(--success-green); font-weight: bold; letter-spacing: 1px; }
 
         /* Banco */
         .bank-section { margin-top: 25px; text-align: center; }
@@ -144,13 +149,17 @@
     <div class="version-tag">Sys.Ver 0.5.2</div>
 
     <script>
-        // === CONFIGURACIÓN ===
+        // ==========================================================
+        // CONFIGURACIÓN DE CONEXIÓN
+        // ==========================================================
+        
+        // ¡IMPORTANTE! SI REIMPLEMENTÓ EL SCRIPT, PEGUE AQUÍ LA NUEVA URL
         const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
         
-        // DATOS DE LA CUENTA (Para copiar)
+        // DATOS DE LA CUENTA CARLOS PANAMEÑO
         const DATOS_BANCO_TEXTO = "CARLOS PANAMEÑO\nCuenta de Ahorro Bancoagrícola\n3113009677";
         const URL_IMAGEN_PAGADO = "https://i.imgur.com/K711e1r.png"; 
-        // ====================
+        // ==========================================================
 
         const inputTelefono = document.getElementById('numero-telefono');
         const btnBuscar = document.getElementById('buscar-recibo');
@@ -209,6 +218,8 @@
 
         function renderizarRecibo(data) {
             mensajeContainer.style.display = 'none';
+            
+            // Lógica de "Está Pagado"
             const estaPagado = data.pagado === true; 
             
             if (estaPagado) {
@@ -217,9 +228,12 @@
                 detalleReciboDiv.classList.remove('is-paid');
             }
 
-            // Lógica de "Todo en 0" si está pagado
+            // LÓGICA DE DINERO
             const totalReal = data.totalServicios + data.pendienteAnterior;
-            const totalMostrar = estaPagado ? 0.00 : totalReal; // Si pagado = 0, sino = real
+            // Si está pagado, mostramos 0.00. Si no, mostramos la deuda real.
+            const totalMostrar = estaPagado ? 0.00 : totalReal; 
+            
+            // Si está pagado, cambiamos el texto a "ESTADO: CANCELADO"
             const etiquetaTotal = estaPagado ? "ESTADO: CANCELADO" : "TOTAL A PAGAR:";
 
             let html = `
@@ -280,6 +294,7 @@
                                 <td colspan="3" class="text-right label-muted">Mora / Ant.:</td>
                                 <td>$${data.pendienteAnterior.toFixed(2)}</td>
                             </tr>
+                            
                             <tr class="total-final-row ${estaPagado ? 'estado-pagado' : 'estado-deuda'}">
                                 <td colspan="3" class="text-right total-label">
                                     ${etiquetaTotal}
