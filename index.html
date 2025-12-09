@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Enterprice | Portal de Pagos</title>
+    <title>Enterprice | Estado de Cuenta</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
     
     <style>
-        /* === 1. ARQUITECTURA VISUAL (Titanium Dark) === */
+        /* === ARQUITECTURA VISUAL (Titanium Minimal) === */
         :root {
             --bg-deep: #050505;
             --bg-surface: #10141d;
-            --primary: #00f2ff; /* Cian Neón */
-            --accent: #4361ee;  /* Azul Eléctrico */
-            --success: #00ff9d; /* Verde Matrix */
-            --danger: #ff0055;  /* Rojo Alerta */
+            --primary: #00f2ff; 
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
             --glass: rgba(255, 255, 255, 0.03);
@@ -25,11 +22,9 @@
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg-deep);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(67, 97, 238, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(0, 242, 255, 0.1) 0px, transparent 50%);
+            background-image: radial-gradient(at 50% 0%, rgba(0, 242, 255, 0.1) 0px, transparent 50%);
             color: var(--text-main);
             margin: 0;
             padding: 20px;
@@ -39,7 +34,6 @@
             align-items: center;
         }
 
-        /* === 2. CONTENEDOR PRINCIPAL === */
         .app-container {
             width: 100%;
             max-width: 480px;
@@ -53,20 +47,16 @@
             animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Cabecera */
         header { text-align: center; margin-bottom: 30px; }
-        h1 { margin: 0; font-weight: 800; letter-spacing: -1px; background: linear-gradient(to right, #fff, #8b9bb4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .brand-accent { color: var(--primary); -webkit-text-fill-color: var(--primary); }
+        h1 { margin: 0; font-weight: 800; letter-spacing: -1px; color: white; }
+        .brand-accent { color: var(--primary); }
         .tagline { color: var(--text-muted); font-size: 0.9em; margin-top: 5px; }
 
-        /* === 3. INPUTS Y BOTONES === */
+        /* Inputs */
         .search-box { position: relative; margin-bottom: 25px; }
-        
         input {
             width: 100%;
             background: var(--glass);
@@ -76,15 +66,9 @@
             color: white;
             font-size: 1.1em;
             text-align: center;
-            letter-spacing: 1px;
             transition: 0.3s;
         }
-        
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 242, 255, 0.1);
-            background: rgba(0, 242, 255, 0.02);
-        }
+        input:focus { border-color: var(--primary); background: rgba(0, 242, 255, 0.02); }
 
         .btn-action {
             width: 100%;
@@ -96,114 +80,57 @@
             font-weight: 700;
             font-size: 1em;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            overflow: hidden;
+            transition: 0.2s;
         }
-
         .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.2); }
-        .btn-action:active { transform: scale(0.98); }
+        
+        /* Resultados */
+        #result-card { display: none; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+        
+        .client-info { text-align: center; margin-bottom: 30px; }
+        .client-label { font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .client-name { font-size: 1.8em; font-weight: 700; color: white; margin-top: 5px; }
 
-        /* Estado de Carga */
-        .loader {
-            width: 20px; height: 20px; border: 2px solid rgba(0,0,0,0.1);
-            border-top-color: #000; border-radius: 50%;
-            animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* === 4. TARJETA DE RESULTADOS === */
-        #result-card { display: none; margin-top: 20px; }
-        
-        /* Grid de Fechas */
-        .meta-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 25px;
-            margin-top: 20px; /* Espacio extra arriba ya que quitamos el banner */
-        }
-        
-        .meta-item {
-            background: var(--glass);
-            padding: 10px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-        
-        .meta-label { font-size: 0.65em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-        .meta-value { font-weight: 700; font-size: 0.9em; }
-
-        /* Lista de Servicios */
-        .invoice-list {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 20px 0;
-        }
-        
+        /* Lista Servicios */
+        .invoice-list { list-style: none; padding: 0; margin: 0 0 25px 0; }
         .invoice-item {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 15px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 0.95em;
+            font-size: 1em;
         }
-        .invoice-item:last-child { border-bottom: none; }
-        .item-price { font-weight: 600; font-feature-settings: "tnum"; }
+        .item-price { font-weight: 600; }
 
-        /* Sección de Totales */
+        /* Totales Limpios */
         .totals-section {
             background: rgba(255,255,255,0.03);
             border-radius: 16px;
-            padding: 20px;
+            padding: 25px;
             margin-bottom: 25px;
         }
         
-        .total-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9em; color: var(--text-muted); }
+        .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95em; color: var(--text-muted); }
+        
         .total-row.final {
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid var(--border);
             color: var(--text-main);
-            font-size: 1.2em;
+            font-size: 1.3em;
             font-weight: 800;
             align-items: center;
         }
 
-        .price-big { font-size: 1.1em; letter-spacing: -0.5px; }
-
         /* Banco */
-        .bank-details {
-            text-align: center;
-            border-top: 1px dashed var(--border);
-            padding-top: 20px;
-        }
-        .bank-name { color: var(--text-muted); font-size: 0.8em; margin-bottom: 5px; }
-        .bank-number { font-family: monospace; font-size: 1.2em; letter-spacing: 1px; margin-bottom: 15px; display: block; }
-        
-        .btn-copy {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--primary);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-copy:hover { background: rgba(0, 242, 255, 0.1); border-color: var(--primary); }
+        .bank-details { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border); }
+        .bank-number { font-family: monospace; font-size: 1.2em; letter-spacing: 1px; display: block; margin: 10px 0; color: var(--primary); }
+        .btn-copy { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 0.8em; }
 
-        /* Utilidades */
-        .hidden { display: none !important; }
-        .error-toast { color: var(--danger); text-align: center; margin-top: 15px; font-size: 0.9em; font-weight: 600; }
-        
-        /* Animación de Números */
-        @property --num {
-          syntax: "<number>";
-          initial-value: 0;
-          inherits: false;
-        }
+        /* Utils */
+        .loader { width: 20px; height: 20px; border: 2px solid rgba(0,0,0,0.1); border-top-color: #000; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error-toast { color: #ff0055; text-align: center; margin-top: 15px; font-size: 0.9em; }
     </style>
 </head>
 <body>
@@ -211,80 +138,55 @@
     <div class="app-container">
         <header>
             <h1>ENTER<span class="brand-accent">PRICE</span></h1>
-            <div class="tagline">Consulta de Saldo</div>
+            <div class="tagline">Portal de Pagos</div>
         </header>
 
         <div class="search-section">
             <div class="search-box">
-                <input type="text" id="telefono" placeholder="Ingresa tu número..." autocomplete="off" inputmode="numeric">
+                <input type="text" id="telefono" placeholder="Número de teléfono..." autocomplete="off" inputmode="numeric">
             </div>
             <button class="btn-action" onclick="consultar()">
-                <span id="btn-text">VER DETALLE</span>
+                <span id="btn-text">CONSULTAR</span>
             </button>
             <div id="error-msg" class="error-toast"></div>
         </div>
 
         <div id="result-card">
-            
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 0.8em; color: var(--text-muted); text-transform: uppercase;">Cliente</div>
-                <div id="client-name" style="font-size: 1.5em; font-weight: 700;"></div>
+            <div class="client-info">
+                <div class="client-label">Cliente</div>
+                <div class="client-name" id="client-name">--</div>
             </div>
 
-            <div class="meta-grid">
-                <div class="meta-item">
-                    <div class="meta-label">Corte</div>
-                    <div class="meta-value" id="date-cut">--</div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">Límite</div>
-                    <div class="meta-value" style="color:var(--primary)" id="date-limit">--</div>
-                </div>
-                <div class="meta-item">
-                    <div class="meta-label">Mora</div>
-                    <div class="meta-value" style="color:var(--danger)" id="date-late">--</div>
-                </div>
-            </div>
-
-            <ul class="invoice-list" id="services-list">
-                </ul>
+            <ul class="invoice-list" id="services-list"></ul>
 
             <div class="totals-section">
                 <div class="total-row">
-                    <span>Subtotal Servicios</span>
+                    <span>Subtotal</span>
                     <span id="val-subtotal">$0.00</span>
                 </div>
                 <div class="total-row">
                     <span>Deuda Anterior</span>
                     <span id="val-debt">$0.00</span>
                 </div>
-                <div class="total-row">
-                    <span style="color: var(--success);">(-) Abonos</span>
-                    <span style="color: var(--success);" id="val-abono">$0.00</span>
-                </div>
                 
                 <div class="total-row final">
-                    <span id="label-total">TOTAL A PAGAR</span>
-                    <span class="price-big" id="val-total">$0.00</span>
+                    <span id="label-total">TOTAL</span>
+                    <span id="val-total">$0.00</span>
                 </div>
             </div>
 
             <div class="bank-details">
-                <div class="bank-name">CARLOS PANAMEÑO • BANCOAGRÍCOLA</div>
+                <div style="font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">Carlos Panameño • Bancoagrícola</div>
                 <span class="bank-number">3113009677</span>
-                <button class="btn-copy" onclick="copiar()">
-                    Copiar Número
-                </button>
+                <button class="btn-copy" onclick="copiar()">Copiar Cuenta</button>
             </div>
         </div>
     </div>
 
     <script>
-        // === CONFIGURACIÓN ===
-        // ASEGÚRESE QUE LA URL SEA LA CORRECTA
+        // URL DE SU SCRIPT (Asegúrese de que sea la correcta v0.5.5)
         const API_URL = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
 
-        // === LÓGICA DE NEGOCIO ===
         async function consultar() {
             const input = document.getElementById('telefono');
             const btn = document.querySelector('.btn-action');
@@ -293,17 +195,15 @@
             const resultCard = document.getElementById('result-card');
             
             const tel = input.value.trim();
-
-            // Reset UI
             errorDiv.textContent = "";
             resultCard.style.display = 'none';
 
             if (!tel) {
-                mostrarError("Por favor ingresa un número");
+                mostrarError("Ingresa un número válido");
                 return;
             }
 
-            // Loading State
+            // Loading
             btnText.style.display = 'none';
             const loader = document.createElement('span');
             loader.className = 'loader';
@@ -316,30 +216,23 @@
                 const cliente = data[tel];
 
                 if (cliente) {
-                    renderizarCliente(cliente);
+                    renderizar(cliente);
                 } else {
-                    mostrarError("No encontramos registro para este número");
+                    mostrarError("No se encontró el cliente");
                 }
             } catch (err) {
                 console.error(err);
-                mostrarError("Error de conexión. Intenta nuevamente.");
+                mostrarError("Error de conexión");
             } finally {
-                // Restore State
                 btnText.style.display = 'inline';
                 if(btn.contains(loader)) btn.removeChild(loader);
                 btn.disabled = false;
             }
         }
 
-        function renderizarCliente(c) {
-            const card = document.getElementById('result-card');
-            card.style.display = 'block';
-            
-            // Textos Básicos
+        function renderizar(c) {
+            document.getElementById('result-card').style.display = 'block';
             document.getElementById('client-name').textContent = c.nombre;
-            document.getElementById('date-cut').textContent = formatearFechaCorta(c.fechaCorte);
-            document.getElementById('date-limit').textContent = formatearFechaCorta(c.fechaLimite);
-            document.getElementById('date-late').textContent = formatearFechaCorta(c.fechaMora);
 
             // Servicios
             const list = document.getElementById('services-list');
@@ -349,90 +242,50 @@
                     <li class="invoice-item">
                         <span>${s.servicio}</span>
                         <span class="item-price">$${s.total.toFixed(2)}</span>
-                    </li>
-                `;
+                    </li>`;
             });
 
-            // Matemáticas
+            // Matemáticas Ocultas (Calculamos pero mostramos limpio)
             const subtotal = c.totalServicios;
             const deuda = c.pendienteAnterior;
-            const abono = c.abonoTotal;
-            let total = c.saldoFinal; // Viene calculado del script
+            // Usamos saldoFinal que viene del script v0.6.0+ o calculamos aquí simple
+            // Si usa el script viejo, c.saldoFinal puede ser undefined, así que aseguramos:
+            let total = c.saldoFinal !== undefined ? c.saldoFinal : (subtotal + deuda);
+            
+            // Si el total es 0 o menor, mostramos 0.00
+            let displayTotal = total <= 0.01 ? 0.00 : total;
 
-            // Renderizar Totales
             document.getElementById('val-subtotal').textContent = `$${subtotal.toFixed(2)}`;
             document.getElementById('val-debt').textContent = `$${deuda.toFixed(2)}`;
-            document.getElementById('val-abono').textContent = `-$${abono.toFixed(2)}`;
-
-            // Lógica de Color del Total (Sin letreros, solo números)
-            const labelTotal = document.getElementById('label-total');
-            const valTotal = document.getElementById('val-total');
-
-            if (total <= 0.01) {
-                // SALDO 0 o A FAVOR
-                labelTotal.textContent = "SALDO PENDIENTE";
-                animarNumero(valTotal, 0, 0, 1000); // Muestra 0.00
-                valTotal.style.color = "var(--success)"; // Verde
+            
+            const valTotalEl = document.getElementById('val-total');
+            valTotalEl.textContent = `$${displayTotal.toFixed(2)}`;
+            
+            // Color del total (Verde si es 0, Blanco si hay deuda)
+            if(displayTotal === 0) {
+                valTotalEl.style.color = "var(--primary)"; // Cian/Verde para saldo limpio
+                document.getElementById('label-total').textContent = "SALDO AL DÍA";
             } else {
-                // DEBE DINERO
-                labelTotal.textContent = "TOTAL A PAGAR";
-                animarNumero(valTotal, 0, total, 1000); // Muestra Deuda
-                valTotal.style.color = "var(--danger)"; // Rojo
+                valTotalEl.style.color = "white";
+                document.getElementById('label-total').textContent = "TOTAL A PAGAR";
             }
         }
 
-        // === UTILIDADES ===
         function mostrarError(msg) {
             const div = document.getElementById('error-msg');
             div.textContent = msg;
-            const input = document.getElementById('telefono');
-            input.animate([
-                { transform: 'translateX(0)' },
-                { transform: 'translateX(-10px)' },
-                { transform: 'translateX(10px)' },
-                { transform: 'translateX(0)' }
-            ], { duration: 300 });
         }
 
         function copiar() {
             navigator.clipboard.writeText("3113009677");
             const btn = document.querySelector('.btn-copy');
-            const original = btn.textContent;
             btn.textContent = "¡Copiado!";
-            btn.style.borderColor = "var(--success)";
-            btn.style.color = "var(--success)";
-            setTimeout(() => {
-                btn.textContent = original;
-                btn.style.borderColor = "var(--border)";
-                btn.style.color = "var(--primary)";
-            }, 2000);
+            setTimeout(() => btn.textContent = "Copiar Cuenta", 2000);
         }
 
-        function formatearFechaCorta(fechaStr) {
-            if(!fechaStr) return "--";
-            const partes = fechaStr.split('-');
-            return `${partes[2]}/${partes[1]}`;
-        }
-
-        function animarNumero(elemento, inicio, fin, duracion) {
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duracion, 1);
-                const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-                const valorActual = (inicio + (fin - inicio) * ease);
-                elemento.textContent = "$" + valorActual.toFixed(2);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-        
         document.getElementById('telefono').addEventListener('keypress', (e) => {
             if(e.key === 'Enter') consultar();
         });
-
     </script>
 </body>
 </html>
