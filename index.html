@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Recibos Enterprice</title>
+    <title>Consulta de Recibos Enterprice Moderna</title>
     <link rel="stylesheet" href="diseño.css"> 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
 </head>
@@ -18,10 +18,12 @@
         <div class="input-group">
             <label for="numero-telefono">Número de Teléfono</label>
             <input type="text" id="numero-telefono" placeholder="Ej: 98765432" autocomplete="off">
+             <span class="input-highlight"></span>
         </div>
         
         <button id="buscar-recibo" class="btn-neon">
             <span>Buscar Recibo</span>
+            <div class="btn-particles"></div>
         </button>
 
         <div id="detalle-recibo" class="glass-panel">
@@ -31,19 +33,18 @@
         </div>
     </div>
 
-    <div class="version-tag">Sys.Ver 0.5.1</div>
-
     <script>
-        // === CONFIGURACIÓN ===
-        // Su URL de API (Asegúrese de que sea la última desplegada)
-        const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
+        // ==========================================================
+        // DATOS ESTÁTICOS PARA DEMOSTRACIÓN (Como en tu versión anterior)
+        // ==========================================================
+        const datosDeRecibos = {
+            "78991675": { "nombre": "César", "servicios": [{ "servicio": "Spotify Family", "precio": 4.00, "cantidad": 2, "total": 8.00 }, { "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 1, "total": 4.25 }, { "servicio": "App Mantenimiento", "precio": 3.51, "cantidad": 1, "total": 3.51 }], "totalServicios": 15.76, "pendienteAnterior": 0.00, "fechaEmision": "2025-11-20" },
+            "73179224": { "nombre": "Daisy", "servicios": [{ "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 1, "total": 4.25 }], "totalServicios": 4.25, "pendienteAnterior": 4.00, "fechaEmision": "2025-11-20" },
+            "76470201": { "nombre": "Adriana", "servicios": [{ "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 3, "total": 12.75 }], "totalServicios": 12.75, "pendienteAnterior": 5.00, "fechaEmision": "2025-11-20" },
+            "98765432": { "nombre": "Invitado Demo", "servicios": [{ "servicio": "Plan Demo Básico", "precio": 10.00, "cantidad": 1, "total": 10.00 }], "totalServicios": 10.00, "pendienteAnterior": 0.00, "fechaEmision": "2025-11-20" }
+        };
+        // ==========================================================
         
-        // DATOS BANCARIOS
-        const CUENTA_BANCO = "Banco Agrícola: 300-555-000-1 | Enterprice S.A.";
-        // IMAGEN DE PAGADO (Sello verde)
-        const URL_IMAGEN_PAGADO = "https://i.imgur.com/K711e1r.png"; 
-        // ====================
-
         const inputTelefono = document.getElementById('numero-telefono');
         const btnBuscar = document.getElementById('buscar-recibo');
         const detalleReciboDiv = document.getElementById('detalle-recibo');
@@ -51,73 +52,65 @@
         const mensajeContainer = document.getElementById('mensaje-estado-container');
 
         btnBuscar.addEventListener('click', buscarRecibo);
-        inputTelefono.addEventListener('keypress', (e) => { if (e.key === 'Enter') buscarRecibo(); });
+        inputTelefono.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') buscarRecibo();
+        });
 
         function mostrarMensaje(mensaje, tipo) {
+            // Limpiamos resultados anteriores si existen
             const existingResult = detalleReciboDiv.querySelector('.result-content');
-            const existingImg = detalleReciboDiv.querySelector('.paid-stamp-img');
-            
             if (existingResult) existingResult.remove();
-            if (existingImg) existingImg.remove();
-
-            detalleReciboDiv.classList.remove('is-paid'); 
             
-            mensajeContainer.style.display = 'flex';
+            mensajeContainer.style.display = 'flex'; // Aseguramos que se vea el contenedor de mensajes
             mensajeEstado.className = `message ${tipo}-message fade-in`;
-            mensajeEstado.innerHTML = mensaje;
+            mensajeEstado.innerHTML = mensaje; // Usamos innerHTML por si insertamos el spinner
         }
 
         function buscarRecibo() {
             const telefono = inputTelefono.value.trim();
             inputTelefono.classList.remove('input-error', 'input-success');
-            
+            detalleReciboDiv.classList.remove('shake-animation');
+
             if (!telefono) {
                 inputTelefono.classList.add('input-error');
-                mostrarMensaje('Por favor, ingresa un número válido.', 'error');
+                mostrarMensaje('Por favor, ingresa un número de teléfono.', 'error');
+                detalleReciboDiv.classList.add('shake-animation');
                 return;
             }
 
+            // Estado de Carga Moderno
             btnBuscar.classList.add('loading-btn');
-            mostrarMensaje('<div class="spinner"></div> Conectando con Enterprice...', 'loading');
+            btnBuscar.disabled = true;
+            mostrarMensaje('<div class="spinner"></div> Buscando en la red...', 'loading');
 
-            fetch(URL_API)
-            .then(res => res.json())
-            .then(data => {
-                const cliente = data[telefono];
+            // Simulación de carga (setTimeout)
+            setTimeout(() => {
                 btnBuscar.classList.remove('loading-btn');
+                btnBuscar.disabled = false;
+                
+                const data = datosDeRecibos[telefono];
 
-                if (cliente) {
+                if (data) {
                     inputTelefono.classList.add('input-success');
-                    renderizarRecibo(cliente);
+                    renderizarRecibo(data);
                 } else {
                     inputTelefono.classList.add('input-error');
-                    mostrarMensaje(`Número <strong>${telefono}</strong> no encontrado.`, 'error');
+                    mostrarMensaje(`No se encontró un recibo asociado al número <strong>${telefono}</strong>.`, 'error');
+                    detalleReciboDiv.classList.add('shake-animation');
                 }
-            })
-            .catch(err => {
-                console.error(err);
-                btnBuscar.classList.remove('loading-btn');
-                mostrarMensaje('Error de conexión. Intente más tarde.', 'error');
-            });
+            }, 800); // Un poco más de tiempo para apreciar la animación de carga
         }
 
         function renderizarRecibo(data) {
-            mensajeContainer.style.display = 'none';
-            
-            // Lógica de Pagado
-            const estaPagado = data.pagado === true; 
-            
-            if (estaPagado) {
-                detalleReciboDiv.classList.add('is-paid');
-            } else {
-                detalleReciboDiv.classList.remove('is-paid');
-            }
+            mensajeContainer.style.display = 'none'; // Ocultamos el contenedor de mensajes
 
-            const totalFinal = data.totalServicios + data.pendienteAnterior;
+            const totalServicios = data.totalServicios; 
+            const pendienteAnterior = data.pendienteAnterior;
+            const totalFinal = totalServicios + pendienteAnterior;
+            const esDeudor = totalFinal > 0;
 
+            // Creamos un nuevo contenedor para el resultado con animación de entrada
             let html = `
-            ${estaPagado ? `<img src="${URL_IMAGEN_PAGADO}" class="paid-stamp-img" alt="PAGADO">` : ''}
-
             <div class="result-content slide-up-fade-in">
                 <div class="recibo-header">
                     <div>
@@ -127,21 +120,6 @@
                     <div style="text-align: right;">
                          <p class="client-label">Emisión</p>
                         <p class="invoice-date">${data.fechaEmision}</p>
-                    </div>
-                </div>
-
-                <div class="dates-grid">
-                    <div class="date-item">
-                        <h4>F. Corte</h4>
-                        <p>${data.fechaCorte}</p>
-                    </div>
-                    <div class="date-item">
-                        <h4>F. Pago</h4>
-                        <p style="color: var(--primary-cyan)">${data.fechaLimite}</p>
-                    </div>
-                    <div class="date-item">
-                        <h4>F. Mora</h4>
-                        <p style="color: var(--danger-red)">${data.fechaMora}</p>
                     </div>
                 </div>
                 
@@ -160,6 +138,7 @@
             `;
 
             data.servicios.forEach((item, index) => {
+                // Añadimos un pequeño retraso escalonado a cada fila para un efecto visual atractivo
                 html += `
                     <tr style="animation-delay: ${index * 0.1}s" class="staggered-row">
                         <td class="col-servicio">${item.servicio}</td>
@@ -174,42 +153,27 @@
                         </tbody>
                         <tfoot>
                              <tr class="summary-row">
-                                <td colspan="3" class="text-right label-muted">Subtotal:</td>
+                                <td colspan="3" class="text-right label-muted">Subtotal Servicios:</td>
                                 <td class="text-highlight">$${data.totalServicios.toFixed(2)}</td>
                             </tr>
                              <tr class="summary-row">
-                                <td colspan="3" class="text-right label-muted">Mora / Ant.:</td>
-                                <td>$${data.pendienteAnterior.toFixed(2)}</td>
+                                <td colspan="3" class="text-right label-muted">Pendiente Anterior:</td>
+                                <td>$${pendienteAnterior.toFixed(2)}</td>
                             </tr>
-                            <tr class="total-final-row ${estaPagado ? 'estado-pagado' : 'estado-deuda'}">
-                                <td colspan="3" class="text-right total-label">
-                                    ${estaPagado ? 'MONTO PAGADO:' : 'TOTAL A PAGAR:'}
-                                </td>
+                            <tr class="total-final-row ${esDeudor ? 'estado-deuda' : 'estado-pagado'}">
+                                <td colspan="3" class="text-right total-label">TOTAL A PAGAR:</td>
                                 <td class="total-amount">$${totalFinal.toFixed(2)}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-
-                <div class="bank-section">
-                    <button class="btn-copy" onclick="copiarCuenta()">
-                        <span>🏦 Copiar Datos de Cuenta</span>
-                    </button>
-                    <p id="copy-feedback" style="font-size: 0.8em; color: var(--success-green); height: 1em; opacity: 0; transition: opacity 0.3s; margin-top: 5px;">¡Copiado al portapapeles!</p>
-                </div>
             </div>
             `;
 
+            // Insertamos el HTML en el div principal de detalle
             detalleReciboDiv.innerHTML = html;
+            // Volvemos a añadir el contenedor de mensajes al final por si se necesita después
             detalleReciboDiv.appendChild(mensajeContainer); 
-        }
-
-        function copiarCuenta() {
-            navigator.clipboard.writeText(CUENTA_BANCO).then(() => {
-                const feedback = document.getElementById('copy-feedback');
-                feedback.style.opacity = '1';
-                setTimeout(() => { feedback.style.opacity = '0'; }, 2000);
-            });
         }
     </script>
 </body>
