@@ -115,44 +115,13 @@
         /* === 4. TARJETA DE RESULTADOS === */
         #result-card { display: none; margin-top: 20px; }
         
-        /* Banner de Estado */
-        .status-badge {
-            text-align: center;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: 0.3s;
-        }
-        
-        .status-paid {
-            background: rgba(0, 255, 157, 0.1);
-            color: var(--success);
-            border: 1px solid rgba(0, 255, 157, 0.2);
-        }
-        
-        .status-pending {
-            background: rgba(255, 0, 85, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(255, 0, 85, 0.2);
-            animation: pulse-border 2s infinite;
-        }
-
-        @keyframes pulse-border { 50% { border-color: rgba(255, 0, 85, 0.6); box-shadow: 0 0 15px rgba(255,0,85,0.2); } }
-
         /* Grid de Fechas */
         .meta-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             margin-bottom: 25px;
+            margin-top: 20px; /* Espacio extra arriba ya que quitamos el banner */
         }
         
         .meta-item {
@@ -225,20 +194,6 @@
         }
         .btn-copy:hover { background: rgba(0, 242, 255, 0.1); border-color: var(--primary); }
 
-        /* === 5. SELLO PAGADO (Physics) === */
-        .stamp-overlay {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 280px;
-            pointer-events: none;
-            z-index: 10;
-            opacity: 0;
-            transform: translate(-50%, -50%) scale(3) rotate(-15deg);
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efecto Rebote */
-        }
-        .stamp-visible { opacity: 0.95; transform: translate(-50%, -50%) scale(1) rotate(-15deg); }
-
         /* Utilidades */
         .hidden { display: none !important; }
         .error-toast { color: var(--danger); text-align: center; margin-top: 15px; font-size: 0.9em; font-weight: 600; }
@@ -256,7 +211,7 @@
     <div class="app-container">
         <header>
             <h1>ENTER<span class="brand-accent">PRICE</span></h1>
-            <div class="tagline">Portal de Pagos v1.0 Titanium</div>
+            <div class="tagline">Consulta de Saldo</div>
         </header>
 
         <div class="search-section">
@@ -264,23 +219,16 @@
                 <input type="text" id="telefono" placeholder="Ingresa tu número..." autocomplete="off" inputmode="numeric">
             </div>
             <button class="btn-action" onclick="consultar()">
-                <span id="btn-text">VER ESTADO DE CUENTA</span>
+                <span id="btn-text">VER DETALLE</span>
             </button>
             <div id="error-msg" class="error-toast"></div>
         </div>
 
         <div id="result-card">
             
-            <img id="sello-img" src="https://i.imgur.com/K711e1r.png" class="stamp-overlay">
-
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 0.8em; color: var(--text-muted); text-transform: uppercase;">Cliente</div>
                 <div id="client-name" style="font-size: 1.5em; font-weight: 700;"></div>
-            </div>
-
-            <div id="status-banner" class="status-badge">
-                <span id="status-icon">●</span>
-                <span id="status-text">PENDIENTE</span>
             </div>
 
             <div class="meta-grid">
@@ -333,7 +281,7 @@
 
     <script>
         // === CONFIGURACIÓN ===
-        // ¡PEGUE AQUÍ SU NUEVA URL DEL SCRIPT!
+        // ASEGÚRESE QUE LA URL SEA LA CORRECTA
         const API_URL = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
 
         // === LÓGICA DE NEGOCIO ===
@@ -349,7 +297,6 @@
             // Reset UI
             errorDiv.textContent = "";
             resultCard.style.display = 'none';
-            document.getElementById('sello-img').classList.remove('stamp-visible');
 
             if (!tel) {
                 mostrarError("Por favor ingresa un número");
@@ -417,39 +364,20 @@
             document.getElementById('val-debt').textContent = `$${deuda.toFixed(2)}`;
             document.getElementById('val-abono').textContent = `-$${abono.toFixed(2)}`;
 
-            // Lógica de Estado (Pagado/Pendiente)
-            const isPaid = c.pagado;
-            const banner = document.getElementById('status-banner');
-            const statusIcon = document.getElementById('status-icon');
-            const statusText = document.getElementById('status-text');
+            // Lógica de Color del Total (Sin letreros, solo números)
             const labelTotal = document.getElementById('label-total');
             const valTotal = document.getElementById('val-total');
-            const sello = document.getElementById('sello-img');
 
-            if (isPaid) {
-                // Modo Pagado
-                banner.className = "status-badge status-paid";
-                statusIcon.textContent = "✔";
-                statusText.textContent = "CUENTA AL DÍA";
-                labelTotal.textContent = "SALDO A FAVOR";
-                
-                // Animación de números contando (si hay saldo a favor)
-                animarNumero(valTotal, 0, Math.abs(total), 1000);
-                valTotal.style.color = "var(--success)";
-
-                // Efecto de Sello
-                setTimeout(() => sello.classList.add('stamp-visible'), 300);
-
+            if (total <= 0.01) {
+                // SALDO 0 o A FAVOR
+                labelTotal.textContent = "SALDO PENDIENTE";
+                animarNumero(valTotal, 0, 0, 1000); // Muestra 0.00
+                valTotal.style.color = "var(--success)"; // Verde
             } else {
-                // Modo Deuda
-                banner.className = "status-badge status-pending";
-                statusIcon.textContent = "!";
-                statusText.textContent = "PAGO PENDIENTE";
+                // DEBE DINERO
                 labelTotal.textContent = "TOTAL A PAGAR";
-                
-                animarNumero(valTotal, 0, total, 1000);
-                valTotal.style.color = "var(--danger)";
-                sello.classList.remove('stamp-visible');
+                animarNumero(valTotal, 0, total, 1000); // Muestra Deuda
+                valTotal.style.color = "var(--danger)"; // Rojo
             }
         }
 
@@ -457,7 +385,6 @@
         function mostrarError(msg) {
             const div = document.getElementById('error-msg');
             div.textContent = msg;
-            // Pequeña animación de sacudida
             const input = document.getElementById('telefono');
             input.animate([
                 { transform: 'translateX(0)' },
@@ -482,7 +409,6 @@
         }
 
         function formatearFechaCorta(fechaStr) {
-            // Convierte YYYY-MM-DD a DD/MM
             if(!fechaStr) return "--";
             const partes = fechaStr.split('-');
             return `${partes[2]}/${partes[1]}`;
@@ -493,7 +419,6 @@
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duracion, 1);
-                // Easing suave
                 const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
                 const valorActual = (inicio + (fin - inicio) * ease);
                 elemento.textContent = "$" + valorActual.toFixed(2);
@@ -504,7 +429,6 @@
             window.requestAnimationFrame(step);
         }
         
-        // Enter para buscar
         document.getElementById('telefono').addEventListener('keypress', (e) => {
             if(e.key === 'Enter') consultar();
         });
