@@ -141,15 +141,14 @@
         </div>
     </div>
 
-    <div class="version-tag">Sys.Ver 0.5.1</div>
+    <div class="version-tag">Sys.Ver 0.5.2</div>
 
     <script>
         // === CONFIGURACIÓN ===
-        // 1. PEGAR AQUÍ SU NUEVA URL DE APPS SCRIPT
         const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
         
-        // 2. DATOS DE LA CUENTA
-        const CUENTA_BANCO = "Banco Agrícola: 300-555-000-1 | Enterprice S.A.";
+        // DATOS DE LA CUENTA (Para copiar)
+        const DATOS_BANCO_TEXTO = "CARLOS PANAMEÑO\nCuenta de Ahorro Bancoagrícola\n3113009677";
         const URL_IMAGEN_PAGADO = "https://i.imgur.com/K711e1r.png"; 
         // ====================
 
@@ -218,7 +217,10 @@
                 detalleReciboDiv.classList.remove('is-paid');
             }
 
-            const totalFinal = data.totalServicios + data.pendienteAnterior;
+            // Lógica de "Todo en 0" si está pagado
+            const totalReal = data.totalServicios + data.pendienteAnterior;
+            const totalMostrar = estaPagado ? 0.00 : totalReal; // Si pagado = 0, sino = real
+            const etiquetaTotal = estaPagado ? "ESTADO: CANCELADO" : "TOTAL A PAGAR:";
 
             let html = `
             ${estaPagado ? `<img src="${URL_IMAGEN_PAGADO}" class="paid-stamp-img" alt="PAGADO">` : ''}
@@ -280,9 +282,9 @@
                             </tr>
                             <tr class="total-final-row ${estaPagado ? 'estado-pagado' : 'estado-deuda'}">
                                 <td colspan="3" class="text-right total-label">
-                                    ${estaPagado ? 'MONTO PAGADO:' : 'TOTAL A PAGAR:'}
+                                    ${etiquetaTotal}
                                 </td>
-                                <td class="total-amount">$${totalFinal.toFixed(2)}</td>
+                                <td class="total-amount">$${totalMostrar.toFixed(2)}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -301,12 +303,12 @@
         }
 
         function copiarCuenta() {
-            navigator.clipboard.writeText(CUENTA_BANCO).then(() => {
+            navigator.clipboard.writeText(DATOS_BANCO_TEXTO).then(() => {
                 const feedback = document.getElementById('copy-feedback');
                 feedback.style.opacity = '1';
                 setTimeout(() => { feedback.style.opacity = '0'; }, 2000);
             }).catch(err => {
-                alert('La cuenta es: ' + CUENTA_BANCO);
+                alert('Detalles de cuenta:\n' + DATOS_BANCO_TEXTO);
             });
         }
     </script>
