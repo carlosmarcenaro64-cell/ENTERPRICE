@@ -3,67 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Recibos Enterprice</title>
+    <title>Consulta de Recibos Enterprice Moderna</title>
     <link rel="stylesheet" href="diseño.css"> 
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
 </head>
 <body>
-    <div class="container">
-        <h1>Consulta tu Recibo <span style="color: #64dded;">Enterprice</span></h1>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="container animate-pop-in">
+        <h1>Consulta tu Recibo <span class="neon-text">Enterprice</span></h1>
         <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
 
-        <label for="numero-telefono">Número de Teléfono (Ej: 98765432):</label>
-        <input type="text" id="numero-telefono" placeholder="Ej: 98765432">
+        <div class="input-group">
+            <label for="numero-telefono">Número de Teléfono</label>
+            <input type="text" id="numero-telefono" placeholder="Ej: 98765432" autocomplete="off">
+             <span class="input-highlight"></span>
+        </div>
         
-        <button id="buscar-recibo">Buscar Recibo</button>
+        <button id="buscar-recibo" class="btn-neon">
+            <span>Buscar Recibo</span>
+            <div class="btn-particles"></div>
+        </button>
 
-        <div id="detalle-recibo">
-            <h2>Detalle del Recibo:</h2>
-            <p id="mensaje-estado">Ingresa un número para buscar.</p>
+        <div id="detalle-recibo" class="glass-panel">
+            <div id="mensaje-estado-container">
+                 <p id="mensaje-estado">Ingresa un número para buscar.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        const URL_GOOGLE_API = "https://script.google.com/macros/s/AKfycbychtDezOXT2Dzp8Jn-mLf4juQHJ-b58TTd0RQp3WAK5U8wdL6BNOdGrf46vAYqZ9KZ/exec";
-
+        // ==========================================================
+        // DATOS ESTÁTICOS PARA DEMOSTRACIÓN (Como en tu versión anterior)
+        // ==========================================================
         const datosDeRecibos = {
-            "78991675": {
-                "nombre": "César",
-                "servicios": [
-                    { "servicio": "spotify", "precio": 4.00, "cantidad": 2, "total": 8.00 },
-                    { "servicio": "youtube", "precio": 4.25, "cantidad": 1, "total": 4.25 },
-                    { "servicio": "app", "precio": 3.51, "cantidad": 1, "total": 3.51 }
-                ],
-                "totalServicios": 15.76, 
-                "pendienteAnterior": 0.00,
-                "fechaEmision": "2025-11-20"
-            },
-            "73179224": {
-                "nombre": "Daisy",
-                "servicios": [
-                    { "servicio": "youtube", "precio": 4.25, "cantidad": 1, "total": 4.25 }
-                ],
-                "totalServicios": 4.25, 
-                "pendienteAnterior": 4.00,
-                "fechaEmision": "2025-11-20"
-            },
-            "76470201": {
-                "nombre": "Adriana",
-                "servicios": [
-                    { "servicio": "youtube", "precio": 4.25, "cantidad": 3, "total": 12.75 }
-                ],
-                "totalServicios": 12.75,
-                "pendienteAnterior": 5.00,
-                "fechaEmision": "2025-11-20"
-            },
-            "98765432": { // Número de ejemplo
-                "nombre": "Invitado",
-                "servicios": [
-                    { "servicio": "Demo", "precio": 10.00, "cantidad": 1, "total": 10.00 }
-                ],
-                "totalServicios": 10.00, 
-                "pendienteAnterior": 0.00,
-                "fechaEmision": "2025-11-20"
-            }
+            "78991675": { "nombre": "César", "servicios": [{ "servicio": "Spotify Family", "precio": 4.00, "cantidad": 2, "total": 8.00 }, { "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 1, "total": 4.25 }, { "servicio": "App Mantenimiento", "precio": 3.51, "cantidad": 1, "total": 3.51 }], "totalServicios": 15.76, "pendienteAnterior": 0.00, "fechaEmision": "2025-11-20" },
+            "73179224": { "nombre": "Daisy", "servicios": [{ "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 1, "total": 4.25 }], "totalServicios": 4.25, "pendienteAnterior": 4.00, "fechaEmision": "2025-11-20" },
+            "76470201": { "nombre": "Adriana", "servicios": [{ "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 3, "total": 12.75 }], "totalServicios": 12.75, "pendienteAnterior": 5.00, "fechaEmision": "2025-11-20" },
+            "98765432": { "nombre": "Invitado Demo", "servicios": [{ "servicio": "Plan Demo Básico", "precio": 10.00, "cantidad": 1, "total": 10.00 }], "totalServicios": 10.00, "pendienteAnterior": 0.00, "fechaEmision": "2025-11-20" }
         };
         // ==========================================================
         
@@ -71,106 +49,132 @@
         const btnBuscar = document.getElementById('buscar-recibo');
         const detalleReciboDiv = document.getElementById('detalle-recibo');
         const mensajeEstado = document.getElementById('mensaje-estado');
+        const mensajeContainer = document.getElementById('mensaje-estado-container');
 
         btnBuscar.addEventListener('click', buscarRecibo);
         inputTelefono.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                buscarRecibo();
-            }
+            if (e.key === 'Enter') buscarRecibo();
         });
 
         function mostrarMensaje(mensaje, tipo) {
-            mensajeEstado.className = `message ${tipo}-message`;
-            mensajeEstado.textContent = mensaje;
-            detalleReciboDiv.querySelector('table')?.remove(); 
+            // Limpiamos resultados anteriores si existen
+            const existingResult = detalleReciboDiv.querySelector('.result-content');
+            if (existingResult) existingResult.remove();
+            
+            mensajeContainer.style.display = 'flex'; // Aseguramos que se vea el contenedor de mensajes
+            mensajeEstado.className = `message ${tipo}-message fade-in`;
+            mensajeEstado.innerHTML = mensaje; // Usamos innerHTML por si insertamos el spinner
         }
 
         function buscarRecibo() {
             const telefono = inputTelefono.value.trim();
-            detalleReciboDiv.classList.remove('shake-animation', 'success-animation');
+            inputTelefono.classList.remove('input-error', 'input-success');
+            detalleReciboDiv.classList.remove('shake-animation');
 
             if (!telefono) {
+                inputTelefono.classList.add('input-error');
                 mostrarMensaje('Por favor, ingresa un número de teléfono.', 'error');
                 detalleReciboDiv.classList.add('shake-animation');
                 return;
             }
 
-            // Muestra pantalla de carga
-            mensajeEstado.className = 'message loading'; 
-            mensajeEstado.textContent = 'Buscando el número...'; 
+            // Estado de Carga Moderno
+            btnBuscar.classList.add('loading-btn');
+            btnBuscar.disabled = true;
+            mostrarMensaje('<div class="spinner"></div> Buscando en la red...', 'loading');
 
-            // Simulación de carga (espera breve)
+            // Simulación de carga (setTimeout)
             setTimeout(() => {
+                btnBuscar.classList.remove('loading-btn');
+                btnBuscar.disabled = false;
+                
                 const data = datosDeRecibos[telefono];
 
                 if (data) {
-                    inputTelefono.classList.add('success-animation');
+                    inputTelefono.classList.add('input-success');
                     renderizarRecibo(data);
-                    detalleReciboDiv.classList.add('success-animation');
-
                 } else {
-                    inputTelefono.classList.add('shake-animation');
-                    mostrarMensaje(`No se encontró un recibo para el número ${telefono}.`, 'error');
+                    inputTelefono.classList.add('input-error');
+                    mostrarMensaje(`No se encontró un recibo asociado al número <strong>${telefono}</strong>.`, 'error');
                     detalleReciboDiv.classList.add('shake-animation');
                 }
-            }, 500);
+            }, 800); // Un poco más de tiempo para apreciar la animación de carga
         }
 
         function renderizarRecibo(data) {
+            mensajeContainer.style.display = 'none'; // Ocultamos el contenedor de mensajes
+
             const totalServicios = data.totalServicios; 
             const pendienteAnterior = data.pendienteAnterior;
             const totalFinal = totalServicios + pendienteAnterior;
+            const esDeudor = totalFinal > 0;
 
+            // Creamos un nuevo contenedor para el resultado con animación de entrada
             let html = `
-                <p style="margin-bottom: 5px;"><strong>Cliente:</strong> ${data.nombre}</p>
-                <p style="margin-bottom: 15px;"><strong>Fecha de Emisión:</strong> ${data.fechaEmision}</p>
+            <div class="result-content slide-up-fade-in">
+                <div class="recibo-header">
+                    <div>
+                        <p class="client-label">Cliente</p>
+                        <p class="client-name">${data.nombre}</p>
+                    </div>
+                    <div style="text-align: right;">
+                         <p class="client-label">Emisión</p>
+                        <p class="invoice-date">${data.fechaEmision}</p>
+                    </div>
+                </div>
                 
-                <h3 style="color: #64dded; margin-top: 10px;">Detalle de Servicios</h3>
-                <table class="recibo-table">
-                    <thead>
-                        <tr>
-                            <th>Servicio</th>
-                            <th>Precio</th>
-                            <th>Cant.</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <h3 class="neon-subtitle">Detalle de Servicios</h3>
+                <div class="table-responsive">
+                    <table class="recibo-table">
+                        <thead>
+                            <tr>
+                                <th>Servicio</th>
+                                <th>Precio</th>
+                                <th>Cant.</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
             `;
 
-            data.servicios.forEach(item => {
+            data.servicios.forEach((item, index) => {
+                // Añadimos un pequeño retraso escalonado a cada fila para un efecto visual atractivo
                 html += `
-                    <tr>
-                        <td>${item.servicio}</td>
+                    <tr style="animation-delay: ${index * 0.1}s" class="staggered-row">
+                        <td class="col-servicio">${item.servicio}</td>
                         <td>$${item.precio.toFixed(2)}</td>
                         <td>${item.cantidad}</td>
-                        <td>$${item.total.toFixed(2)}</td>
+                        <td class="col-total">$${item.total.toFixed(2)}</td>
                     </tr>
                 `;
             });
 
             html += `
-                    </tbody>
-                    <tfoot>
-                        <tr class="pendiente-anterior-row">
-                            <td colspan="3" style="text-align: right;">PENDIENTE ANTERIOR:</td>
-                            <td>$${pendienteAnterior.toFixed(2)}</td>
-                        </tr>
-                        <tr class="total-row">
-                            <td colspan="3" style="text-align: right;">TOTAL SERVICIOS DEL MES:</td>
-                            <td>$${data.totalServicios.toFixed(2)}</td>
-                        </tr>
-                        <tr class="total-row final-pendiente-row">
-                            <td colspan="3" style="text-align: right;">TOTAL PENDIENTE A PAGAR:</td>
-                            <td>$${totalFinal.toFixed(2)}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </tbody>
+                        <tfoot>
+                             <tr class="summary-row">
+                                <td colspan="3" class="text-right label-muted">Subtotal Servicios:</td>
+                                <td class="text-highlight">$${data.totalServicios.toFixed(2)}</td>
+                            </tr>
+                             <tr class="summary-row">
+                                <td colspan="3" class="text-right label-muted">Pendiente Anterior:</td>
+                                <td>$${pendienteAnterior.toFixed(2)}</td>
+                            </tr>
+                            <tr class="total-final-row ${esDeudor ? 'estado-deuda' : 'estado-pagado'}">
+                                <td colspan="3" class="text-right total-label">TOTAL A PAGAR:</td>
+                                <td class="total-amount">$${totalFinal.toFixed(2)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
             `;
 
-            mensajeEstado.innerHTML = html;
+            // Insertamos el HTML en el div principal de detalle
+            detalleReciboDiv.innerHTML = html;
+            // Volvemos a añadir el contenedor de mensajes al final por si se necesita después
+            detalleReciboDiv.appendChild(mensajeContainer); 
         }
-
     </script>
 </body>
 </html>
