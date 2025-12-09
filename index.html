@@ -7,199 +7,507 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
     
     <style>
-        :root { --bg-dark: #0a0e17; --primary-cyan: #64dded; --accent-blue: #3b8d99; --text-primary: #e0f2f7; --danger-red: #ff4757; --success-green: #2ed573; --bg-panel: rgba(20, 30, 48, 0.95); }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background: radial-gradient(circle at top right, #1a2a3a 0%, #0a0e17 100%); color: var(--text-primary); margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        
-        .container { max-width: 500px; width: 100%; background: var(--bg-panel); padding: 30px; border-radius: 20px; border: 1px solid rgba(100,221,237,0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
-        
-        h1 { text-align: center; font-weight: 300; margin-bottom: 5px; } 
-        .neon-text { color: var(--primary-cyan); font-weight: 800; text-shadow: 0 0 10px rgba(100,221,237,0.5); }
-        .subtitle { text-align: center; color: #a5c3d4; font-size: 0.9em; margin-bottom: 25px; }
+        /* === 1. VARIABLES Y BASE === */
+        :root {
+            --bg-dark: #0a0e17;
+            --primary-cyan: #64dded;
+            --accent-blue: #3b8d99;
+            --text-primary: #e0f2f7;
+            --text-secondary: #a5c3d4;
+            --danger-red: #ff4757;
+            --success-green: #2ed573;
+            --glass-bg: rgba(20, 30, 48, 0.75);
+            --glass-border: 1px solid rgba(100, 221, 237, 0.3);
+            --glass-blur: blur(20px);
+        }
 
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #3b506b; background: rgba(0,0,0,0.2); color: white; text-align: center; font-size: 1.2em; margin-bottom: 20px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input[type="text"]:focus { border-color: var(--primary-cyan); background: rgba(0,0,0,0.4); }
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background: radial-gradient(circle at top right, #1a2a3a 0%, #0a0e17 100%);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-        .btn-neon { width: 100%; padding: 15px; background: linear-gradient(90deg, #3b8d99, #64dded); border: none; border-radius: 12px; font-weight: 800; letter-spacing: 1px; cursor: pointer; color: #0a0e17; transition: transform 0.2s; }
+        /* === 2. ANIMACIONES DE FONDO (LUCES) === */
+        .bg-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.15;
+            z-index: -1;
+            animation: floating 10s ease-in-out infinite alternate;
+        }
+        .glow-1 { top: -10%; left: -10%; background: var(--primary-cyan); }
+        .glow-2 { bottom: -10%; right: -10%; background: var(--accent-blue); animation-delay: 2s; }
+
+        @keyframes floating {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 30px) scale(1.1); }
+        }
+
+        /* === 3. CONTENEDOR PRINCIPAL (GLASSMORPHISM) === */
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: var(--glass-border);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            position: relative;
+            overflow: hidden;
+            animation: pop-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes pop-in {
+            0% { opacity: 0; transform: translateY(40px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* === 4. TIPOGRAFÍA Y NEÓN === */
+        h1 {
+            text-align: center;
+            font-weight: 300;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+        .neon-text {
+            font-weight: 800;
+            color: var(--primary-cyan);
+            text-shadow: 0 0 10px rgba(100, 221, 237, 0.6);
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        /* === 5. INPUTS Y BOTONES === */
+        .input-group { position: relative; margin-bottom: 25px; }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 2px solid #3b506b;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+            font-size: 1.2em;
+            outline: none;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        input[type="text"]:focus {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(100, 221, 237, 0.2);
+        }
+
+        .btn-neon {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--primary-cyan));
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            color: #0a0e17;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 5px 15px rgba(100, 221, 237, 0.3);
+        }
+
+        .btn-neon:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(100, 221, 237, 0.5);
+        }
+        
         .btn-neon:active { transform: scale(0.98); }
 
-        /* ESTADO */
-        .status-banner { text-align: center; padding: 12px; margin: 20px 0; border-radius: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; font-size: 1.2em; }
-        .status-pagada { background: rgba(46, 213, 115, 0.2); color: var(--success-green); border: 2px solid var(--success-green); box-shadow: 0 0 15px rgba(46, 213, 115, 0.2); }
-        .status-no-pagada { background: rgba(255, 71, 87, 0.2); color: var(--danger-red); border: 2px solid var(--danger-red); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.8; } }
-
-        /* FECHAS */
-        .dates-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; text-align: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; margin-bottom: 20px; }
-        .date-item h4 { margin: 0; font-size: 0.65em; color: #8899a6; text-transform: uppercase; } 
-        .date-item p { margin: 3px 0 0 0; font-weight: 700; font-size: 0.9em; }
-
-        /* TABLA */
-        .table-responsive { overflow-x: auto; }
-        .recibo-table { width: 100%; border-collapse: separate; border-spacing: 0 5px; }
-        .recibo-table th { text-align: left; color: #8899a6; font-size: 0.8em; padding: 5px 10px; }
-        .recibo-table td { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; }
-        .text-right { text-align: right; }
-
-        /* TOTALES */
-        .total-section td { background: transparent; padding-top: 5px; font-weight: bold; }
-        .abono-row td { color: var(--success-green); }
-        .final-row td { font-size: 1.3em; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px; }
+        /* === 6. RESULTADOS Y ESTADOS === */
+        #resultado { display: none; margin-top: 20px; animation: slide-up 0.5s ease-out; }
         
-        .paid-img { position: absolute; width: 220px; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); pointer-events: none; opacity: 0; transition: 0.5s; z-index: 10; }
-        .show-stamp { opacity: 0.9; transform: translate(-50%, -50%) rotate(-20deg) scale(1); }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        .hidden { display: none; }
-        .bank-info { margin-top: 25px; text-align: center; padding: 15px; border: 1px dashed #3b506b; border-radius: 10px; font-size: 0.9em; color: #a5c3d4; }
-        .copy-btn { background: none; border: 1px solid var(--primary-cyan); color: var(--primary-cyan); padding: 5px 15px; border-radius: 20px; margin-top: 10px; cursor: pointer; }
+        .status-banner {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+
+        .status-pagada {
+            background: rgba(46, 213, 115, 0.15);
+            color: var(--success-green);
+            border: 1px solid var(--success-green);
+            box-shadow: 0 0 20px rgba(46, 213, 115, 0.2);
+        }
+
+        .status-no-pagada {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--danger-red);
+            border: 1px solid var(--danger-red);
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+
+        /* === 7. SELLO DE PAGADO (ANIMACIÓN DE GOLPE) === */
+        .paid-stamp-img {
+            position: absolute;
+            width: 280px;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg) scale(3); /* Empieza gigante */
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efecto rebote */
+        }
+
+        .show-stamp {
+            opacity: 0.95;
+            transform: translate(-50%, -50%) rotate(-20deg) scale(1); /* Cae a tamaño normal */
+        }
+
+        /* === 8. GRID DE FECHAS === */
+        .dates-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .date-item { text-align: center; }
+        .date-item h4 { margin: 0; font-size: 0.7em; color: var(--text-secondary); text-transform: uppercase; }
+        .date-item p { margin: 5px 0 0 0; font-weight: bold; font-size: 0.95em; }
+
+        /* === 9. TABLA DE SERVICIOS === */
+        .table-responsive { overflow-x: auto; margin-bottom: 20px; }
+        .recibo-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        
+        .recibo-table th {
+            text-align: left;
+            color: var(--text-secondary);
+            font-size: 0.8em;
+            padding: 0 10px;
+            text-transform: uppercase;
+        }
+        
+        .recibo-table td {
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border: none;
+        }
+        .recibo-table td:first-child { border-radius: 8px 0 0 8px; }
+        .recibo-table td:last-child { border-radius: 0 8px 8px 0; text-align: right; }
+
+        /* Filas de Totales */
+        .total-section td { background: transparent !important; padding: 5px 12px; font-weight: 500; }
+        .abono-row td { color: var(--success-green); }
+        .final-row td { 
+            border-top: 1px solid rgba(255,255,255,0.1); 
+            padding-top: 15px; 
+            font-size: 1.3em; 
+            font-weight: 900; 
+        }
+
+        /* === 10. BANCO === */
+        .bank-info {
+            text-align: center;
+            padding: 20px;
+            border: 1px dashed var(--accent-blue);
+            border-radius: 12px;
+            background: rgba(59, 141, 153, 0.05);
+            margin-top: 25px;
+        }
+        .copy-btn {
+            margin-top: 10px;
+            background: transparent;
+            border: 1px solid var(--primary-cyan);
+            color: var(--primary-cyan);
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .copy-btn:hover { background: rgba(100, 221, 237, 0.1); transform: scale(1.05); }
+
+        /* Mensajes de Error */
+        #error-msg { 
+            color: var(--danger-red); 
+            text-align: center; 
+            min-height: 20px; 
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border: 2px solid rgba(100,221,237,0.3);
+            border-top-color: var(--primary-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
     <div class="container">
         <h1>Consulta <span class="neon-text">Enterprice</span></h1>
-        <p class="subtitle">v0.6.0 (Logic: Zero Balance)</p>
+        <p class="subtitle">v0.6.1 Neon Math Edition</p>
+
+        <div class="input-group">
+            <input type="text" id="telefono" placeholder="Número de Teléfono" autocomplete="off">
+        </div>
         
-        <input type="text" id="telefono" placeholder="Número (Ej: 98765432)" autocomplete="off">
-        <button class="btn-neon" onclick="buscar()">CONSULTAR</button>
-        <p id="error-msg" style="color: var(--danger-red); text-align: center; min-height: 20px;"></p>
+        <button class="btn-neon" onclick="buscar()">
+            Consultar Recibo
+        </button>
+        
+        <div id="error-msg"></div>
 
-        <div id="resultado" class="hidden">
-            <img id="sello" src="https://i.imgur.com/K711e1r.png" class="paid-img">
-
-            <h2 id="cliente-nombre" style="text-align: center; color: var(--primary-cyan); margin-top: 0;"></h2>
+        <div id="resultado">
             
+            <img id="sello" src="https://i.imgur.com/K711e1r.png" class="paid-stamp-img">
+
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="color: var(--text-secondary); margin:0; font-size: 0.9em; text-transform: uppercase;">Cliente</p>
+                <h2 id="cliente-nombre" style="color: var(--primary-cyan); margin: 5px 0 0 0; font-size: 1.8em;"></h2>
+            </div>
+
             <div id="banner" class="status-banner"></div>
 
             <div class="dates-grid">
-                <div class="date-item"><h4>Corte</h4><p id="f-corte"></p></div>
-                <div class="date-item"><h4>Pago</h4><p id="f-pago" style="color: var(--primary-cyan)"></p></div>
-                <div class="date-item"><h4>Mora</h4><p id="f-mora" style="color: var(--danger-red)"></p></div>
+                <div class="date-item">
+                    <h4>Corte</h4>
+                    <p id="f-corte">--</p>
+                </div>
+                <div class="date-item">
+                    <h4>Pago</h4>
+                    <p id="f-pago" style="color: var(--primary-cyan)">--</p>
+                </div>
+                <div class="date-item">
+                    <h4>Mora</h4>
+                    <p id="f-mora" style="color: var(--danger-red)">--</p>
+                </div>
             </div>
 
             <div class="table-responsive">
                 <table class="recibo-table">
-                    <thead><tr><th>Servicio</th><th class="text-right">Total</th></tr></thead>
-                    <tbody id="tabla-body"></tbody>
+                    <thead>
+                        <tr>
+                            <th>Servicio</th>
+                            <th style="text-align: right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-body">
+                        </tbody>
                     <tfoot class="total-section">
                         <tr>
-                            <td class="text-right">Subtotal:</td>
-                            <td class="text-right" id="val-subtotal"></td>
+                            <td style="text-align: right;">Subtotal:</td>
+                            <td style="text-align: right;" id="val-subtotal">$0.00</td>
                         </tr>
                         <tr>
-                            <td class="text-right">Deuda Ant.:</td>
-                            <td class="text-right" id="val-mora"></td>
+                            <td style="text-align: right;">Deuda Ant.:</td>
+                            <td style="text-align: right;" id="val-mora">$0.00</td>
                         </tr>
                         <tr class="abono-row">
-                            <td class="text-right">(-) Abonos:</td>
-                            <td class="text-right" id="val-abono"></td>
+                            <td style="text-align: right;">(-) Abonos:</td>
+                            <td style="text-align: right;" id="val-abono">$0.00</td>
                         </tr>
                         <tr class="final-row">
-                            <td class="text-right" id="lbl-total">TOTAL:</td>
-                            <td class="text-right" id="val-total"></td>
+                            <td style="text-align: right;" id="lbl-total">TOTAL:</td>
+                            <td style="text-align: right;" id="val-total">$0.00</td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
 
             <div class="bank-info">
-                <strong>CARLOS PANAMEÑO</strong><br>
-                Bancoagrícola: 3113009677<br>
-                <button class="copy-btn" onclick="copiar()">Copiar Cuenta</button>
+                <div style="font-weight: bold; color: var(--text-primary); font-size: 1.1em; margin-bottom: 5px;">CARLOS PANAMEÑO</div>
+                <div style="color: var(--text-secondary);">Cuenta de Ahorro Bancoagrícola</div>
+                <div style="font-family: monospace; font-size: 1.2em; letter-spacing: 1px; margin: 5px 0;">3113009677</div>
+                
+                <button class="copy-btn" onclick="copiar()">
+                    <span>📋 Copiar Cuenta</span>
+                </button>
             </div>
+
         </div>
     </div>
 
     <script>
-        // PEGA AQUÍ TU URL DE APPS SCRIPT
+        // PEGA AQUÍ TU URL DEL SCRIPT (Si no la cambiaste, usa la misma)
         const API_URL = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
 
         function buscar() {
-            const tel = document.getElementById('telefono').value.trim();
+            const telInput = document.getElementById('telefono');
+            const tel = telInput.value.trim();
             const error = document.getElementById('error-msg');
             const res = document.getElementById('resultado');
+            const btn = document.querySelector('.btn-neon');
 
-            if(!tel) { error.textContent = "Ingresa un número."; return; }
+            // Reset UI
+            telInput.style.borderColor = "#3b506b";
+            res.style.display = 'none';
+            document.getElementById('sello').classList.remove('show-stamp'); // Ocultar sello
+
+            if(!tel) {
+                error.textContent = "Por favor, ingresa un número.";
+                telInput.style.borderColor = "var(--danger-red)";
+                return;
+            }
             
-            error.textContent = "Buscando en la base de datos...";
-            res.classList.add('hidden');
+            // Estado de Carga
+            btn.innerHTML = '<div class="spinner"></div> Buscando...';
+            btn.style.opacity = "0.7";
+            error.textContent = "";
 
             fetch(API_URL)
             .then(r => r.json())
             .then(data => {
+                // Restaurar botón
+                btn.innerHTML = 'CONSULTAR RECIBO';
+                btn.style.opacity = "1";
+
                 const c = data[tel];
                 if(c) {
-                    error.textContent = "";
                     render(c);
                 } else {
-                    error.textContent = "Cliente no encontrado.";
+                    error.textContent = "No encontramos un recibo para ese número.";
+                    telInput.style.borderColor = "var(--danger-red)";
                 }
             })
             .catch(e => {
                 console.error(e);
-                error.textContent = "Error de conexión.";
+                btn.innerHTML = 'CONSULTAR RECIBO';
+                btn.style.opacity = "1";
+                error.textContent = "Error de conexión. Intenta más tarde.";
             });
         }
 
         function render(c) {
-            document.getElementById('resultado').classList.remove('hidden');
-            document.getElementById('cliente-nombre').textContent = c.nombre;
+            const res = document.getElementById('resultado');
+            res.style.display = 'block'; // Mostrar contenedor
             
-            // Fechas
+            document.getElementById('cliente-nombre').textContent = c.nombre;
             document.getElementById('f-corte').textContent = c.fechaCorte;
             document.getElementById('f-pago').textContent = c.fechaLimite;
             document.getElementById('f-mora').textContent = c.fechaMora;
 
-            // Lógica de ESTADO (Basada en matemáticas)
-            const isPaid = c.pagado; // El script ya calculó si (Total - Abono <= 0)
+            // --- LÓGICA VISUAL DE ESTADO ---
+            const isPaid = c.pagado; // Viene calculado del script (Total <= 0)
             const banner = document.getElementById('banner');
             const sello = document.getElementById('sello');
             const lblTotal = document.getElementById('lbl-total');
+            const valTotal = document.getElementById('val-total');
 
             if(isPaid) {
+                // ESTADO: PAGADO
                 banner.textContent = "PAGADA";
                 banner.className = "status-banner status-pagada";
-                sello.classList.add('show-stamp');
-                lblTotal.textContent = "SALDO:";
+                lblTotal.textContent = "SALDO A FAVOR:";
+                valTotal.style.color = "var(--success-green)";
+                
+                // Animación del sello con retraso pequeño
+                setTimeout(() => {
+                    sello.classList.add('show-stamp');
+                }, 100);
+
             } else {
+                // ESTADO: NO PAGADO
                 banner.textContent = "NO PAGADA";
                 banner.className = "status-banner status-no-pagada";
-                sello.classList.remove('show-stamp');
                 lblTotal.textContent = "TOTAL A PAGAR:";
+                valTotal.style.color = "var(--danger-red)";
+                sello.classList.remove('show-stamp');
             }
 
-            // Tabla
+            // --- LLENAR TABLA ---
             const tbody = document.getElementById('tabla-body');
             tbody.innerHTML = "";
             c.servicios.forEach(s => {
-                // Solo mostrar servicios con precio, ignorar filas vacías
                 if(s.precio !== 0) {
-                    tbody.innerHTML += `<tr><td>${s.servicio}</td><td class="text-right">$${s.total.toFixed(2)}</td></tr>`;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${s.servicio}</td>
+                            <td style="text-align: right;">$${s.total.toFixed(2)}</td>
+                        </tr>`;
                 }
             });
 
-            // Totales Numéricos
+            // --- TOTALES ---
             document.getElementById('val-subtotal').textContent = "$" + c.totalServicios.toFixed(2);
             document.getElementById('val-mora').textContent = "$" + c.pendienteAnterior.toFixed(2);
             document.getElementById('val-abono').textContent = "-$" + c.abonoTotal.toFixed(2);
             
-            // Si está pagado (negativo o cero), mostramos 0.00 o el saldo a favor
-            // Si prefiere ver el 0.00 absoluto:
-            let displayFinal = c.totalFinalCalculado;
-            if(displayFinal < 0) displayFinal = 0; // Opcional: para que no diga $-1.00
+            // Total final (Si es negativo, lo mostramos como 0.00 o valor absoluto si hay saldo a favor)
+            let finalShow = c.totalFinalCalculado;
+            if (isPaid && finalShow < 0) finalShow = Math.abs(finalShow); // Mostrar saldo a favor en positivo
+            if (isPaid && finalShow === 0) finalShow = 0.00;
 
-            document.getElementById('val-total').textContent = "$" + displayFinal.toFixed(2);
-            
-            if(isPaid) {
-                 document.getElementById('val-total').style.color = "var(--success-green)";
-            } else {
-                 document.getElementById('val-total').style.color = "var(--danger-red)";
-            }
+            document.getElementById('val-total').textContent = "$" + finalShow.toFixed(2);
         }
 
         function copiar() {
             navigator.clipboard.writeText("3113009677");
-            alert("Número de cuenta copiado.");
+            const btn = document.querySelector('.copy-btn span');
+            const originalText = btn.textContent;
+            btn.textContent = "¡Copiado!";
+            setTimeout(() => {
+                btn.textContent = originalText;
+            }, 2000);
         }
+        
+        // Permitir buscar con Enter
+        document.getElementById('telefono').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                buscar();
+            }
+        });
     </script>
 </body>
 </html>
