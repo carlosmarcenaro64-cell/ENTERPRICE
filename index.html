@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Recibos Enterprice Moderna</title>
+    <title>Consulta de Recibos Enterprice</title>
     <link rel="stylesheet" href="diseño.css"> 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
 </head>
@@ -18,12 +18,10 @@
         <div class="input-group">
             <label for="numero-telefono">Número de Teléfono</label>
             <input type="text" id="numero-telefono" placeholder="Ej: 98765432" autocomplete="off">
-             <span class="input-highlight"></span>
         </div>
         
         <button id="buscar-recibo" class="btn-neon">
             <span>Buscar Recibo</span>
-            <div class="btn-particles"></div>
         </button>
 
         <div id="detalle-recibo" class="glass-panel">
@@ -35,14 +33,9 @@
 
     <script>
         // ==========================================================
-        // DATOS ESTÁTICOS PARA DEMOSTRACIÓN (Como en tu versión anterior)
+        // CONFIGURACIÓN DE CONEXIÓN
         // ==========================================================
-        const datosDeRecibos = {
-            "78991675": { "nombre": "César", "servicios": [{ "servicio": "Spotify Family", "precio": 4.00, "cantidad": 2, "total": 8.00 }, { "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 1, "total": 4.25 }, { "servicio": "App Mantenimiento", "precio": 3.51, "cantidad": 1, "total": 3.51 }], "totalServicios": 15.76, "pendienteAnterior": 0.00, "fechaEmision": "2025-11-20" },
-            "73179224": { "nombre": "Daisy", "servicios": [{ "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 1, "total": 4.25 }], "totalServicios": 4.25, "pendienteAnterior": 4.00, "fechaEmision": "2025-11-20" },
-            "76470201": { "nombre": "Adriana", "servicios": [{ "servicio": "YouTube Premium", "precio": 4.25, "cantidad": 3, "total": 12.75 }], "totalServicios": 12.75, "pendienteAnterior": 5.00, "fechaEmision": "2025-11-20" },
-            "98765432": { "nombre": "Invitado Demo", "servicios": [{ "servicio": "Plan Demo Básico", "precio": 10.00, "cantidad": 1, "total": 10.00 }], "totalServicios": 10.00, "pendienteAnterior": 0.00, "fechaEmision": "2025-11-20" }
-        };
+        const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
         // ==========================================================
         
         const inputTelefono = document.getElementById('numero-telefono');
@@ -51,6 +44,7 @@
         const mensajeEstado = document.getElementById('mensaje-estado');
         const mensajeContainer = document.getElementById('mensaje-estado-container');
 
+        // Event Listeners
         btnBuscar.addEventListener('click', buscarRecibo);
         inputTelefono.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') buscarRecibo();
@@ -61,9 +55,9 @@
             const existingResult = detalleReciboDiv.querySelector('.result-content');
             if (existingResult) existingResult.remove();
             
-            mensajeContainer.style.display = 'flex'; // Aseguramos que se vea el contenedor de mensajes
+            mensajeContainer.style.display = 'flex';
             mensajeEstado.className = `message ${tipo}-message fade-in`;
-            mensajeEstado.innerHTML = mensaje; // Usamos innerHTML por si insertamos el spinner
+            mensajeEstado.innerHTML = mensaje;
         }
 
         function buscarRecibo() {
@@ -78,38 +72,45 @@
                 return;
             }
 
-            // Estado de Carga Moderno
+            // Estado de Carga
             btnBuscar.classList.add('loading-btn');
             btnBuscar.disabled = true;
-            mostrarMensaje('<div class="spinner"></div> Buscando en la red...', 'loading');
+            mostrarMensaje('<div class="spinner"></div> Conectando con base de datos...', 'loading');
 
-            // Simulación de carga (setTimeout)
-            setTimeout(() => {
+            // Petición a la API (Google Sheets)
+            fetch(URL_API)
+            .then(response => response.json())
+            .then(data => {
+                const cliente = data[telefono]; // Buscamos el teléfono en el JSON recibido
+
                 btnBuscar.classList.remove('loading-btn');
                 btnBuscar.disabled = false;
-                
-                const data = datosDeRecibos[telefono];
 
-                if (data) {
+                if (cliente) {
                     inputTelefono.classList.add('input-success');
-                    renderizarRecibo(data);
+                    renderizarRecibo(cliente);
                 } else {
                     inputTelefono.classList.add('input-error');
-                    mostrarMensaje(`No se encontró un recibo asociado al número <strong>${telefono}</strong>.`, 'error');
+                    mostrarMensaje(`No se encontró registro para <strong>${telefono}</strong>.`, 'error');
                     detalleReciboDiv.classList.add('shake-animation');
                 }
-            }, 800); // Un poco más de tiempo para apreciar la animación de carga
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                btnBuscar.classList.remove('loading-btn');
+                btnBuscar.disabled = false;
+                mostrarMensaje('Error de conexión. Intente más tarde.', 'error');
+            });
         }
 
         function renderizarRecibo(data) {
-            mensajeContainer.style.display = 'none'; // Ocultamos el contenedor de mensajes
+            mensajeContainer.style.display = 'none';
 
             const totalServicios = data.totalServicios; 
             const pendienteAnterior = data.pendienteAnterior;
             const totalFinal = totalServicios + pendienteAnterior;
             const esDeudor = totalFinal > 0;
 
-            // Creamos un nuevo contenedor para el resultado con animación de entrada
             let html = `
             <div class="result-content slide-up-fade-in">
                 <div class="recibo-header">
@@ -138,7 +139,6 @@
             `;
 
             data.servicios.forEach((item, index) => {
-                // Añadimos un pequeño retraso escalonado a cada fila para un efecto visual atractivo
                 html += `
                     <tr style="animation-delay: ${index * 0.1}s" class="staggered-row">
                         <td class="col-servicio">${item.servicio}</td>
@@ -170,9 +170,7 @@
             </div>
             `;
 
-            // Insertamos el HTML en el div principal de detalle
             detalleReciboDiv.innerHTML = html;
-            // Volvemos a añadir el contenedor de mensajes al final por si se necesita después
             detalleReciboDiv.appendChild(mensajeContainer); 
         }
     </script>
