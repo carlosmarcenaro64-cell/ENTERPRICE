@@ -8,11 +8,11 @@
     
     <style>
         :root {
-            --bg-dark: #0a0e17; --bg-panel: rgba(20, 30, 48, 0.85);
+            --bg-dark: #0a0e17; --bg-panel: rgba(20, 30, 48, 0.90);
             --primary-cyan: #64dded; --accent-blue: #3b8d99;
             --accent-glow: rgba(100, 221, 237, 0.6); --text-primary: #e0f2f7;
             --text-secondary: #a5c3d4; --danger-red: #ff4757; --success-green: #2ed573;
-            --glass-blur: blur(15px); --panel-border: 1px solid rgba(100, 221, 237, 0.3);
+            --glass-blur: blur(20px); --panel-border: 1px solid rgba(100, 221, 237, 0.3);
         }
         body {
             font-family: 'Segoe UI', 'Roboto', sans-serif;
@@ -83,11 +83,9 @@
         .recibo-table tbody tr td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
         .text-right { text-align: right; }
         
-        /* Filas de totales y estados */
+        /* Totales y Estados */
         .total-final-row td { padding-top: 15px; font-size: 1.1em; border-top: 1px solid rgba(255,255,255,0.1); }
         .estado-deuda .total-amount { color: var(--danger-red); font-weight: 900; font-size: 1.4em; }
-        
-        /* ESTADO PAGADO (VERDE) */
         .estado-pagado .total-amount { color: var(--success-green); font-weight: 900; font-size: 1.4em; text-shadow: 0 0 10px rgba(46, 213, 115, 0.4); }
         .estado-pagado .total-label { color: var(--success-green); font-weight: bold; letter-spacing: 1px; }
 
@@ -146,17 +144,14 @@
         </div>
     </div>
 
-    <div class="version-tag">Sys.Ver 0.5.2</div>
+    <div class="version-tag">Sys.Ver 0.5.3</div>
 
     <script>
         // ==========================================================
-        // CONFIGURACIÓN DE CONEXIÓN
-        // ==========================================================
-        
-        // ¡IMPORTANTE! SI REIMPLEMENTÓ EL SCRIPT, PEGUE AQUÍ LA NUEVA URL
+        // PEGAR AQUÍ LA URL NUEVA DEL APPS SCRIPT
         const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
         
-        // DATOS DE LA CUENTA CARLOS PANAMEÑO
+        // DATOS DE LA CUENTA
         const DATOS_BANCO_TEXTO = "CARLOS PANAMEÑO\nCuenta de Ahorro Bancoagrícola\n3113009677";
         const URL_IMAGEN_PAGADO = "https://i.imgur.com/K711e1r.png"; 
         // ==========================================================
@@ -218,8 +213,6 @@
 
         function renderizarRecibo(data) {
             mensajeContainer.style.display = 'none';
-            
-            // Lógica de "Está Pagado"
             const estaPagado = data.pagado === true; 
             
             if (estaPagado) {
@@ -228,12 +221,9 @@
                 detalleReciboDiv.classList.remove('is-paid');
             }
 
-            // LÓGICA DE DINERO
+            // Si está pagado, forzamos a 0.00
             const totalReal = data.totalServicios + data.pendienteAnterior;
-            // Si está pagado, mostramos 0.00. Si no, mostramos la deuda real.
             const totalMostrar = estaPagado ? 0.00 : totalReal; 
-            
-            // Si está pagado, cambiamos el texto a "ESTADO: CANCELADO"
             const etiquetaTotal = estaPagado ? "ESTADO: CANCELADO" : "TOTAL A PAGAR:";
 
             let html = `
@@ -294,7 +284,6 @@
                                 <td colspan="3" class="text-right label-muted">Mora / Ant.:</td>
                                 <td>$${data.pendienteAnterior.toFixed(2)}</td>
                             </tr>
-                            
                             <tr class="total-final-row ${estaPagado ? 'estado-pagado' : 'estado-deuda'}">
                                 <td colspan="3" class="text-right total-label">
                                     ${etiquetaTotal}
