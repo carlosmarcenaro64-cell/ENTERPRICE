@@ -7,294 +7,151 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
     
     <style>
-        :root {
-            --bg-dark: #0a0e17; --bg-panel: rgba(20, 30, 48, 0.90);
-            --primary-cyan: #64dded; --accent-blue: #3b8d99;
-            --accent-glow: rgba(100, 221, 237, 0.6); --text-primary: #e0f2f7;
-            --text-secondary: #a5c3d4; --danger-red: #ff4757; --success-green: #2ed573;
-            --glass-blur: blur(20px); --panel-border: 1px solid rgba(100, 221, 237, 0.3);
-        }
-        body {
-            font-family: 'Segoe UI', 'Roboto', sans-serif;
-            background: radial-gradient(circle at top right, #1a2a3a 0%, #0a0e17 100%);
-            color: var(--text-primary); margin: 0; padding: 20px;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow-x: hidden; position: relative;
-        }
-        .bg-glow { position: absolute; width: 300px; height: 300px; border-radius: 50%; filter: blur(90px); opacity: 0.15; z-index: -1; animation: floating 10s ease-in-out infinite alternate; }
-        .bg-glow-1 { top: -50px; left: -50px; background: var(--primary-cyan); }
-        .bg-glow-2 { bottom: -50px; right: -50px; background: var(--accent-blue); animation-delay: 2s; }
-        @keyframes floating { from { transform: translate(0,0); } to { transform: translate(30px, 30px); } }
-
-        .container {
-            max-width: 500px; width: 100%; background: var(--bg-panel);
-            backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-            border: var(--panel-border); padding: 40px; border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6); position: relative; overflow: hidden;
-        }
-        h1 { font-weight: 300; text-align: center; margin-bottom: 10px; }
-        .neon-text { font-weight: 700; color: var(--primary-cyan); text-shadow: 0 0 8px var(--accent-glow); }
-        .subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 30px; font-size: 0.9em; }
-
-        .input-group { margin-bottom: 25px; }
-        label { display: block; margin-bottom: 8px; color: var(--primary-cyan); font-size: 0.9em; font-weight: 600; text-transform: uppercase; }
-        input[type="text"] {
-            width: 100%; padding: 15px; border: 2px solid rgba(91, 121, 155, 0.3); border-radius: 12px;
-            font-size: 1.1em; text-align: center; background-color: rgba(63, 84, 106, 0.2); color: var(--text-primary);
-            transition: all 0.3s; outline: none; box-sizing: border-box;
-        }
-        input[type="text"]:focus { border-color: var(--primary-cyan); background-color: rgba(63, 84, 106, 0.4); }
-        .input-error { border-color: var(--danger-red) !important; animation: shake 0.4s; }
-        .input-success { border-color: var(--success-green) !important; }
-
-        .btn-neon {
-            width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer;
-            font-size: 1.1em; font-weight: 700; text-transform: uppercase;
-            background: linear-gradient(90deg, var(--accent-blue), var(--primary-cyan));
-            color: #0a0e17; transition: all 0.3s; box-shadow: 0 5px 15px rgba(100, 221, 237, 0.3);
-        }
-        .btn-neon:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(100, 221, 237, 0.5); }
-        .loading-btn { opacity: 0.7; pointer-events: none; }
-
-        #detalle-recibo { margin-top: 30px; min-height: 100px; display: flex; flex-direction: column; justify-content: center; position: relative; }
-        .recibo-header { display: flex; justify-content: space-between; margin-bottom: 15px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px; }
-        .client-label { font-size: 0.8em; color: var(--text-secondary); margin: 0; text-transform: uppercase; }
-        .client-name { font-size: 1.3em; font-weight: bold; color: var(--primary-cyan); margin: 5px 0 0 0; }
-        .invoice-date { font-weight: bold; margin: 5px 0 0 0; }
-        .neon-subtitle { color: var(--primary-cyan); margin: 20px 0 15px 0; border-bottom: 1px solid rgba(100,221,237,0.3); padding-bottom: 5px; }
-
-        .status-banner {
-            text-align: center; padding: 10px; margin-bottom: 20px; border-radius: 8px;
-            font-weight: 800; letter-spacing: 2px; text-transform: uppercase; font-size: 1.1em;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.3s ease;
-        }
-        .status-pagada { background: rgba(46, 213, 115, 0.15); color: var(--success-green); border: 1px solid var(--success-green); }
-        .status-no-pagada { background: rgba(255, 71, 87, 0.15); color: var(--danger-red); border: 1px solid var(--danger-red); animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0%,100% { box-shadow: 0 0 5px rgba(255, 71, 87, 0.2); } 50% { box-shadow: 0 0 15px rgba(255, 71, 87, 0.4); } }
-
-        .dates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; text-align: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
-        .date-item h4 { margin: 0 0 5px 0; font-size: 0.7em; color: var(--text-secondary); text-transform: uppercase; }
-        .date-item p { margin: 0; font-size: 0.85em; font-weight: bold; }
-
-        .table-responsive { overflow-x: auto; }
-        .recibo-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
-        .recibo-table th { text-align: left; padding: 10px; color: var(--text-secondary); font-size: 0.8em; text-transform: uppercase; }
-        .recibo-table tbody tr { background-color: rgba(63, 84, 106, 0.3); }
-        .recibo-table td { padding: 12px; border: none; }
-        .recibo-table tbody tr td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
-        .recibo-table tbody tr td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
-        .text-right { text-align: right; }
+        /* ESTILOS DE BASE */
+        :root { --bg-dark: #0a0e17; --primary-cyan: #64dded; --accent-blue: #3b8d99; --text-primary: #e0f2f7; --danger-red: #ff4757; --success-green: #2ed573; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0e17; color: var(--text-primary); margin: 0; padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
         
-        .total-final-row td { padding-top: 15px; font-size: 1.1em; border-top: 1px solid rgba(255,255,255,0.1); }
-        .estado-deuda .total-amount { color: var(--danger-red); font-weight: 900; font-size: 1.4em; }
-        .estado-pagado .total-amount { color: var(--success-green); font-weight: 900; font-size: 1.4em; text-shadow: 0 0 10px rgba(46, 213, 115, 0.4); }
-        .estado-pagado .total-label { color: var(--success-green); font-weight: bold; letter-spacing: 1px; }
+        .container { max-width: 500px; width: 100%; background: rgba(20, 30, 48, 0.9); padding: 30px; border-radius: 20px; border: 1px solid rgba(100, 221, 237, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { text-align: center; font-weight: 300; } .neon-text { color: var(--primary-cyan); font-weight: 700; }
+        
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 10px; border: 2px solid #3b8d99; background: #1a2a3a; color: white; text-align: center; font-size: 1.1em; margin-bottom: 20px; box-sizing: border-box; }
+        .btn-neon { width: 100%; padding: 15px; background: linear-gradient(90deg, #3b8d99, #64dded); border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: #000; }
+        
+        /* BANNER DE ESTADO */
+        .status-banner { text-align: center; padding: 15px; margin: 20px 0; border-radius: 8px; font-weight: 800; font-size: 1.2em; text-transform: uppercase; letter-spacing: 2px; }
+        .status-pagada { background: rgba(46, 213, 115, 0.2); color: var(--success-green); border: 2px solid var(--success-green); box-shadow: 0 0 15px rgba(46, 213, 115, 0.3); }
+        .status-no-pagada { background: rgba(255, 71, 87, 0.2); color: var(--danger-red); border: 2px solid var(--danger-red); }
 
-        .bank-section { margin-top: 25px; text-align: center; }
-        .btn-copy { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-copy:hover { background: rgba(59, 141, 153, 0.1); transform: scale(1.05); }
+        /* TABLA */
+        .recibo-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .recibo-table th { text-align: left; color: #a5c3d4; padding: 10px; }
+        .recibo-table td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        
+        /* TOTALES */
+        .total-row td { font-size: 1.3em; font-weight: bold; padding-top: 20px; border-top: 2px solid white; }
+        .text-green { color: var(--success-green); } .text-red { color: var(--danger-red); }
 
-        .paid-stamp-img { position: absolute; top: 50%; left: 50%; width: 250px; opacity: 0; transform: translate(-50%, -50%) rotate(-15deg) scale(2); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; z-index: 10; filter: drop-shadow(0 0 15px rgba(46, 213, 115, 0.4)); }
-        .is-paid .paid-stamp-img { opacity: 0.9; transform: translate(-50%, -50%) rotate(-15deg) scale(1); }
+        /* FECHAS */
+        .dates-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; text-align: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; margin-bottom: 20px; }
+        .date-item h4 { margin: 0; font-size: 0.7em; color: #aaa; } .date-item p { margin: 5px 0 0 0; font-weight: bold; }
 
-        .message { padding: 10px 20px; border-radius: 50px; font-size: 0.9em; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .error-message { background: rgba(255, 71, 87, 0.2); color: #ffb6c1; border: 1px solid var(--danger-red); }
-        .loading-message { color: var(--primary-cyan); }
-        .spinner { width: 15px; height: 15px; border: 2px solid rgba(100,221,237,0.3); border-top-color: var(--primary-cyan); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        @keyframes pop-in { 0% { opacity: 0; transform: scale(0.95) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        .animate-pop-in { animation: pop-in 0.6s ease-out; }
-        .slide-up-fade-in { animation: pop-in 0.5s ease-out; }
-        .staggered-row { opacity: 0; animation: pop-in 0.4s ease-out forwards; }
-        .version-tag { position: fixed; bottom: 10px; right: 15px; font-family: monospace; color: var(--primary-cyan); opacity: 0.5; font-size: 0.8em; animation: pulse 4s infinite; }
-        @keyframes pulse { 50% { opacity: 0.8; } }
+        .hidden { display: none; }
+        .error-msg { color: var(--danger-red); text-align: center; margin-top: 10px; }
+        .paid-img { position: absolute; width: 200px; opacity: 0.8; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); pointer-events: none; }
     </style>
 </head>
 <body>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
 
-    <div class="container animate-pop-in">
-        <h1>Consulta tu Recibo <span class="neon-text">Enterprice</span></h1>
-        <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
-
-        <div class="input-group">
-            <label for="numero-telefono">Número de Teléfono</label>
-            <input type="text" id="numero-telefono" placeholder="Ej: 98765432" autocomplete="off">
-        </div>
+    <div class="container">
+        <h1>Consulta <span class="neon-text">Enterprice</span></h1>
         
-        <button id="buscar-recibo" class="btn-neon">
-            <span>Buscar Recibo</span>
-        </button>
+        <input type="text" id="telefono" placeholder="Ingresa tu número (Ej: 98765432)">
+        <button class="btn-neon" onclick="buscar()">BUSCAR RECIBO</button>
+        <p id="error" class="error-msg"></p>
 
-        <div id="detalle-recibo" class="glass-panel">
-            <div id="mensaje-estado-container">
-                 <p id="mensaje-estado">Ingresa un número para buscar.</p>
+        <div id="resultado" class="hidden" style="position: relative;">
+            <img id="sello-pagado" src="https://i.imgur.com/K711e1r.png" class="paid-img hidden">
+            
+            <h2 id="cliente" style="text-align: center; color: var(--primary-cyan);"></h2>
+            
+            <div id="banner-estado" class="status-banner"></div>
+
+            <div class="dates-grid">
+                <div class="date-item"><h4>F. CORTE</h4><p id="f-corte"></p></div>
+                <div class="date-item"><h4>F. PAGO</h4><p id="f-pago" style="color: var(--primary-cyan)"></p></div>
+                <div class="date-item"><h4>F. MORA</h4><p id="f-mora" style="color: var(--danger-red)"></p></div>
+            </div>
+
+            <table class="recibo-table">
+                <thead><tr><th>Servicio</th><th>Total</th></tr></thead>
+                <tbody id="lista-servicios"></tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td>TOTAL:</td>
+                        <td id="total-monto"></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div style="text-align: center; margin-top: 30px; padding: 15px; border: 1px dashed #3b8d99; border-radius: 10px;">
+                <p style="margin:0; color: #aaa; font-size: 0.8em;">DATOS DE PAGO</p>
+                <p style="margin:5px 0; font-weight:bold;">CARLOS PANAMEÑO</p>
+                <p style="margin:0;">Bancoagrícola: 3113009677</p>
             </div>
         </div>
     </div>
 
-    <div class="version-tag">Sys.Ver 0.5.5 (Auto-Column)</div>
-
     <script>
-        const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
-        const DATOS_BANCO_TEXTO = "CARLOS PANAMEÑO\nCuenta de Ahorro Bancoagrícola\n3113009677";
-        const URL_IMAGEN_PAGADO = "https://i.imgur.com/K711e1r.png"; 
+        // PEGA TU URL DE APPS SCRIPT AQUÍ
+        const API_URL = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
 
-        const inputTelefono = document.getElementById('numero-telefono');
-        const btnBuscar = document.getElementById('buscar-recibo');
-        const detalleReciboDiv = document.getElementById('detalle-recibo');
-        const mensajeEstado = document.getElementById('mensaje-estado');
-        const mensajeContainer = document.getElementById('mensaje-estado-container');
-
-        btnBuscar.addEventListener('click', buscarRecibo);
-        inputTelefono.addEventListener('keypress', (e) => { if (e.key === 'Enter') buscarRecibo(); });
-
-        function mostrarMensaje(mensaje, tipo) {
-            const existingResult = detalleReciboDiv.querySelector('.result-content');
-            const existingImg = detalleReciboDiv.querySelector('.paid-stamp-img');
-            if (existingResult) existingResult.remove();
-            if (existingImg) existingImg.remove();
-            detalleReciboDiv.classList.remove('is-paid'); 
-            mensajeContainer.style.display = 'flex';
-            mensajeEstado.className = `message ${tipo}-message fade-in`;
-            mensajeEstado.innerHTML = mensaje;
-        }
-
-        function buscarRecibo() {
-            const telefono = inputTelefono.value.trim();
-            inputTelefono.classList.remove('input-error', 'input-success');
-            if (!telefono) {
-                inputTelefono.classList.add('input-error');
-                mostrarMensaje('Por favor, ingresa un número válido.', 'error');
-                return;
-            }
-            btnBuscar.classList.add('loading-btn');
-            mostrarMensaje('<div class="spinner"></div> Conectando con Enterprice...', 'loading');
-
-            fetch(URL_API)
-            .then(res => res.json())
-            .then(data => {
-                const cliente = data[telefono];
-                btnBuscar.classList.remove('loading-btn');
-                
-                if (data.error) {
-                     mostrarMensaje(`Error de Configuración: ${data.error}`, 'error');
-                     return;
-                }
-
-                if (cliente) {
-                    inputTelefono.classList.add('input-success');
-                    renderizarRecibo(cliente);
-                } else {
-                    inputTelefono.classList.add('input-error');
-                    mostrarMensaje(`Número <strong>${telefono}</strong> no encontrado.`, 'error');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                btnBuscar.classList.remove('loading-btn');
-                mostrarMensaje('Error de conexión. Intente más tarde.', 'error');
-            });
-        }
-
-        function renderizarRecibo(data) {
-            mensajeContainer.style.display = 'none';
-            const estaPagado = data.pagado === true; 
+        function buscar() {
+            const tel = document.getElementById('telefono').value.trim();
+            const error = document.getElementById('error');
+            const res = document.getElementById('resultado');
             
-            if (estaPagado) {
-                detalleReciboDiv.classList.add('is-paid');
-            } else {
-                detalleReciboDiv.classList.remove('is-paid');
-            }
+            if(!tel) { error.textContent = "Escribe un número."; return; }
+            
+            error.textContent = "Buscando...";
+            res.classList.add('hidden');
 
-            const textoEstado = estaPagado ? "PAGADA" : "NO PAGADA";
-            const claseBanner = estaPagado ? "status-pagada" : "status-no-pagada";
-            const totalReal = data.totalServicios + data.pendienteAnterior;
-            const totalMostrar = estaPagado ? 0.00 : totalReal; 
-            const etiquetaTotal = estaPagado ? "ESTADO: CANCELADO" : "TOTAL A PAGAR:";
-
-            let html = `
-            ${estaPagado ? `<img src="${URL_IMAGEN_PAGADO}" class="paid-stamp-img" alt="PAGADO">` : ''}
-
-            <div class="result-content slide-up-fade-in">
-                <div class="recibo-header">
-                    <div>
-                        <p class="client-label">Cliente</p>
-                        <p class="client-name">${data.nombre}</p>
-                    </div>
-                    <div style="text-align: right;">
-                         <p class="client-label">Emisión</p>
-                        <p class="invoice-date">${data.fechaEmision}</p>
-                    </div>
-                </div>
-
-                <div class="status-banner ${claseBanner}">
-                    ESTADO: ${textoEstado}
-                </div>
-
-                <div class="dates-grid">
-                    <div class="date-item"><h4>F. Corte</h4><p>${data.fechaCorte}</p></div>
-                    <div class="date-item"><h4>F. Pago</h4><p style="color: var(--primary-cyan)">${data.fechaLimite}</p></div>
-                    <div class="date-item"><h4>F. Mora</h4><p style="color: var(--danger-red)">${data.fechaMora}</p></div>
-                </div>
-                
-                <h3 class="neon-subtitle">Detalle de Servicios</h3>
-                <div class="table-responsive">
-                    <table class="recibo-table">
-                        <thead><tr><th>Servicio</th><th>$$</th><th>#</th><th>Total</th></tr></thead>
-                        <tbody>
-            `;
-
-            data.servicios.forEach((item, index) => {
-                html += `
-                    <tr style="animation-delay: ${index * 0.1}s" class="staggered-row">
-                        <td class="col-servicio">${item.servicio}</td>
-                        <td>$${item.precio.toFixed(2)}</td>
-                        <td>${item.cantidad}</td>
-                        <td class="col-total">$${item.total.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
-
-            html += `
-                        </tbody>
-                        <tfoot>
-                             <tr class="summary-row">
-                                <td colspan="3" class="text-right label-muted">Subtotal:</td>
-                                <td class="text-highlight">$${data.totalServicios.toFixed(2)}</td>
-                            </tr>
-                             <tr class="summary-row">
-                                <td colspan="3" class="text-right label-muted">Mora / Ant.:</td>
-                                <td>$${data.pendienteAnterior.toFixed(2)}</td>
-                            </tr>
-                            <tr class="total-final-row ${estaPagado ? 'estado-pagado' : 'estado-deuda'}">
-                                <td colspan="3" class="text-right total-label">${etiquetaTotal}</td>
-                                <td class="total-amount">$${totalMostrar.toFixed(2)}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-                <div class="bank-section">
-                    <button class="btn-copy" onclick="copiarCuenta()">
-                        <span>🏦 Copiar Datos de Cuenta</span>
-                    </button>
-                    <p id="copy-feedback" style="font-size: 0.8em; color: var(--success-green); height: 1em; opacity: 0; transition: opacity 0.3s; margin-top: 5px;">¡Copiado al portapapeles!</p>
-                </div>
-            </div>
-            `;
-            detalleReciboDiv.innerHTML = html;
-            detalleReciboDiv.appendChild(mensajeContainer); 
+            fetch(API_URL)
+                .then(r => r.json())
+                .then(data => {
+                    const cliente = data[tel];
+                    if(!cliente) {
+                        error.textContent = "Número no encontrado.";
+                        return;
+                    }
+                    error.textContent = "";
+                    mostrarRecibo(cliente);
+                })
+                .catch(e => {
+                    console.log(e);
+                    error.textContent = "Error de conexión. Intenta de nuevo.";
+                });
         }
 
-        function copiarCuenta() {
-            navigator.clipboard.writeText(DATOS_BANCO_TEXTO).then(() => {
-                const feedback = document.getElementById('copy-feedback');
-                feedback.style.opacity = '1';
-                setTimeout(() => { feedback.style.opacity = '0'; }, 2000);
-            }).catch(err => { alert('Detalles de cuenta:\n' + DATOS_BANCO_TEXTO); });
+        function mostrarRecibo(c) {
+            document.getElementById('resultado').classList.remove('hidden');
+            document.getElementById('cliente').textContent = c.nombre;
+            document.getElementById('f-corte').textContent = c.fechaCorte;
+            document.getElementById('f-pago').textContent = c.fechaLimite;
+            document.getElementById('f-mora').textContent = c.fechaMora;
+
+            // Lógica de Estado
+            const banner = document.getElementById('banner-estado');
+            const sello = document.getElementById('sello-pagado');
+            const totalDisplay = document.getElementById('total-monto');
+            
+            // Calculamos el total real
+            let totalReal = c.totalServicios + c.pendienteAnterior;
+
+            if (c.pagado === true) {
+                // CASO 1: PAGADO
+                banner.textContent = "PAGADA";
+                banner.className = "status-banner status-pagada";
+                sello.classList.remove('hidden'); // Mostrar sello
+                totalDisplay.textContent = "$0.00"; // Deuda en cero
+                totalDisplay.className = "text-green";
+            } else {
+                // CASO 2: NO PAGADO
+                banner.textContent = "NO PAGADA";
+                banner.className = "status-banner status-no-pagada";
+                sello.classList.add('hidden'); // Ocultar sello
+                totalDisplay.textContent = "$" + totalReal.toFixed(2);
+                totalDisplay.className = "text-red";
+            }
+
+            // Llenar tabla
+            const tbody = document.getElementById('lista-servicios');
+            tbody.innerHTML = "";
+            c.servicios.forEach(s => {
+                tbody.innerHTML += `<tr><td>${s.servicio}</td><td>$${s.total.toFixed(2)}</td></tr>`;
+            });
+            if(c.pendienteAnterior > 0) {
+                 tbody.innerHTML += `<tr><td>Deuda Anterior</td><td>$${c.pendienteAnterior.toFixed(2)}</td></tr>`;
+            }
         }
     </script>
 </body>
