@@ -1,87 +1,145 @@
-/* === MARCA DE AGUA (CANCELADO) === */
-.watermark {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-30deg);
-    font-size: 5rem;
-    font-weight: 900;
-    color: transparent;
-    -webkit-text-stroke: 4px rgba(255, 255, 255, 0.15); /* Borde sutil */
-    text-transform: uppercase;
-    z-index: 0;
-    pointer-events: none;
-    white-space: nowrap;
-    opacity: 0; /* Oculto por defecto */
-    transition: opacity 0.5s ease;
+/* === VARIABLES BASE === */
+:root {
+    --bg-dark: #0a0e17;
+    --bg-panel: rgba(20, 30, 48, 0.75);
+    --primary-cyan: #64dded;
+    --accent-blue: #3b8d99;
+    --accent-glow: rgba(100, 221, 237, 0.6);
+    --text-primary: #e0f2f7;
+    --text-secondary: #a5c3d4;
+    --danger-red: #ff4757;
+    --success-green: #2ed573;
+    --glass-blur: blur(12px);
+    --panel-border: 1px solid rgba(100, 221, 237, 0.2);
 }
 
-/* Estado visible y estilo específico para CANCELADO */
-.is-paid .watermark {
-    opacity: 1;
-    color: rgba(46, 213, 115, 0.2); /* Verde semitransparente */
-    -webkit-text-stroke: 2px var(--success-green);
-    border: 8px solid rgba(46, 213, 115, 0.4);
-    padding: 20px 40px;
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(46, 213, 115, 0.2);
-}
-
-/* Aseguramos que el contenido esté sobre la marca de agua */
-.result-content {
-    position: relative;
-    z-index: 1;
-}
-
-/* === SECCIÓN DE FECHAS DETALLADAS === */
-.dates-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
-    background: rgba(255,255,255,0.05);
-    padding: 15px;
-    border-radius: 12px;
-}
-
-.date-item h4 {
-    margin: 0 0 5px 0;
-    font-size: 0.75em;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-}
-
-.date-item p {
-    margin: 0;
-    font-weight: bold;
+body {
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    background: radial-gradient(circle at top right, #1a2a3a 0%, #0a0e17 100%);
     color: var(--text-primary);
-}
-
-/* === BOTÓN DE BANCO === */
-.bank-section {
-    margin-top: 25px;
-    text-align: center;
-}
-
-.btn-copy {
-    background: transparent;
-    border: 1px solid var(--accent-blue);
-    color: var(--accent-blue);
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: all 0.3s;
-    display: inline-flex;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
 }
 
-.btn-copy:hover {
-    background: rgba(59, 141, 153, 0.1);
-    box-shadow: 0 0 10px rgba(59, 141, 153, 0.2);
+/* Fondos flotantes */
+.bg-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    z-index: -1;
+    animation: floating 10s ease-in-out infinite alternate;
+}
+.bg-glow-1 { top: -50px; left: -50px; background: var(--primary-cyan); }
+.bg-glow-2 { bottom: -50px; right: -50px; background: var(--accent-blue); animation-delay: 2s; }
+
+@keyframes floating { from { transform: translate(0,0); } to { transform: translate(30px, 30px); } }
+
+/* Contenedor Principal */
+.container {
+    max-width: 500px;
+    width: 100%;
+    background: var(--bg-panel);
+    backdrop-filter: var(--glass-blur); 
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: var(--panel-border);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+    position: relative;
+    overflow: hidden;
 }
 
-.btn-copy:active {
-    transform: scale(0.98);
+h1 { font-weight: 300; text-align: center; margin-bottom: 10px; }
+.neon-text { font-weight: 700; color: var(--primary-cyan); text-shadow: 0 0 8px var(--accent-glow); }
+.subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 30px; font-size: 0.9em; }
+
+/* Inputs y Botones */
+.input-group { margin-bottom: 25px; }
+label { display: block; margin-bottom: 8px; color: var(--primary-cyan); font-size: 0.9em; font-weight: 600; text-transform: uppercase; }
+
+input[type="text"] {
+    width: 100%; padding: 15px; border: 2px solid rgba(91, 121, 155, 0.3); border-radius: 12px;
+    font-size: 1.1em; text-align: center; background-color: rgba(63, 84, 106, 0.2); color: var(--text-primary);
+    transition: all 0.3s; outline: none; box-sizing: border-box;
 }
+input[type="text"]:focus { border-color: var(--primary-cyan); background-color: rgba(63, 84, 106, 0.4); }
+.input-error { border-color: var(--danger-red) !important; animation: shake 0.4s; }
+.input-success { border-color: var(--success-green) !important; }
+
+.btn-neon {
+    width: 100%; padding: 15px; border: none; border-radius: 12px; cursor: pointer;
+    font-size: 1.1em; font-weight: 700; text-transform: uppercase;
+    background: linear-gradient(90deg, var(--accent-blue), var(--primary-cyan));
+    color: #0a0e17; transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(100, 221, 237, 0.3);
+}
+.btn-neon:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(100, 221, 237, 0.5); }
+.loading-btn { opacity: 0.7; pointer-events: none; }
+
+/* Resultados */
+#detalle-recibo { margin-top: 30px; min-height: 100px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+.recibo-header { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 12px; }
+.client-label { font-size: 0.8em; color: var(--text-secondary); margin: 0; text-transform: uppercase; }
+.client-name { font-size: 1.3em; font-weight: bold; color: var(--primary-cyan); margin: 5px 0 0 0; }
+.invoice-date { font-weight: bold; margin: 5px 0 0 0; }
+
+.neon-subtitle { color: var(--primary-cyan); margin: 20px 0 15px 0; border-bottom: 1px solid rgba(100,221,237,0.3); padding-bottom: 5px; }
+
+/* Fechas */
+.dates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; text-align: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
+.date-item h4 { margin: 0 0 5px 0; font-size: 0.7em; color: var(--text-secondary); text-transform: uppercase; }
+.date-item p { margin: 0; font-size: 0.9em; font-weight: bold; }
+
+/* Tabla */
+.table-responsive { overflow-x: auto; }
+.recibo-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+.recibo-table th { text-align: left; padding: 10px; color: var(--text-secondary); font-size: 0.8em; text-transform: uppercase; }
+.recibo-table tbody tr { background-color: rgba(63, 84, 106, 0.3); }
+.recibo-table td { padding: 12px; border: none; }
+.recibo-table tbody tr td:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+.recibo-table tbody tr td:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+.text-right { text-align: right; }
+.total-final-row td { padding-top: 15px; font-size: 1.1em; border-top: 1px solid rgba(255,255,255,0.1); }
+.estado-deuda .total-amount { color: var(--danger-red); font-weight: 900; font-size: 1.4em; }
+.estado-pagado .total-amount { color: var(--success-green); font-weight: 900; font-size: 1.4em; }
+
+/* Botón Banco */
+.bank-section { margin-top: 25px; text-align: center; }
+.btn-copy { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+.btn-copy:hover { background: rgba(59, 141, 153, 0.1); transform: scale(1.05); }
+
+/* IMAGEN DE PAGADO */
+.paid-stamp-img {
+    position: absolute; top: 50%; left: 50%; width: 250px; opacity: 0; 
+    transform: translate(-50%, -50%) rotate(-15deg) scale(2);
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none; z-index: 10; filter: drop-shadow(0 0 15px rgba(46, 213, 115, 0.4));
+}
+.is-paid .paid-stamp-img { opacity: 0.9; transform: translate(-50%, -50%) rotate(-15deg) scale(1); }
+
+/* Mensajes y Animaciones */
+.message { padding: 10px 20px; border-radius: 50px; font-size: 0.9em; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.error-message { background: rgba(255, 71, 87, 0.2); color: #ffb6c1; border: 1px solid var(--danger-red); }
+.loading-message { color: var(--primary-cyan); }
+.spinner { width: 15px; height: 15px; border: 2px solid rgba(100,221,237,0.3); border-top-color: var(--primary-cyan); border-radius: 50%; animation: spin 1s linear infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@keyframes pop-in { 0% { opacity: 0; transform: scale(0.95) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+.animate-pop-in { animation: pop-in 0.6s ease-out; }
+.slide-up-fade-in { animation: pop-in 0.5s ease-out; }
+.staggered-row { opacity: 0; animation: pop-in 0.4s ease-out forwards; }
+
+/* Indicador Versión */
+.version-tag { position: fixed; bottom: 10px; right: 15px; font-family: monospace; color: var(--primary-cyan); opacity: 0.5; font-size: 0.8em; animation: pulse 4s infinite; }
+@keyframes pulse { 50% { opacity: 0.8; } }
