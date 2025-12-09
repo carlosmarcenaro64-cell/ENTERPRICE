@@ -31,14 +31,17 @@
         </div>
     </div>
 
-    <div class="version-tag">Sys.Ver 0.5</div>
+    <div class="version-tag">Sys.Ver 0.5.1</div>
 
     <script>
         // === CONFIGURACIÓN ===
+        // Su URL de API (Asegúrese de que sea la última desplegada)
         const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
         
-        // DATOS DE LA CUENTA BANCARIA (Edite aquí)
-        const CUENTA_BANCO = "Banco Agrícola: 300-555-000-1 | A nombre de: Enterprice S.A.";
+        // DATOS BANCARIOS
+        const CUENTA_BANCO = "Banco Agrícola: 300-555-000-1 | Enterprice S.A.";
+        // IMAGEN DE PAGADO (Sello verde)
+        const URL_IMAGEN_PAGADO = "https://i.imgur.com/K711e1r.png"; 
         // ====================
 
         const inputTelefono = document.getElementById('numero-telefono');
@@ -52,8 +55,11 @@
 
         function mostrarMensaje(mensaje, tipo) {
             const existingResult = detalleReciboDiv.querySelector('.result-content');
+            const existingImg = detalleReciboDiv.querySelector('.paid-stamp-img');
+            
             if (existingResult) existingResult.remove();
-            // Removemos clases de estado previo del panel
+            if (existingImg) existingImg.remove();
+
             detalleReciboDiv.classList.remove('is-paid'); 
             
             mensajeContainer.style.display = 'flex';
@@ -72,7 +78,7 @@
             }
 
             btnBuscar.classList.add('loading-btn');
-            mostrarMensaje('<div class="spinner"></div> Accediendo al sistema...', 'loading');
+            mostrarMensaje('<div class="spinner"></div> Conectando con Enterprice...', 'loading');
 
             fetch(URL_API)
             .then(res => res.json())
@@ -91,17 +97,16 @@
             .catch(err => {
                 console.error(err);
                 btnBuscar.classList.remove('loading-btn');
-                mostrarMensaje('Error de conexión con el servidor.', 'error');
+                mostrarMensaje('Error de conexión. Intente más tarde.', 'error');
             });
         }
 
         function renderizarRecibo(data) {
             mensajeContainer.style.display = 'none';
             
-            // Lógica de estado de pago
-            const estaPagado = data.pagado === true; // Viene del script
+            // Lógica de Pagado
+            const estaPagado = data.pagado === true; 
             
-            // Añadimos clase al padre para activar la marca de agua si aplica
             if (estaPagado) {
                 detalleReciboDiv.classList.add('is-paid');
             } else {
@@ -111,7 +116,7 @@
             const totalFinal = data.totalServicios + data.pendienteAnterior;
 
             let html = `
-            <div class="watermark">CANCELADO</div>
+            ${estaPagado ? `<img src="${URL_IMAGEN_PAGADO}" class="paid-stamp-img" alt="PAGADO">` : ''}
 
             <div class="result-content slide-up-fade-in">
                 <div class="recibo-header">
@@ -128,26 +133,26 @@
                 <div class="dates-grid">
                     <div class="date-item">
                         <h4>F. Corte</h4>
-                        <p>${data.fechaCorte || '--'}</p>
+                        <p>${data.fechaCorte}</p>
                     </div>
                     <div class="date-item">
                         <h4>F. Pago</h4>
-                        <p style="color: var(--primary-cyan)">${data.fechaLimite || '--'}</p>
+                        <p style="color: var(--primary-cyan)">${data.fechaLimite}</p>
                     </div>
                     <div class="date-item">
                         <h4>F. Mora</h4>
-                        <p style="color: var(--danger-red)">${data.fechaMora || '--'}</p>
+                        <p style="color: var(--danger-red)">${data.fechaMora}</p>
                     </div>
                 </div>
                 
-                <h3 class="neon-subtitle">Servicios</h3>
+                <h3 class="neon-subtitle">Detalle de Servicios</h3>
                 <div class="table-responsive">
                     <table class="recibo-table">
                         <thead>
                             <tr>
-                                <th>Item</th>
-                                <th>$$</th>
-                                <th>#</th>
+                                <th>Servicio</th>
+                                <th>Precio</th>
+                                <th>Cant.</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -190,7 +195,7 @@
                     <button class="btn-copy" onclick="copiarCuenta()">
                         <span>🏦 Copiar Datos de Cuenta</span>
                     </button>
-                    <p id="copy-feedback" style="font-size: 0.8em; color: var(--success-green); height: 1em; opacity: 0; transition: opacity 0.3s;">¡Copiado al portapapeles!</p>
+                    <p id="copy-feedback" style="font-size: 0.8em; color: var(--success-green); height: 1em; opacity: 0; transition: opacity 0.3s; margin-top: 5px;">¡Copiado al portapapeles!</p>
                 </div>
             </div>
             `;
@@ -199,17 +204,11 @@
             detalleReciboDiv.appendChild(mensajeContainer); 
         }
 
-        // Función independiente para copiar
         function copiarCuenta() {
             navigator.clipboard.writeText(CUENTA_BANCO).then(() => {
                 const feedback = document.getElementById('copy-feedback');
                 feedback.style.opacity = '1';
-                setTimeout(() => {
-                    feedback.style.opacity = '0';
-                }, 2000);
-            }).catch(err => {
-                console.error('Error al copiar:', err);
-                alert('No se pudo copiar automáticamente. La cuenta es: ' + CUENTA_BANCO);
+                setTimeout(() => { feedback.style.opacity = '0'; }, 2000);
             });
         }
     </script>
