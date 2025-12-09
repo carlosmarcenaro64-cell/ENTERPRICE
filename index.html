@@ -31,6 +31,222 @@
         </div>
     </div>
 
+    <div class="version-tag">Sys.Ver 0.5</div>
+
+    <script>
+        // === CONFIGURACIÓN ===
+        const URL_API = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
+        
+        // DATOS DE LA CUENTA BANCARIA (Edite aquí)
+        const CUENTA_BANCO = "Banco Agrícola: 300-555-000-1 | A nombre de: Enterprice S.A.";
+        // ====================
+
+        const inputTelefono = document.getElementById('numero-telefono');
+        const btnBuscar = document.getElementById('buscar-recibo');
+        const detalleReciboDiv = document.getElementById('detalle-recibo');
+        const mensajeEstado = document.getElementById('mensaje-estado');
+        const mensajeContainer = document.getElementById('mensaje-estado-container');
+
+        btnBuscar.addEventListener('click', buscarRecibo);
+        inputTelefono.addEventListener('keypress', (e) => { if (e.key === 'Enter') buscarRecibo(); });
+
+        function mostrarMensaje(mensaje, tipo) {
+            const existingResult = detalleReciboDiv.querySelector('.result-content');
+            if (existingResult) existingResult.remove();
+            // Removemos clases de estado previo del panel
+            detalleReciboDiv.classList.remove('is-paid'); 
+            
+            mensajeContainer.style.display = 'flex';
+            mensajeEstado.className = `message ${tipo}-message fade-in`;
+            mensajeEstado.innerHTML = mensaje;
+        }
+
+        function buscarRecibo() {
+            const telefono = inputTelefono.value.trim();
+            inputTelefono.classList.remove('input-error', 'input-success');
+            
+            if (!telefono) {
+                inputTelefono.classList.add('input-error');
+                mostrarMensaje('Por favor, ingresa un número válido.', 'error');
+                return;
+            }
+
+            btnBuscar.classList.add('loading-btn');
+            mostrarMensaje('<div class="spinner"></div> Accediendo al sistema...', 'loading');
+
+            fetch(URL_API)
+            .then(res => res.json())
+            .then(data => {
+                const cliente = data[telefono];
+                btnBuscar.classList.remove('loading-btn');
+
+                if (cliente) {
+                    inputTelefono.classList.add('input-success');
+                    renderizarRecibo(cliente);
+                } else {
+                    inputTelefono.classList.add('input-error');
+                    mostrarMensaje(`Número <strong>${telefono}</strong> no encontrado.`, 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                btnBuscar.classList.remove('loading-btn');
+                mostrarMensaje('Error de conexión con el servidor.', 'error');
+            });
+        }
+
+        function renderizarRecibo(data) {
+            mensajeContainer.style.display = 'none';
+            
+            // Lógica de estado de pago
+            const estaPagado = data.pagado === true; // Viene del script
+            
+            // Añadimos clase al padre para activar la marca de agua si aplica
+            if (estaPagado) {
+                detalleReciboDiv.classList.add('is-paid');
+            } else {
+                detalleReciboDiv.classList.remove('is-paid');
+            }
+
+            const totalFinal = data.totalServicios + data.pendienteAnterior;
+
+            let html = `
+            <div class="watermark">CANCELADO</div>
+
+            <div class="result-content slide-up-fade-in">
+                <div class="recibo-header">
+                    <div>
+                        <p class="client-label">Cliente</p>
+                        <p class="client-name">${data.nombre}</p>
+                    </div>
+                    <div style="text-align: right;">
+                         <p class="client-label">Emisión</p>
+                        <p class="invoice-date">${data.fechaEmision}</p>
+                    </div>
+                </div>
+
+                <div class="dates-grid">
+                    <div class="date-item">
+                        <h4>F. Corte</h4>
+                        <p>${data.fechaCorte || '--'}</p>
+                    </div>
+                    <div class="date-item">
+                        <h4>F. Pago</h4>
+                        <p style="color: var(--primary-cyan)">${data.fechaLimite || '--'}</p>
+                    </div>
+                    <div class="date-item">
+                        <h4>F. Mora</h4>
+                        <p style="color: var(--danger-red)">${data.fechaMora || '--'}</p>
+                    </div>
+                </div>
+                
+                <h3 class="neon-subtitle">Servicios</h3>
+                <div class="table-responsive">
+                    <table class="recibo-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>$$</th>
+                                <th>#</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            data.servicios.forEach((item, index) => {
+                html += `
+                    <tr style="animation-delay: ${index * 0.1}s" class="staggered-row">
+                        <td class="col-servicio">${item.servicio}</td>
+                        <td>$${item.precio.toFixed(2)}</td>
+                        <td>${item.cantidad}</td>
+                        <td class="col-total">$${item.total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                        <tfoot>
+                             <tr class="summary-row">
+                                <td colspan="3" class="text-right label-muted">Subtotal:</td>
+                                <td class="text-highlight">$${data.totalServicios.toFixed(2)}</td>
+                            </tr>
+                             <tr class="summary-row">
+                                <td colspan="3" class="text-right label-muted">Mora / Ant.:</td>
+                                <td>$${data.pendienteAnterior.toFixed(2)}</td>
+                            </tr>
+                            <tr class="total-final-row ${estaPagado ? 'estado-pagado' : 'estado-deuda'}">
+                                <td colspan="3" class="text-right total-label">
+                                    ${estaPagado ? 'MONTO PAGADO:' : 'TOTAL A PAGAR:'}
+                                </td>
+                                <td class="total-amount">$${totalFinal.toFixed(2)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="bank-section">
+                    <button class="btn-copy" onclick="copiarCuenta()">
+                        <span>🏦 Copiar Datos de Cuenta</span>
+                    </button>
+                    <p id="copy-feedback" style="font-size: 0.8em; color: var(--success-green); height: 1em; opacity: 0; transition: opacity 0.3s;">¡Copiado al portapapeles!</p>
+                </div>
+            </div>
+            `;
+
+            detalleReciboDiv.innerHTML = html;
+            detalleReciboDiv.appendChild(mensajeContainer); 
+        }
+
+        // Función independiente para copiar
+        function copiarCuenta() {
+            navigator.clipboard.writeText(CUENTA_BANCO).then(() => {
+                const feedback = document.getElementById('copy-feedback');
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error al copiar:', err);
+                alert('No se pudo copiar automáticamente. La cuenta es: ' + CUENTA_BANCO);
+            });
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Recibos Enterprice</title>
+    <link rel="stylesheet" href="diseño.css"> 
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧾</text></svg>">
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="container animate-pop-in">
+        <h1>Consulta tu Recibo <span class="neon-text">Enterprice</span></h1>
+        <p class="subtitle">Ingresa tu número de teléfono para ver tu detalle.</p>
+
+        <div class="input-group">
+            <label for="numero-telefono">Número de Teléfono</label>
+            <input type="text" id="numero-telefono" placeholder="Ej: 98765432" autocomplete="off">
+        </div>
+        
+        <button id="buscar-recibo" class="btn-neon">
+            <span>Buscar Recibo</span>
+        </button>
+
+        <div id="detalle-recibo" class="glass-panel">
+            <div id="mensaje-estado-container">
+                 <p id="mensaje-estado">Ingresa un número para buscar.</p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ==========================================================
         // CONFIGURACIÓN DE CONEXIÓN
@@ -176,3 +392,4 @@
     </script>
 </body>
 </html>
+
