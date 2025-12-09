@@ -1,281 +1,385 @@
-/* === ANIMACIONES === */
-/* Keyframes para el temblor (error) */
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-10px); }
-    40%, 80% { transform: translateX(10px); }
+/* === VARIABLES Y CONFIGURACIÓN BASE === */
+:root {
+    /* Paleta de Colores Cyberpunk/Modern */
+    --bg-dark: #0a0e17;
+    --bg-panel: rgba(20, 30, 48, 0.7); /* Panel semitransparente */
+    --primary-cyan: #64dded;
+    --accent-blue: #3b8d99;
+    --accent-glow: rgba(100, 221, 237, 0.6);
+    --text-primary: #e0f2f7;
+    --text-secondary: #a5c3d4;
+    --danger-red: #ff4757;
+    --success-green: #2ed573;
+    
+    /* Efectos */
+    --glass-blur: blur(12px);
+    --neon-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow);
+    --panel-border: 1px solid rgba(100, 221, 237, 0.2);
 }
 
-/* Keyframes para el éxito (verde/aqua suave) */
-@keyframes pulse-success {
-    0% { box-shadow: 0 0 0 0 rgba(100, 221, 237, 0.7); }
-    70% { box-shadow: 0 0 0 10px rgba(100, 221, 237, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(100, 221, 237, 0); }
-}
-
-/* Keyframes para que la tabla aparezca suavemente */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Keyframes para mensaje de carga */
-@keyframes pulse {
-    0% { opacity: 0.7; }
-    50% { opacity: 1; }
-    100% { opacity: 0.7; }
-}
-
-/* Clases aplicadas por JS */
-.shake-animation {
-    animation: shake 0.5s ease-in-out;
-    border-color: #ffb6c1 !important; /* Borde rojo claro para error */
-}
-
-.success-animation {
-    animation: pulse-success 0.8s;
-    border-color: #64dded !important; /* Borde aqua para éxito */
-}
-/* === FIN DE ANIMACIONES === */
-
-/* --- ESTILOS BASE --- */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #1a2a3a; /* Fondo oscuro (azul metálico oscuro) */
-    color: #e0f2f7; /* Color de texto claro */
+    font-family: 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
+    /* Fondo degradado profundo */
+    background: radial-gradient(circle at top right, #1a2a3a 0%, #0a0e17 100%);
+    color: var(--text-primary);
     margin: 0;
-    padding: 40px;
+    padding: 20px;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     min-height: 100vh;
+    overflow-x: hidden; /* Evitar scroll horizontal por efectos */
+    position: relative;
 }
 
+/* Elementos decorativos de fondo (resplandores sutiles) */
+.bg-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    z-index: -1;
+    animation: floating-glow 10s ease-in-out infinite alternate;
+}
+.bg-glow-1 { top: -50px; left: -50px; background: var(--primary-cyan); }
+.bg-glow-2 { bottom: -50px; right: -50px; background: var(--accent-blue); animation-delay: 2s; }
+
+
+/* === CONTENEDOR PRINCIPAL (Efecto Glassmorphism) === */
 .container {
-    max-width: 700px;
+    max-width: 500px; /* Un poco más estrecho para aspecto moderno */
     width: 100%;
-    background: #2b3e50; /* Fondo del contenedor (azul metálico) */
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); 
-    border: 1px solid #3b506b; 
+    /* El corazón del efecto cristal */
+    background: var(--bg-panel);
+    backdrop-filter: var(--glass-blur); 
+    -webkit-backdrop-filter: var(--glass-blur); /* Soporte Safari */
+    border: var(--panel-border);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); 
+    position: relative;
+    overflow: hidden;
 }
 
+/* === TIPOGRAFÍA Y HEADERS === */
 h1 {
-    color: #87ceeb; 
+    font-weight: 300;
     text-align: center;
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    letter-spacing: 1px;
 }
 
-.company-name {
-    font-size: 0.7em; 
-    font-weight: normal;
-    color: #64dded; 
-    border: 1px solid #64dded;
-    padding: 5px 10px;
-    border-radius: 5px;
+.neon-text {
+    font-weight: 700;
+    color: var(--primary-cyan);
+    text-shadow: 0 0 8px var(--accent-glow);
 }
 
 .subtitle {
     text-align: center;
-    color: #b0c4de; 
-    margin-bottom: 30px;
+    color: var(--text-secondary);
+    margin-bottom: 35px;
     font-size: 0.95em;
 }
 
-/* --- ELEMENTOS DE FORMULARIO --- */
+/* === FORMULARIO MODERNO === */
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
 label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-weight: 600;
-    color: #a5c3d4; 
-    font-size: 1.1em;
+    color: var(--primary-cyan);
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
-#numero-telefono { /* Usamos el ID del input */
-    width: 80%; 
-    max-width: 300px;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 2px solid #5b799b; 
-    border-radius: 8px;
+input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid rgba(91, 121, 155, 0.3);
+    border-radius: 12px;
     box-sizing: border-box;
-    font-size: 1em;
+    font-size: 1.1em;
     text-align: center;
-    background-color: #3f546a; 
-    color: #e0f2f7; 
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
-}
-
-#numero-telefono:focus {
-    border-color: #64dded; 
+    background-color: rgba(63, 84, 106, 0.2); /* Fondo semi-transparente */
+    color: var(--text-primary);
+    transition: all 0.3s ease;
     outline: none;
-    box-shadow: 0 0 8px rgba(100, 221, 237, 0.5); 
 }
 
-#buscar-recibo { /* Usamos el ID del botón */
-    background-color: #3b8d99; 
-    color: white;
-    padding: 12px 25px;
+/* Estados del Input */
+input[type="text"]:focus {
+    border-color: var(--primary-cyan);
+    box-shadow: 0 0 15px rgba(100, 221, 237, 0.3);
+    background-color: rgba(63, 84, 106, 0.4);
+}
+
+.input-error {
+    border-color: var(--danger-red) !important;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.4) !important;
+    animation: shake 0.4s ease-in-out;
+}
+
+.input-success {
+    border-color: var(--success-green) !important;
+    box-shadow: 0 0 10px rgba(46, 213, 115, 0.4) !important;
+}
+
+
+/* === BOTÓN NEÓN === */
+.btn-neon {
+    width: 100%;
+    padding: 15px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 1.1em;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 100%; /* Opcional: para que ocupe todo el ancho */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #0a0e17; /* Texto oscuro para contraste */
+    background: linear-gradient(90deg, var(--accent-blue), var(--primary-cyan));
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(100, 221, 237, 0.3);
 }
 
-#buscar-recibo:hover {
-    background-color: #2a6f7b; 
-    transform: translateY(-2px);
+.btn-neon:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(100, 221, 237, 0.5);
 }
 
-#buscar-recibo:active {
-    transform: translateY(0);
+.btn-neon:active:not(:disabled) {
+    transform: translateY(-1px);
 }
 
-/* --- RESULTADO Y MENSAJES --- */
-#detalle-recibo { /* Sección donde se muestra el resultado */
+/* Efecto de brillo al pasar el mouse sobre el botón */
+.btn-neon::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(45deg) translateY(-100%);
+    transition: transform 0.6s ease;
+}
+
+.btn-neon:hover::after {
+    transform: rotate(45deg) translateY(100%);
+}
+
+
+/* === PANEL DE RESULTADOS === */
+#detalle-recibo {
     margin-top: 30px;
-    padding: 20px;
-    border: 1px solid #3f546a; 
-    border-radius: 10px;
-    background-color: #344a60; 
-    min-height: 150px; 
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
 }
 
-#detalle-recibo h2 {
-    color: #87ceeb; 
-    margin-top: 0;
-    border-bottom: 1px solid #4a637a;
-    padding-bottom: 10px;
-}
-
-/* Estilos de mensajes de estado usados en JS (mensajeEstado) */
-.message {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.error-message { 
-    color: #ffb6c1;
-    background-color: #5e1c2a;
-    border: 1px solid #ffb6c1;
-}
-
-.loading { 
-    color: #64dded;
-    background-color: #3f546a;
-    border: 1px solid #64dded;
-    animation: pulse 1.5s infinite;
-}
-
-/* --- TABLA DE RECIBO --- */
-.recibo-table { /* Usamos la clase que creaste en el HTML/JS */
+/* Contenedor interno del resultado cuando aparece */
+.result-content {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    animation: fadeIn 1s ease-out; 
 }
 
-.recibo-table th, .recibo-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #4a637a; 
-    color: #e0f2f7; 
+/* Cabecera del recibo (Cliente y Fecha) */
+.recibo-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+.client-label { font-size: 0.8em; color: var(--text-secondary); margin: 0; text-transform: uppercase; }
+.client-name { font-size: 1.3em; font-weight: bold; color: var(--primary-cyan); margin: 5px 0 0 0; }
+.invoice-date { font-weight: bold; margin: 5px 0 0 0; }
+
+.neon-subtitle {
+    color: var(--primary-cyan);
+    margin: 20px 0 15px 0;
+    border-bottom: 2px solid rgba(100, 221, 237, 0.3);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+
+/* === TABLA MODERNA === */
+.table-responsive {
+    overflow-x: auto;
+}
+
+.recibo-table {
+    width: 100%;
+    border-collapse: separate; /* Necesario para bordes redondeados en filas */
+    border-spacing: 0 8px; /* Espacio entre filas */
 }
 
 .recibo-table th {
-    background-color: #5b799b; 
-    color: #e0f2f7; 
-    font-weight: 700;
-}
-
-.recibo-table tr:nth-child(even) { 
-    background-color: #3f546a; 
-}
-
-/* Filas de Totales */
-.pendiente-anterior-row {
-    font-weight: 500;
-    background-color: #3b506a; 
-    color: #b0c4de;
-}
-
-.total-servicios-row { /* Total de servicios del mes (subtotal) */
-    font-weight: bold;
-    background-color: #4a637a; 
-    color: #e0f2f7;
-    border-top: 1px solid #5b799b;
-}
-
-.total-final-row { /* Total Pendiente a Pagar (el más importante) */
-    font-weight: bold;
-    background-color: #7b2c3d; /* Fondo color de error/alerta */
-    color: #ffb6c1; /* Texto rojo claro */
-    font-size: 1.2em;
-    border-top: 3px solid #ffb6c1; 
-}
-
-/* --- ESTILOS DE PAGO (Si decides implementarlos) --- */
-.payment-details {
-    margin-top: 15px;
-    padding: 10px;
-    border: 1px dashed #5b799b;
-    border-radius: 8px;
-    background-color: #3f546a;
-    color: #b0c4de;
+    text-align: left;
+    padding: 15px;
+    color: var(--text-secondary);
     font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.payment-details p {
-    margin: 5px 0;
+.recibo-table tbody tr {
+    background-color: rgba(63, 84, 106, 0.3);
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.payment-buttons-container {
+/* Bordes redondeados para las filas */
+.recibo-table tbody tr td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+.recibo-table tbody tr td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+
+.recibo-table tbody tr:hover {
+    transform: scale(1.02);
+    background-color: rgba(100, 221, 237, 0.15);
+}
+
+.recibo-table td {
+    padding: 15px;
+    border: none;
+}
+
+.col-servicio { font-weight: 500; }
+.col-total { font-weight: 700; color: var(--primary-cyan); }
+
+/* FOOTER DE TOTALES */
+.recibo-table tfoot td { padding: 10px 15px; }
+.text-right { text-align: right; }
+.label-muted { color: var(--text-secondary); font-size: 0.9em; }
+.text-highlight { font-weight: bold; color: var(--text-primary); }
+
+.total-final-row {
+    position: relative;
+}
+
+/* Fondo potente para el total final */
+.total-final-row td {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 1.1em;
+}
+
+/* Estilo específico si debe dinero */
+.estado-deuda .total-amount {
+    color: var(--danger-red);
+    font-size: 1.5em;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+
+/* Estilo específico si está al día (saldo 0) */
+.estado-pagado .total-amount {
+    color: var(--success-green);
+    font-size: 1.5em;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(46, 213, 115, 0.5);
+}
+
+
+/* === MENSAJES Y ESTADOS === */
+#mensaje-estado-container {
     display: flex;
-    gap: 15px;
-    margin-top: 15px;
     justify-content: center;
-    flex-wrap: wrap;
+    width: 100%;
 }
 
-.payment-button {
-    text-decoration: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: background-color 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+.message {
+    padding: 15px 25px;
+    border-radius: 50px; /* Forma de píldora */
+    font-weight: 600;
     text-align: center;
-    flex-grow: 1;
-    max-width: 250px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(5px);
 }
 
-.bank-agricola {
-    background-color: #c0392b; 
-    color: #e0f2f7; 
+.error-message {
+    color: #ffb6c1;
+    background-color: rgba(94, 28, 42, 0.8);
+    border: 1px solid rgba(255, 182, 193, 0.3);
 }
 
-.bank-agricola:hover {
-    background-color: #9d2e23;
+.loading-message {
+    color: var(--primary-cyan);
+    background-color: rgba(63, 84, 106, 0.5);
+    border: 1px solid var(--accent-glow);
 }
 
-.n1co-app {
-    background-color: #3b8d99; 
-    color: #ffffff;
+
+/* === ANIMACIONES KEYFRAMES === */
+
+/* Temblor (Error) */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
 }
 
-.n1co-app:hover {
-    background-color: #2a6f7b;
+/* Entrada Pop-in (Contenedor Principal) */
+@keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.9) translateY(30px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.animate-pop-in { animation: pop-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+
+/* Deslizar hacia arriba y aparecer (Resultados) */
+@keyframes slide-up-fade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.slide-up-fade-in { animation: slide-up-fade 0.6s ease-out forwards; }
+
+
+/* Aparición escalonada de filas */
+@keyframes staggered-appear {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.staggered-row {
+    opacity: 0; /* Invisible al inicio */
+    animation: staggered-appear 0.5s ease-out forwards;
+}
+
+/* Spinner de carga moderno */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(100, 221, 237, 0.3);
+    border-top-color: var(--primary-cyan);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+
+/* Animación de los resplandores de fondo */
+@keyframes floating-glow {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+    100% { transform: translate(30px, 30px) scale(1.1); opacity: 0.25; }
+}
+
+/* Estado de botón cargando */
+.loading-btn {
+    pointer-events: none;
+    opacity: 0.8;
 }
