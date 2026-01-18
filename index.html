@@ -2,290 +2,241 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Enterprice | Estado de Cuenta</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
-    
-    <style>
-        /* === ARQUITECTURA VISUAL (Titanium Minimal) === */
-        :root {
-            --bg-deep: #050505;
-            --bg-surface: #10141d;
-            --primary: #00f2ff; 
-            --text-main: #ffffff;
-            --text-muted: #8b9bb4;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --shadow: 0 10px 40px -10px rgba(0,0,0,0.8);
-        }
-
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-deep);
-            background-image: radial-gradient(at 50% 0%, rgba(0, 242, 255, 0.1) 0px, transparent 50%);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-            animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Cabecera */
-        header { text-align: center; margin-bottom: 30px; }
-        h1 { margin: 0; font-weight: 800; letter-spacing: -1px; color: white; }
-        .brand-accent { color: var(--primary); }
-        .tagline { color: var(--text-muted); font-size: 0.9em; margin-top: 5px; }
-
-        /* Inputs */
-        .search-box { position: relative; margin-bottom: 25px; }
-        input {
-            width: 100%;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 16px;
-            border-radius: 16px;
-            color: white;
-            font-size: 1.1em;
-            text-align: center;
-            transition: 0.3s;
-        }
-        input:focus { border-color: var(--primary); background: rgba(0, 242, 255, 0.02); }
-
-        .btn-action {
-            width: 100%;
-            padding: 16px;
-            background: var(--text-main);
-            color: black;
-            border: none;
-            border-radius: 16px;
-            font-weight: 700;
-            font-size: 1em;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,255,255,0.2); }
-        
-        /* Resultados */
-        #result-card { display: none; margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
-        
-        .client-info { text-align: center; margin-bottom: 30px; }
-        .client-label { font-size: 0.7em; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-        .client-name { font-size: 1.8em; font-weight: 700; color: white; margin-top: 5px; }
-
-        /* Lista Servicios */
-        .invoice-list { list-style: none; padding: 0; margin: 0 0 25px 0; }
-        .invoice-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 1em;
-        }
-        .item-price { font-weight: 600; }
-
-        /* Totales Limpios */
-        .totals-section {
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-        
-        .total-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95em; color: var(--text-muted); }
-        
-        .total-row.final {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border);
-            color: var(--text-main);
-            font-size: 1.3em;
-            font-weight: 800;
-            align-items: center;
-        }
-
-        /* Banco */
-        .bank-details { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border); }
-        .bank-number { font-family: monospace; font-size: 1.2em; letter-spacing: 1px; display: block; margin: 10px 0; color: var(--primary); }
-        .btn-copy { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 0.8em; }
-
-        /* Utils */
-        .loader { width: 20px; height: 20px; border: 2px solid rgba(0,0,0,0.1); border-top-color: #000; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .error-toast { color: #ff0055; text-align: center; margin-top: 15px; font-size: 0.9em; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitácora de C/A | Carlos & Alexandra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="app-container">
-        <header>
-            <h1>ENTER<span class="brand-accent">PRICE</span></h1>
-            <div class="tagline">Portal de Pagos</div>
-        </header>
+<header class="main-header reveal">
+    <h1 class="glow-title">BITÁCORA DE C/A</h1>
+    <p class="subtitle">Archivo de Aventuras Eternas</p>
+</header>
 
-        <div class="search-section">
-            <div class="search-box">
-                <input type="text" id="telefono" placeholder="Número de teléfono..." autocomplete="off" inputmode="numeric">
+<main class="container">
+    <section class="glass-panel filters reveal" style="transition-delay: 0.2s;">
+        <div class="filter-row">
+            <div class="filter-item">
+                <label>📅 Por Fecha</label>
+                <input type="date" id="filtroFecha" onchange="window.filtrar()">
             </div>
-            <button class="btn-action" onclick="consultar()">
-                <span id="btn-text">CONSULTAR</span>
-            </button>
-            <div id="error-msg" class="error-toast"></div>
+            <div class="filter-item">
+                <label>⭐ Por Promedio</label>
+                <select id="filtroEstrellas" onchange="window.filtrar()">
+                    <option value="todos">Todos</option>
+                    <option value="10">10 Estrellas</option>
+                    <option value="9">9 Estrellas</option>
+                    <option value="8">8 Estrellas</option>
+                </select>
+            </div>
+            <button class="btn-clean" onclick="location.reload()">Limpiar</button>
         </div>
+    </section>
 
-        <div id="result-card">
-            <div class="client-info">
-                <div class="client-label">Cliente</div>
-                <div class="client-name" id="client-name">--</div>
+    <section class="glass-panel form-card reveal" style="transition-delay: 0.4s;">
+        <div class="form-header">
+            <h3 id="formTitle">📝 Registrar Nueva Experiencia</h3>
+            <span id="editBadge" class="badge-edit hidden-el">MODO EDICIÓN</span>
+        </div>
+        
+        <input type="hidden" id="editKey">
+        
+        <div class="form-body">
+            <div class="input-row main-select">
+                <select id="tipoEntrada" onchange="window.alternarCampos()" class="select-glow">
+                    <option value="lugar">📍 Salida / Lugar</option>
+                    <option value="cine">🎬 Película / Cine</option>
+                </select>
             </div>
 
-            <ul class="invoice-list" id="services-list"></ul>
-
-            <div class="totals-section">
-                <div class="total-row">
-                    <span>Subtotal</span>
-                    <span id="val-subtotal">$0.00</span>
+            <div class="input-grid">
+                <div class="input-group">
+                    <input type="text" id="nombre" placeholder=" " required>
+                    <label>Nombre del lugar o película</label>
                 </div>
-                <div class="total-row">
-                    <span>Deuda Anterior</span>
-                    <span id="val-debt">$0.00</span>
+                <div class="input-group">
+                    <input type="text" id="foto" placeholder=" " required>
+                    <label>URL de la imagen</label>
                 </div>
-                
-                <div class="total-row final">
-                    <span id="label-total">TOTAL</span>
-                    <span id="val-total">$0.00</span>
+                <div class="input-group">
+                    <input type="date" id="fecha" required>
+                    <label class="static-label">Fecha</label>
                 </div>
             </div>
 
-            <div class="bank-details">
-                <div style="font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px;">Carlos Panameño • Bancoagrícola</div>
-                <span class="bank-number">3113009677</span>
-                <button class="btn-copy" onclick="copiar()">Copiar Cuenta</button>
+            <div id="camposLugar" class="dynamic-section">
+                <div class="input-grid-2">
+                    <div class="input-group">
+                        <input type="number" id="califCarlosL" min="1" max="10" placeholder=" ">
+                        <label>Rating Carlos (1-10)</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="califAlexandraL" min="1" max="10" placeholder=" ">
+                        <label>Rating Alexandra (1-10)</label>
+                    </div>
+                </div>
+                <div class="textarea-grid">
+                    <textarea id="divertido" placeholder="Lo más divertido..."></textarea>
+                    <textarea id="aburrido" placeholder="Lo más aburrido..."></textarea>
+                </div>
+            </div>
+
+            <div id="camposCine" class="dynamic-section hidden-el">
+                <div class="input-grid-2">
+                    <div class="input-group">
+                        <input type="number" id="califCarlosC" min="1" max="10" placeholder=" ">
+                        <label>Rating Carlos (1-10)</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="califAlexandraC" min="1" max="10" placeholder=" ">
+                        <label>Rating Alexandra (1-10)</label>
+                    </div>
+                </div>
+                <div class="input-row" style="margin-top: 20px;">
+                    <select id="generoCine" class="select-glow">
+                        <option value="">🎬 Seleccionar Género</option>
+                        <option value="Acción">Acción</option>
+                        <option value="Comedia">Comedia</option>
+                        <option value="Terror">Terror</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Animación">Animación</option>
+                        <option value="Drama">Drama</option>
+                    </select>
+                </div>
+                <div class="textarea-grid">
+                    <textarea id="gustoCine" placeholder="Lo que más nos gustó..."></textarea>
+                    <textarea id="noGustoCine" placeholder="Lo que no nos gustó..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <button class="btn-save" id="btnGuardar">Guardar Memoria</button>
+                <button class="btn-cancel hidden-el" onclick="window.cancelarEdicion()">Cancelar</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <script>
-        // URL DE SU SCRIPT (Asegúrese de que sea la correcta v0.5.5)
-        const API_URL = "https://script.google.com/macros/s/AKfycbyv_Yj9_Z5HfRn6dZ1cb65-CAf4T4ggmoIDmg4iUlz9Sz6tWVfcBszBo9bPnwImOdP-6Q/exec";
+    <div class="grid-display" id="contenedorPrincipal"></div>
+</main>
 
-        async function consultar() {
-            const input = document.getElementById('telefono');
-            const btn = document.querySelector('.btn-action');
-            const btnText = document.getElementById('btn-text');
-            const errorDiv = document.getElementById('error-msg');
-            const resultCard = document.getElementById('result-card');
-            
-            const tel = input.value.trim();
-            errorDiv.textContent = "";
-            resultCard.style.display = 'none';
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-            if (!tel) {
-                mostrarError("Ingresa un número válido");
-                return;
-            }
+    const firebaseConfig = {
+        apiKey: "AIzaSyDgc_fOFDZZTcBe2mtD0uGpgcFl4f34oPI",
+        authDomain: "bitacora-ca.firebaseapp.com",
+        projectId: "bitacora-ca",
+        storageBucket: "bitacora-ca.firebasestorage.app",
+        messagingSenderId: "707668977849",
+        appId: "1:707668977849:web:5e72c6eb55fcdfb4dad368",
+        databaseURL: "https://bitacora-ca-default-rtdb.firebaseio.com/"
+    };
 
-            // Loading
-            btnText.style.display = 'none';
-            const loader = document.createElement('span');
-            loader.className = 'loader';
-            btn.appendChild(loader);
-            btn.disabled = true;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const aventurasRef = ref(db, 'aventuras');
 
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                const cliente = data[tel];
+    window.alternarCampos = () => {
+        const t = document.getElementById('tipoEntrada').value;
+        document.getElementById('camposLugar').classList.toggle('hidden-el', t !== 'lugar');
+        document.getElementById('camposCine').classList.toggle('hidden-el', t !== 'cine');
+    };
 
-                if (cliente) {
-                    renderizar(cliente);
-                } else {
-                    mostrarError("No se encontró el cliente");
-                }
-            } catch (err) {
-                console.error(err);
-                mostrarError("Error de conexión");
-            } finally {
-                btnText.style.display = 'inline';
-                if(btn.contains(loader)) btn.removeChild(loader);
-                btn.disabled = false;
-            }
+    document.getElementById('btnGuardar').onclick = () => {
+        const key = document.getElementById('editKey').value;
+        const tipo = document.getElementById('tipoEntrada').value;
+        
+        const c1 = parseFloat(tipo === 'lugar' ? document.getElementById('califCarlosL').value : document.getElementById('califCarlosC').value) || 0;
+        const c2 = parseFloat(tipo === 'lugar' ? document.getElementById('califAlexandraL').value : document.getElementById('califAlexandraC').value) || 0;
+        const promedio = ((c1 + c2) / 2).toFixed(1);
+
+        const data = {
+            tipo,
+            nombre: document.getElementById('nombre').value,
+            foto: document.getElementById('foto').value,
+            fecha: document.getElementById('fecha').value,
+            califCarlos: c1,
+            califAlexandra: c2,
+            rating: promedio,
+            genero: tipo === 'cine' ? document.getElementById('generoCine').value : "",
+            divertido: document.getElementById('divertido').value || "",
+            aburrido: document.getElementById('aburrido').value || "",
+            gusto: document.getElementById('gustoCine').value || "",
+            noGusto: document.getElementById('noGustoCine').value || ""
+        };
+
+        if(key) {
+            update(ref(db, `aventuras/${key}`), data).then(() => location.reload());
+        } else {
+            push(aventurasRef, data).then(() => location.reload());
         }
+    };
 
-        function renderizar(c) {
-            document.getElementById('result-card').style.display = 'block';
-            document.getElementById('client-name').textContent = c.nombre;
+    onValue(aventurasRef, (snap) => {
+        window.raw = snap.val();
+        window.render(window.raw);
+    });
 
-            // Servicios
-            const list = document.getElementById('services-list');
-            list.innerHTML = '';
-            c.servicios.forEach(s => {
-                list.innerHTML += `
-                    <li class="invoice-item">
-                        <span>${s.servicio}</span>
-                        <span class="item-price">$${s.total.toFixed(2)}</span>
-                    </li>`;
-            });
-
-            // Matemáticas Ocultas (Calculamos pero mostramos limpio)
-            const subtotal = c.totalServicios;
-            const deuda = c.pendienteAnterior;
-            // Usamos saldoFinal que viene del script v0.6.0+ o calculamos aquí simple
-            // Si usa el script viejo, c.saldoFinal puede ser undefined, así que aseguramos:
-            let total = c.saldoFinal !== undefined ? c.saldoFinal : (subtotal + deuda);
-            
-            // Si el total es 0 o menor, mostramos 0.00
-            let displayTotal = total <= 0.01 ? 0.00 : total;
-
-            document.getElementById('val-subtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('val-debt').textContent = `$${deuda.toFixed(2)}`;
-            
-            const valTotalEl = document.getElementById('val-total');
-            valTotalEl.textContent = `$${displayTotal.toFixed(2)}`;
-            
-            // Color del total (Verde si es 0, Blanco si hay deuda)
-            if(displayTotal === 0) {
-                valTotalEl.style.color = "var(--primary)"; // Cian/Verde para saldo limpio
-                document.getElementById('label-total').textContent = "SALDO AL DÍA";
-            } else {
-                valTotalEl.style.color = "white";
-                document.getElementById('label-total').textContent = "TOTAL A PAGAR";
-            }
-        }
-
-        function mostrarError(msg) {
-            const div = document.getElementById('error-msg');
-            div.textContent = msg;
-        }
-
-        function copiar() {
-            navigator.clipboard.writeText("3113009677");
-            const btn = document.querySelector('.btn-copy');
-            btn.textContent = "¡Copiado!";
-            setTimeout(() => btn.textContent = "Copiar Cuenta", 2000);
-        }
-
-        document.getElementById('telefono').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter') consultar();
+    window.render = (data) => {
+        const cont = document.getElementById('contenedorPrincipal');
+        cont.innerHTML = '';
+        if(!data) return;
+        Object.keys(data).reverse().forEach((id, index) => {
+            const e = data[id];
+            cont.innerHTML += `
+                <div class="card reveal" style="transition-delay: ${index * 0.1}s">
+                    <img src="${e.foto}" class="card-img">
+                    <div class="card-info">
+                        <div class="tag-row">
+                            <span class="tag ${e.tipo}">${e.tipo}</span>
+                            ${e.genero ? `<span class="tag-gen">${e.genero}</span>` : ''}
+                        </div>
+                        <h3>${e.nombre}</h3>
+                        <div class="scores">
+                            <span>🧔 Carlos: ${e.califCarlos}</span>
+                            <span>👩 Alexandra: ${e.califAlexandra}</span>
+                            <div class="final-avg">⭐ Promedio: ${e.rating}</div>
+                        </div>
+                        <p class="card-date">📅 ${e.fecha}</p>
+                        <div class="card-actions">
+                            <button class="edit-btn" onclick="prepararEdicion('${id}')">Editar</button>
+                            <button class="del-btn" onclick="borrar('${id}')">Borrar</button>
+                        </div>
+                    </div>
+                </div>`;
         });
-    </script>
+    };
+
+    window.prepararEdicion = (id) => {
+        const e = window.raw[id];
+        document.getElementById('editKey').value = id;
+        document.getElementById('tipoEntrada').value = e.tipo;
+        document.getElementById('nombre').value = e.nombre;
+        document.getElementById('foto').value = e.foto;
+        document.getElementById('fecha').value = e.fecha;
+        if(e.tipo === 'lugar') {
+            document.getElementById('califCarlosL').value = e.califCarlos;
+            document.getElementById('califAlexandraL').value = e.califAlexandra;
+            document.getElementById('divertido').value = e.divertido;
+            document.getElementById('aburrido').value = e.aburrido;
+        } else {
+            document.getElementById('califCarlosC').value = e.califCarlos;
+            document.getElementById('califAlexandraC').value = e.califAlexandra;
+            document.getElementById('generoCine').value = e.genero;
+            document.getElementById('gustoCine').value = e.gusto;
+            document.getElementById('noGustoCine').value = e.noGusto;
+        }
+        window.alternarCampos();
+        document.getElementById('formTitle').innerText = "✏️ Editando...";
+        document.getElementById('btnGuardar').innerText = "Actualizar";
+        document.getElementById('editBadge').classList.remove('hidden-el');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+
+    window.borrar = (id) => confirm("¿Borrar recuerdo?") && remove(ref(db, `aventuras/${id}`));
+    window.cancelarEdicion = () => location.reload();
+</script>
 </body>
 </html>
