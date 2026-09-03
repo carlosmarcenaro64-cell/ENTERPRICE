@@ -13,7 +13,6 @@
 </head>
 <body class="bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950 min-h-screen text-white flex flex-col justify-between items-center p-3 select-none overflow-x-hidden">
 
-    <!-- Pantalla de Carga (Splash Screen) -->
     <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
         <div class="flex flex-col items-center justify-center pop-animation">
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-6 text-center animate-pulse">
@@ -26,7 +25,6 @@
                 </span>
             </div>
             
-            <!-- Pequeño indicador de carga -->
             <div class="mt-8 flex gap-1">
                 <div class="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
                 <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
@@ -37,7 +35,6 @@
 
     <header class="w-full max-w-md flex flex-col gap-2 py-2">
         <div class="flex flex-wrap items-center justify-between gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/10">
-            <!-- Info de Usuario -->
             <div id="user-profile" class="flex items-center gap-2">
                 <div id="user-avatar" class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase shadow">
                     👤
@@ -48,11 +45,10 @@
                 </div>
             </div>
 
-            <!-- Acciones de Cuenta / Estadísticas -->
             <div class="flex flex-wrap justify-end items-center gap-1.5">
-                <button id="words-btn" title="Diccionario de Palabras" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 active:scale-95 transition-all p-2 rounded-xl text-sm md:text-xs flex items-center gap-1 font-bold">
+                <a href="palabras.html" title="Diccionario de Palabras" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 active:scale-95 transition-all p-2 rounded-xl text-sm md:text-xs flex items-center gap-1 font-bold no-underline">
                     📖<span class="hidden sm:inline">Diccionario</span>
-                </button>
+                </a>
                 <button id="suggest-btn" title="Recomendar Palabra" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
                     💡<span class="hidden sm:inline">Sugerir</span>
                 </button>
@@ -71,7 +67,6 @@
             </div>
         </div>
 
-        <!-- Título -->
         <div class="text-center mt-1">
             <h1 class="text-2xl md:text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-sm">
                 PALABRA SECRETA
@@ -92,24 +87,17 @@
     </header>
 
     <main class="w-full max-w-md flex flex-col items-center gap-3 my-auto">
-        
-        <!-- Pista Actual -->
         <div id="hint-box" class="bg-white/15 backdrop-blur-md border border-yellow-400/30 rounded-xl px-4 py-2 text-center text-xs md:text-sm text-yellow-200 font-medium shadow-lg w-full transition-all duration-500 opacity-0 scale-95 pointer-events-none hidden">
             🔮 <span class="font-bold">Pista:</span> <span id="clue-text" class="italic">...</span>
         </div>
 
-        <!-- Cuadrícula del Tablero -->
-        <div id="board" class="w-full mx-auto flex flex-col gap-1.5 justify-center items-center px-2">
-            <!-- Celdas dinámicas se insertan aquí -->
-        </div>
+        <div id="board" class="w-full mx-auto flex flex-col gap-1.5 justify-center items-center px-2"></div>
 
-        <!-- Mensajes de Estado -->
         <div id="message-container" class="h-8 flex items-center justify-center mt-2 z-10">
             <span id="game-message" class="text-xs md:text-sm font-semibold px-4 py-2 rounded-xl bg-slate-900/90 backdrop-blur border border-pink-500/30 text-pink-300 opacity-0 transition-opacity duration-300 shadow-lg pointer-events-none"></span>
         </div>
 
         <div id="keyboard" class="w-full flex flex-col gap-1.5 max-w-md px-1 mt-2">
-            <!-- Fila 1 -->
             <div class="flex justify-center gap-1 w-full">
                 <button data-key="Q" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Q</button>
                 <button data-key="W" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">W</button>
@@ -122,7 +110,6 @@
                 <button data-key="O" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">O</button>
                 <button data-key="P" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">P</button>
             </div>
-            <!-- Fila 2 -->
             <div class="flex justify-center gap-1 w-full px-3">
                 <button data-key="A" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">A</button>
                 <button data-key="S" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">S</button>
@@ -135,7 +122,6 @@
                 <button data-key="L" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">L</button>
                 <button data-key="Ñ" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Ñ</button>
             </div>
-            <!-- Fila 3 -->
             <div class="flex justify-center gap-1 w-full">
                 <button data-key="ENTER" class="key-btn flex-[1.5] bg-indigo-600 hover:bg-indigo-500 active:scale-90 transition-all font-bold py-3 rounded-lg text-[10px] md:text-xs shadow-md">ENTER</button>
                 <button data-key="Z" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Z</button>
@@ -149,23 +135,16 @@
             </div>
         </div>
 
-        <!-- Botón Reiniciar -->
         <button id="restart-btn" class="hidden mt-4 bg-gradient-to-r from-pink-500 to-yellow-400 hover:opacity-95 active:scale-95 text-slate-950 font-bold px-8 py-3 rounded-xl shadow-xl transition-all tracking-wide text-sm animate-bounce">
             ✨ Jugar Nuevamente
         </button>
-
     </main>
 
-    <!-- Modal Estadísticas -->
     <div id="stats-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
         <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl relative transform scale-90 transition-all duration-300" id="stats-modal-content">
             <button id="close-stats-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 mb-1">
-                Estadísticas de Juego
-            </h2>
+            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 mb-1">Estadísticas de Juego</h2>
             <p id="stats-user-label" class="text-xs text-indigo-300 mb-5">Progreso Local</p>
-
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
                     <span id="stat-won" class="text-2xl font-black text-emerald-400">0</span>
@@ -184,30 +163,19 @@
                     <span class="text-[11px] text-slate-300 font-medium">% Victoria</span>
                 </div>
             </div>
-
             <div class="bg-indigo-950/60 border border-indigo-500/30 p-3 rounded-xl flex justify-between items-center mb-4">
                 <span class="text-xs text-indigo-200">🔥 Racha Actual:</span>
                 <span id="stat-streak" class="text-base font-bold text-yellow-400">0</span>
             </div>
-
-            <button id="modal-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">
-                Cerrar
-            </button>
+            <button id="modal-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">Cerrar</button>
         </div>
     </div>
 
-    <!-- Modal Cómo Jugar -->
     <div id="help-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
         <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="help-modal-content">
             <button id="close-help-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 mb-2 text-center">
-                ¿Cómo Jugar?
-            </h2>
-            <p class="text-xs text-indigo-200 mb-4 text-center">
-                Adivina la palabra oculta en 6 intentos. El color de las casillas cambiará para darte pistas.
-            </p>
-
+            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 mb-2 text-center">¿Cómo Jugar?</h2>
+            <p class="text-xs text-indigo-200 mb-4 text-center">Adivina la palabra oculta en 6 intentos. El color de las casillas cambiará para darte pistas.</p>
             <div class="space-y-3 text-xs mb-5">
                 <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
                     <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white shrink-0">A</div>
@@ -216,7 +184,6 @@
                         <span class="text-slate-300 text-[11px]">La letra está en la palabra y en el lugar correcto.</span>
                     </div>
                 </div>
-
                 <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
                     <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-white shrink-0">B</div>
                     <div>
@@ -224,7 +191,6 @@
                         <span class="text-slate-300 text-[11px]">La letra está en la palabra, pero en otra posición.</span>
                     </div>
                 </div>
-
                 <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
                     <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-white shrink-0">C</div>
                     <div>
@@ -232,241 +198,109 @@
                         <span class="text-slate-300 text-[11px]">La letra no se encuentra en la palabra oculta.</span>
                     </div>
                 </div>
-
-                <div class="bg-indigo-950/80 p-2.5 rounded-xl border border-indigo-500/30 text-[11px] text-indigo-200">
-                    💡 <span class="font-semibold text-yellow-300">Pistas progresivas:</span> Obtendrás una pista en el 5º intento y la descripción completa al finalizar.
-                </div>
             </div>
-
-            <button id="modal-help-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">
-                ¡Entendido, a jugar!
-            </button>
+            <button id="modal-help-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">¡Entendido, a jugar!</button>
         </div>
     </div>
 
-    <!-- Modal Recomendar Palabra -->
     <div id="suggest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
         <div class="bg-slate-900 border border-amber-500/30 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="suggest-modal-content">
             <button id="close-suggest-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-400 mb-1 text-center flex items-center justify-center gap-2">
-                💡 Recomendar Palabra
-            </h2>
-            <p class="text-xs text-indigo-200 mb-4 text-center">
-                ¡Envía tu idea de palabra para agregarla al juego!
-            </p>
-
-            <form id="suggest-form" class="space-y-3">
+            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-400 mb-1 text-center">💡 Recomendar Palabra</h2>
+            <form id="suggest-form" class="space-y-3 mt-3">
                 <div>
                     <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Palabra *</label>
-                    <input type="text" id="suggest-word" placeholder="Ej: ASTRONAUTA" required 
-                           class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 uppercase font-bold tracking-wider">
+                    <input type="text" id="suggest-word" placeholder="Ej: ASTRONAUTA" required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white uppercase font-bold tracking-wider">
                 </div>
-
                 <div>
                     <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Descripción Corta (Pista) *</label>
-                    <input type="text" id="suggest-short" placeholder="Ej: Viajero espacial" required
-                           class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400">
+                    <input type="text" id="suggest-short" placeholder="Ej: Viajero espacial" required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
-
                 <div>
                     <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Descripción Larga (Final) *</label>
-                    <textarea id="suggest-long" rows="2" placeholder="Ej: Persona entrenada para viajar y explorar..." required
-                              class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 resize-none"></textarea>
+                    <textarea id="suggest-long" rows="2" placeholder="Ej: Persona entrenada para viajar..." required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white resize-none"></textarea>
                 </div>
-
-                <div class="bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/30 text-[11px] text-amber-200 leading-tight">
-                    📲 Al enviar, el texto se copiará y se abrirá Instagram para que lo mandes por mensaje directo.
-                </div>
-
-                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black py-2.5 rounded-xl text-xs tracking-wide shadow-lg transition-all active:scale-95">
-                    🚀 Enviar vía Instagram
-                </button>
+                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black py-2.5 rounded-xl text-xs shadow-lg transition-all active:scale-95">🚀 Enviar vía Instagram</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal Reportar Bug -->
     <div id="bug-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
         <div class="bg-slate-900 border border-rose-500/30 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="bug-modal-content">
             <button id="close-bug-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400 mb-1 text-center flex items-center justify-center gap-2">
-                🐛 Reportar un Fallo
-            </h2>
-            <p class="text-xs text-indigo-200 mb-4 text-center">
-                ¿Encontraste un problema? Ayúdanos a solucionarlo.
-            </p>
-
-            <form id="bug-form" class="space-y-3">
+            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400 mb-1 text-center">🐛 Reportar un Fallo</h2>
+            <form id="bug-form" class="space-y-3 mt-3">
                 <div>
                     <label class="block text-[11px] font-bold text-rose-300 uppercase mb-1">Descripción del fallo *</label>
-                    <textarea id="bug-desc" rows="4" placeholder="Describe lo que ocurrió y cómo replicarlo..." required
-                              class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400 resize-none"></textarea>
+                    <textarea id="bug-desc" rows="4" placeholder="Describe lo que ocurrió..." required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white resize-none"></textarea>
                 </div>
-
-                <div class="bg-rose-950/40 p-2.5 rounded-xl border border-rose-500/30 text-[11px] text-rose-200 leading-tight">
-                    📲 El texto se copiará al portapapeles y se abrirá Instagram para enviarlo por mensaje directo.
-                </div>
-
-                <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black py-2.5 rounded-xl text-xs tracking-wide shadow-lg transition-all active:scale-95">
-                    📩 Reportar vía Instagram
-                </button>
+                <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg transition-all active:scale-95">📩 Reportar vía Instagram</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal Listado de Palabras -->
-    <div id="words-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-teal-500/30 rounded-2xl w-full max-w-md max-h-[85vh] flex flex-col p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="words-modal-content">
-            <button id="close-words-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold z-10">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-300 mb-1 text-center flex items-center justify-center gap-2 shrink-0">
-                📖 Diccionario del Juego
-            </h2>
-            <p class="text-[11px] text-teal-200/70 mb-3 text-center shrink-0">
-                Pulsa sobre una palabra para ver su pista.
-            </p>
-
-            <!-- Contenedor para desbloquear con PIN -->
-            <div id="dic-unlock-container" class="flex gap-2 mb-3 bg-slate-800/50 p-2 rounded-xl border border-white/10 shrink-0">
-                <input type="password" id="dic-pin" placeholder="PIN secreto..." class="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-teal-400 text-center tracking-widest">
-                <button id="dic-unlock-btn" class="bg-teal-600 hover:bg-teal-500 active:scale-95 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-all shadow-md">Desbloquear</button>
-            </div>
-
-            <div id="words-list-container" class="overflow-y-auto pr-2 space-y-4 flex-1 custom-scrollbar">
-                <!-- Contenido dinámico -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Pie de página -->
     <footer class="w-full max-w-md flex items-center justify-between text-[11px] text-indigo-300/80 pt-2 pb-1 px-2 border-t border-white/10 mt-auto">
-        <span class="font-bold tracking-wide text-indigo-200/90">
-            By: <span class="text-pink-400">Marcenaroc64</span>
-        </span>
-
-        <a href="https://www.tiktok.com/@marcenaroc64" 
-           target="_blank" 
-           rel="noopener noreferrer" 
-           class="flex items-center gap-1.5 bg-black/60 hover:bg-black/90 active:scale-95 border border-white/20 text-white px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all shadow-md hover:border-pink-500/50">
-            <svg class="w-3.5 h-3.5 fill-current text-cyan-400" viewBox="0 0 24 24">
-                <path d="M12.525 0h3.08c.12 1.052.752 1.988 1.7 2.493a4.757 4.757 0 002.595.6v3.169a8.03 8.03 0 01-3.692-.903c-.235-.126-.454-.27-.658-.432v8.92c0 3.823-3.105 6.928-6.928 6.928-3.823 0-6.928-3.105-6.928-6.928 0-3.823 3.105-6.928 6.928-6.928.324 0 .643.023.956.068v3.2a3.732 3.732 0 00-.956-.123c-2.062 0-3.732 1.67-3.732 3.732 0 2.062 1.67 3.732 3.732 3.732 2.062 0 3.732-1.67 3.732-3.732V0z"/>
-            </svg>
+        <span class="font-bold tracking-wide text-indigo-200/90">By: <span class="text-pink-400">Marcenaroc64</span></span>
+        <a href="https://www.tiktok.com/@marcenaroc64" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 bg-black/60 hover:bg-black/90 active:scale-95 border border-white/20 text-white px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all shadow-md">
+            <svg class="w-3.5 h-3.5 fill-current text-cyan-400" viewBox="0 0 24 24"><path d="M12.525 0h3.08c.12 1.052.752 1.988 1.7 2.493a4.757 4.757 0 002.595.6v3.169a8.03 8.03 0 01-3.692-.903c-.235-.126-.454-.27-.658-.432v8.92c0 3.823-3.105 6.928-6.928 6.928-3.823 0-6.928-3.105-6.928-6.928 0-3.823 3.105-6.928 6.928-6.928.324 0 .643.023.956.068v3.2a3.732 3.732 0 00-.956-.123c-2.062 0-3.732 1.67-3.732 3.732 0 2.062 1.67 3.732 3.732 3.732 2.062 0 3.732-1.67 3.732-3.732V0z"/></svg>
             <span class="text-white">TikTok</span>
         </a>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, doc, getDoc, setDoc 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const rawData = [
+        const localDictionary = [
             "SOL|Astro|Astro diurno","PAN|Alimento|Hecho de harina","LUZ|Claridad|Vence a las sombras","MAR|Agua|Masa de agua salada","REY|Monarca|Soberano de un reino","VOZ|Sonido|Producido por cuerdas vocales","ORO|Metal|Metal precioso amarillo","RIO|Cauce|Corriente natural de agua","PAZ|Tranquilidad|Estado sin conflictos","RED|Malla|Malla de hilos","OLA|Onda|Onda en el agua","SUR|Punto|Punto cardinal","AJO|Planta|Bulbo usado en cocina","DIA|Periodo|Iluminado por el sol","GAS|Estado|Estado fluido de la materia","LEY|Norma|Regla establecida","BAR|Local|Para tomar bebidas","BUS|Transporte|Vehículo urbano","UVA|Fruta|Para hacer vino","COL|Hortaliza|Hojas apretadas","PIE|Extremidad|Base para caminar","SAL|Condimento|Sustancia blanca","VIA|Camino|Carril de tránsito","OJO|Órgano|Órgano visual","REO|Acusado|Persona juzgada","DOS|Número|Después del uno","SIN|Preposición|Carencia de algo","CON|Preposición|Compañía de algo","POR|Preposición|Causa o motivo","QUE|Pronombre|Pronombre relativo","TAL|Adjetivo|Semejante o igual","VER|Verbo|Percibir por los ojos","DAR|Verbo|Entregar algo","SER|Verbo|Tener existencia","FIN|Término|Final de algo","MAL|Daño|Lo contrario al bien","MES|Tiempo|Doceava parte del año","ECO|Sonido|Reflejo de sonido","EGO|Psicología|Conciencia del yo","IRA|Emoción|Enojo profundo","TIO|Familiar|Hermano del padre","TIA|Familiar|Hermana de la madre","OSO|Animal|Mamífero peludo","RON|Bebida|Licor de caña","TOS|Reflejo|Expulsión de aire","USO|Acción|Acción de usar","UNO|Número|El primer número",
-            // 4 LETRAS (50)
             "CASA|Vivienda|Lugar donde se habita","LUNA|Satélite|Satélite natural de la Tierra","AGUA|Líquido|Vital para la vida","ROSA|Flor|Flor con espinas","ARCO|Arma|Para disparar flechas","CAFE|Bebida|Estimulante oscuro","LAPIZ|Utensilio|Para escribir en papel","LEON|Animal|Rey de la selva","PATO|Ave|Ave acuática","ROJO|Color|Color primario cálido","AZUL|Color|Color del cielo despejado","OSO|Animal|Mamífero grande","GATO|Animal|Felino doméstico","PERO|Conjunción|Conjunción adversativa","TAPA|Cubierta|Cierre de un recipiente","ROCA|Piedra|Fragmento mineral duro","VIDA|Existencia|Estado de los seres vivos","AIRE|Gas|Mezcla de gases atmosféricos","NUBE|Vapor|Acumulación de vapor suspendido","FUEGO|Calor|Proceso de combustión","HIEL|Líquido|Bilis segregada por el hígado","MARS|Planeta|Planeta rojo","LOLA|Nombre|Nombre propio femenino","BOTE|Embarcación|Embarcación pequeña","PIPA|Pipa|Para fumar tabaco","MESA|Mueble|Mueble con tablero y patas","SILL|Mueble|Asiento con respaldo","TREN|Vehículo|Transporte ferroviario","NAVE|Vehículo|Para navegar en el espacio","COCO|Fruta|Fruto de la palmera",
-            // 5 LETRAS (50)
             "PERRO|Animal|El mejor amigo del hombre","GABAN|Prenda|Abrigo largo con mangas","PLAYA|Costa|Arena junto al mar","LIBRO|Objeto|Conjunto de hojas encuadernadas","FUTBOL|Deporte|Deporte rey con balón","PIANO|Instrumento|Instrumento musical de teclas","TIGRE|Animal|Felino rayado de Asia","VALLE|Terreno|Llanura entre montañas","ARBOL|Planta|Planta con tronco leñoso","RADIO|Aparato|Para escuchar transmisiones","MOTOR|Máquina|Que produce movimiento","PLATO|Utensilio|Recipiente para comer","RELOJ|Objeto|Mide el paso del tiempo","MAGIA|Arte|Producción de efectos ilusorios","TORRE|Construcción|Edificio alto y estrecho",
-            // 6 LETRAS (50)
             "PLANETA|Cuerpo|Cuerpo celeste en órbita","MUSICA|Arte|Combinación de sonidos","TIERRA|Planeta|Nuestro hogar en el espacio","OCEANO|Agua|Gran masa de agua salada","CIELOS|Espacio|Bóveda celeste visible",
-            // 7 LETRAS (30)
             "LIBERTAD|Derecho|Facultad natural de obrar","ESTRELLA|Astro|Cuerpo celeste que brilla con luz propia","DIAMANTE|Mineral|Piedra preciosa cristalina",
-            // 8+ LETRAS (20)
             "ASTRONAUTA|Profesión|Explorador del espacio exterior","UNIVERSO|Todo|La totalidad del espacio y el tiempo"
         ];
 
-        let dictionary = rawData.map(item => {
+        let dictionary = localDictionary.map(item => {
             const parts = item.split('|');
-            return {
-                word: parts[0].toUpperCase(),
-                hint: parts[1] || 'Sin pista',
-                long: parts[2] || 'Sin descripción detallada'
-            };
+            return { word: parts[0].toUpperCase(), hint: parts[1] || 'Sin pista', long: parts[2] || 'Sin descripción' };
         });
 
-        // Configuración Firebase simulada / funcional
         let auth, db, currentUser = null;
         try {
-            const firebaseConfig = {
-                apiKey: "AIzaSyDummyKeyForCloudStorageFallback",
-                authDomain: "adivina-palabra.firebaseapp.com",
-                projectId: "adivina-palabra",
-                storageBucket: "adivina-palabra.appspot.com",
-                messagingSenderId: "123456789",
-                appId: "1:123456789:web:abcdef"
-            };
+            const firebaseConfig = { apiKey: "AIzaSyDummyKey", authDomain: "adivina.firebaseapp.com", projectId: "adivina" };
             const app = initializeApp(firebaseConfig);
             auth = getAuth(app);
             db = getFirestore(app);
-        } catch (e) {
-            console.warn("Firebase inicializado en modo local offline:", e);
-        }
+        } catch (e) {}
 
-        // Estado del Juego
-        let wordData = null;
-        let WORD = "";
-        let CLUE = "";
-        let LONG_DESC = "";
-        let WORD_LENGTH = 3;
-        let MAX_ATTEMPTS = 6;
-        let currentAttempt = 0;
-        let currentGuess = [];
-        let isGameOver = false;
+        let WORD = "", CLUE = "", LONG_DESC = "", WORD_LENGTH = 3, MAX_ATTEMPTS = 6, currentAttempt = 0, currentGuess = [], isGameOver = false;
         let stats = { won: 0, lost: 0, played: 0, streak: 0 };
-        let unlockedDictionary = false;
 
-        // Elementos DOM
-        const boardEl = document.getElementById('board');
-        const keyboardEl = document.getElementById('keyboard');
-        const messageEl = document.getElementById('game-message');
-        const restartBtn = document.getElementById('restart-btn');
-        const totalWordsCount = document.getElementById('total-words-count');
-        const wordLengthCount = document.getElementById('word-length-count');
-        const skipBtn = document.getElementById('skip-btn');
-        const hintBox = document.getElementById('hint-box');
-        const clueText = document.getElementById('clue-text');
-        const splashScreen = document.getElementById('splash-screen');
-
-        totalWordsCount.textContent = dictionary.length;
+        document.getElementById('total-words-count').textContent = dictionary.length;
 
         function initGame() {
-            // Seleccionar palabra aleatoria
-            wordData = dictionary[Math.floor(Math.random() * dictionary.length)];
-            WORD = wordData.word;
-            CLUE = wordData.hint;
-            LONG_DESC = wordData.long;
-            WORD_LENGTH = WORD.length;
-            
-            wordLengthCount.textContent = WORD_LENGTH;
-            if (WORD_LENGTH >= 6) {
-                skipBtn.classList.remove('hidden');
-            } else {
-                skipBtn.classList.add('hidden');
-            }
+            const wordData = dictionary[Math.floor(Math.random() * dictionary.length)];
+            WORD = wordData.word; CLUE = wordData.hint; LONG_DESC = wordData.long; WORD_LENGTH = WORD.length;
+            document.getElementById('word-length-count').textContent = WORD_LENGTH;
+            if (WORD_LENGTH >= 6) document.getElementById('skip-btn').classList.remove('hidden');
+            else document.getElementById('skip-btn').classList.add('hidden');
 
-            currentAttempt = 0;
-            currentGuess = [];
-            isGameOver = false;
-            restartBtn.classList.add('hidden');
+            currentAttempt = 0; currentGuess = []; isGameOver = false;
+            document.getElementById('restart-btn').classList.add('hidden');
+            const hintBox = document.getElementById('hint-box');
             hintBox.classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'hidden');
-            clueText.textContent = "...";
-            hideMessage();
-
+            document.getElementById('clue-text').textContent = "...";
             renderBoard();
             resetKeyboardUI();
         }
 
         function renderBoard() {
+            const boardEl = document.getElementById('board');
             boardEl.innerHTML = '';
             for (let i = 0; i < MAX_ATTEMPTS; i++) {
                 const row = document.createElement('div');
                 row.className = 'flex gap-1.5 justify-center';
-                row.id = `row-${i}`;
                 for (let j = 0; j < WORD_LENGTH; j++) {
                     const tile = document.createElement('div');
                     tile.className = 'w-12 h-12 md:w-14 md:h-14 border-2 border-white/20 rounded-xl flex items-center justify-center text-lg md:text-xl font-extrabold bg-white/5 transition-all duration-300 shadow-inner';
@@ -479,8 +313,7 @@
 
         function resetKeyboardUI() {
             document.querySelectorAll('.key-btn').forEach(btn => {
-                const key = btn.getAttribute('data-key');
-                if (key !== 'ENTER' && key !== 'BACK') {
+                if (btn.getAttribute('data-key') !== 'ENTER' && btn.getAttribute('data-key') !== 'BACK') {
                     btn.className = "key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md text-white";
                 }
             });
@@ -488,19 +321,14 @@
 
         function handleKeyPress(key) {
             if (isGameOver) return;
-
             if (key === 'ENTER') {
                 submitGuess();
             } else if (key === 'BACK') {
-                if (currentGuess.length > 0) {
-                    currentGuess.pop();
-                    updateCurrentRow();
-                }
+                if (currentGuess.length > 0) { currentGuess.pop(); updateCurrentRow(); }
             } else {
                 if (currentGuess.length < WORD_LENGTH) {
                     currentGuess.push(key.toUpperCase());
                     updateCurrentRow();
-                    playPopAnimation(currentAttempt, currentGuess.length - 1);
                 }
             }
         }
@@ -508,428 +336,114 @@
         function updateCurrentRow() {
             for (let j = 0; j < WORD_LENGTH; j++) {
                 const tile = document.getElementById(`tile-${currentAttempt}-${j}`);
-                if (j < currentGuess.length) {
-                    tile.textContent = currentGuess[j];
-                    tile.classList.add('border-indigo-400');
-                } else {
-                    tile.textContent = '';
-                    tile.classList.remove('border-indigo-400');
-                }
-            }
-        }
-
-        function playPopAnimation(row, col) {
-            const tile = document.getElementById(`tile-${row}-${col}`);
-            if (tile) {
-                tile.classList.add('pop-animation');
-                setTimeout(() => tile.classList.remove('pop-animation'), 200);
+                tile.textContent = j < currentGuess.length ? currentGuess[j] : '';
             }
         }
 
         function submitGuess() {
-            if (currentGuess.length < WORD_LENGTH) {
-                showMessage("Faltan letras por completar", 2000);
-                shakeRow(currentAttempt);
-                return;
-            }
-
+            if (currentGuess.length < WORD_LENGTH) { showMessage("Faltan letras"); return; }
             const guessWord = currentGuess.join('');
-            
-            // Evaluar colores
             const letterCount = {};
-            for (let char of WORD) {
-                letterCount[char] = (letterCount[char] || 0) + 1;
-            }
-
+            for (let char of WORD) letterCount[char] = (letterCount[char] || 0) + 1;
             const statuses = Array(WORD_LENGTH).fill('absent');
-            
-            // 1ª pasada: Correctos (Verdes)
-            for (let i = 0; i < WORD_LENGTH; i++) {
-                if (guessWord[i] === WORD[i]) {
-                    statuses[i] = 'correct';
-                    letterCount[guessWord[i]]--;
-                }
-            }
 
-            // 2ª pasada: Presentes (Amarillos) y Ausentes (Gris)
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                if (guessWord[i] === WORD[i]) { statuses[i] = 'correct'; letterCount[guessWord[i]]--; }
+            }
             for (let i = 0; i < WORD_LENGTH; i++) {
                 if (statuses[i] !== 'correct') {
-                    if (letterCount[guessWord[i]] && letterCount[guessWord[i]] > 0) {
-                        statuses[i] = 'present';
-                        letterCount[guessWord[i]]--;
-                    } else {
-                        statuses[i] = 'absent';
-                    }
+                    if (letterCount[guessWord[i]] > 0) { statuses[i] = 'present'; letterCount[guessWord[i]]--; }
                 }
             }
 
-            // Aplicar animación de volteo y colores a las celdas
             for (let i = 0; i < WORD_LENGTH; i++) {
                 const tile = document.getElementById(`tile-${currentAttempt}-${i}`);
                 setTimeout(() => {
                     tile.classList.add('flip-tile');
-                    if (statuses[i] === 'correct') {
-                        tile.classList.add('tile-correct');
-                    } else if (statuses[i] === 'present') {
-                        tile.classList.add('tile-present');
-                    } else {
-                        tile.classList.add('tile-absent');
-                    }
-                    updateKeyboardKey(guessWord[i], statuses[i]);
-                }, i * 250);
+                    if (statuses[i] === 'correct') tile.classList.add('tile-correct');
+                    else if (statuses[i] === 'present') tile.classList.add('tile-present');
+                    else tile.classList.add('tile-absent');
+                }, i * 200);
             }
 
             setTimeout(() => {
-                if (guessWord === WORD) {
-                    endGame(true);
-                } else {
-                    currentAttempt++;
-                    currentGuess = [];
-
-                    // Pistas progresivas en intento 5
+                if (guessWord === WORD) { endGame(true); }
+                else {
+                    currentAttempt++; currentGuess = [];
                     if (currentAttempt === 4) {
-                        showHintBox();
+                        document.getElementById('clue-text').textContent = CLUE;
+                        document.getElementById('hint-box').classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
                     }
-
-                    if (currentAttempt >= MAX_ATTEMPTS) {
-                        endGame(false);
-                    }
+                    if (currentAttempt >= MAX_ATTEMPTS) endGame(false);
                 }
-            }, WORD_LENGTH * 250 + 100);
-        }
-
-        function shakeRow(row) {
-            for (let j = 0; j < WORD_LENGTH; j++) {
-                const tile = document.getElementById(`tile-${row}-${j}`);
-                tile.classList.add('shake-animation');
-                setTimeout(() => tile.classList.remove('shake-animation'), 400);
-            }
-        }
-
-        function showHintBox() {
-            clueText.textContent = CLUE;
-            hintBox.classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
-            hintBox.classList.add('opacity-100', 'scale-100', 'pulse-glow');
-        }
-
-        function updateKeyboardKey(letter, status) {
-            const btn = document.querySelector(`[data-key="${letter}"]`);
-            if (!btn) return;
-
-            if (btn.classList.contains('tile-correct')) return;
-            if (btn.classList.contains('tile-present') && status === 'absent') return;
-
-            btn.classList.remove('bg-white/25', 'hover:bg-white/35');
-            if (status === 'correct') {
-                btn.className = btn.className.replace(/bg-\S+/g, '') + ' bg-emerald-600 text-white';
-            } else if (status === 'present') {
-                btn.className = btn.className.replace(/bg-\S+/g, '') + ' bg-amber-600 text-white';
-            } else {
-                btn.className = btn.className.replace(/bg-\S+/g, '') + ' bg-slate-700 text-slate-400';
-            }
+            }, WORD_LENGTH * 200 + 50);
         }
 
         function endGame(won) {
-            isGameOver = true;
-            stats.played++;
-            if (won) {
-                stats.won++;
-                stats.streak++;
-                showMessage(`🎉 ¡Excelente! Adivinaste la palabra.`, 5000);
-            } else {
-                stats.lost++;
-                stats.streak = 0;
-                showMessage(`❌ Fin del juego. La palabra era: ${WORD}`, 6000);
-            }
-            saveCloudStats();
-            restartBtn.classList.remove('hidden');
+            isGameOver = true; stats.played++;
+            if (won) { stats.won++; stats.streak++; showMessage("¡Excelente! Adivinaste la palabra."); }
+            else { stats.lost++; stats.streak = 0; showMessage(`Fin del juego. Era: ${WORD}`); }
+            document.getElementById('restart-btn').classList.remove('hidden');
         }
 
-        function showMessage(text, duration = 3000) {
-            messageEl.textContent = text;
-            messageEl.classList.remove('opacity-0', 'pointer-events-none');
-            messageEl.classList.add('opacity-100');
-            setTimeout(() => {
-                messageEl.classList.remove('opacity-100');
-                messageEl.classList.add('opacity-0', 'pointer-events-none');
-            }, duration);
+        function showMessage(text) {
+            const msg = document.getElementById('game-message');
+            msg.textContent = text; msg.classList.remove('opacity-0', 'pointer-events-none');
+            setTimeout(() => msg.classList.add('opacity-0', 'pointer-events-none'), 3000);
         }
 
-        function hideMessage() {
-            messageEl.textContent = "";
-            messageEl.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        // Eventos Teclado Físico y Virtual
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                handleKeyPress('ENTER');
-            } else if (e.key === 'Backspace') {
-                handleKeyPress('BACK');
-            } else {
-                const upper = e.key.toUpperCase();
-                if (/^[A-ZÑ]$/.test(upper)) {
-                    handleKeyPress(upper);
-                }
-            }
+            if (e.key === 'Enter') handleKeyPress('ENTER');
+            else if (e.key === 'Backspace') handleKeyPress('BACK');
+            else if (/^[a-zA-ZñÑ]$/.test(e.key)) handleKeyPress(e.key.toUpperCase());
         });
 
-        keyboardEl.addEventListener('click', (e) => {
+        document.getElementById('keyboard').addEventListener('click', (e) => {
             const btn = e.target.closest('button');
-            if (btn) {
-                const key = btn.getAttribute('data-key');
-                if (key) handleKeyPress(key);
-            }
+            if (btn && btn.getAttribute('data-key')) handleKeyPress(btn.getAttribute('data-key'));
         });
 
-        restartBtn.addEventListener('click', initGame);
-        skipBtn.addEventListener('click', () => {
-            if (WORD_LENGTH >= 6 && !isGameOver) {
-                initGame();
-                showMessage("Se ha cambiado la palabra exitosamente", 2500);
-            }
-        });
+        document.getElementById('restart-btn').addEventListener('click', initGame);
+        document.getElementById('skip-btn').addEventListener('click', () => { if (!isGameOver) initGame(); });
 
-        // Modales
         const statsModal = document.getElementById('stats-modal');
         const helpModal = document.getElementById('help-modal');
         const suggestModal = document.getElementById('suggest-modal');
         const bugModal = document.getElementById('bug-modal');
-        const wordsModal = document.getElementById('words-modal');
 
-        document.getElementById('stats-btn').addEventListener('click', () => openModal(statsModal));
-        document.getElementById('close-stats-btn').addEventListener('click', () => closeModal(statsModal));
-        document.getElementById('modal-close-action').addEventListener('click', () => closeModal(statsModal));
+        document.getElementById('stats-btn').addEventListener('click', () => statsModal.classList.remove('opacity-0', 'pointer-events-none'));
+        document.getElementById('close-stats-btn').addEventListener('click', () => statsModal.classList.add('opacity-0', 'pointer-events-none'));
+        document.getElementById('modal-close-action').addEventListener('click', () => statsModal.classList.add('opacity-0', 'pointer-events-none'));
 
-        document.getElementById('help-btn').addEventListener('click', () => openModal(helpModal));
-        document.getElementById('close-help-btn').addEventListener('click', () => closeModal(helpModal));
-        document.getElementById('modal-help-close-action').addEventListener('click', () => closeModal(helpModal));
+        document.getElementById('help-btn').addEventListener('click', () => helpModal.classList.remove('opacity-0', 'pointer-events-none'));
+        document.getElementById('close-help-btn').addEventListener('click', () => helpModal.classList.add('opacity-0', 'pointer-events-none'));
+        document.getElementById('modal-help-close-action').addEventListener('click', () => helpModal.classList.add('opacity-0', 'pointer-events-none'));
 
-        document.getElementById('suggest-btn').addEventListener('click', () => openModal(suggestModal));
-        document.getElementById('close-suggest-btn').addEventListener('click', () => closeModal(suggestModal));
+        document.getElementById('suggest-btn').addEventListener('click', () => suggestModal.classList.remove('opacity-0', 'pointer-events-none'));
+        document.getElementById('close-suggest-btn').addEventListener('click', () => suggestModal.classList.add('opacity-0', 'pointer-events-none'));
 
-        document.getElementById('bug-btn').addEventListener('click', () => openModal(bugModal));
-        document.getElementById('close-bug-btn').addEventListener('click', () => closeModal(bugModal));
+        document.getElementById('bug-btn').addEventListener('click', () => bugModal.classList.remove('opacity-0', 'pointer-events-none'));
+        document.getElementById('close-bug-btn').addEventListener('click', () => bugModal.classList.add('opacity-0', 'pointer-events-none'));
 
-        document.getElementById('words-btn').addEventListener('click', () => {
-            renderDictionaryList();
-            openModal(wordsModal);
-        });
-        document.getElementById('close-words-btn').addEventListener('click', () => closeModal(wordsModal));
-
-        function openModal(modal) {
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            const content = modal.querySelector('div[id$="-content"]');
-            if (content) {
-                content.classList.remove('scale-90');
-                content.classList.add('scale-100');
-            }
-        }
-
-        function closeModal(modal) {
-            const content = modal.querySelector('div[id$="-content"]');
-            if (content) {
-                content.classList.remove('scale-100');
-                content.classList.add('scale-90');
-            }
-            modal.classList.add('opacity-0', 'pointer-events-none');
-        }
-
-        // Formularios de Sugerencia y Bug (WhatsApp / Instagram clipboard integration)
         document.getElementById('suggest-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const w = document.getElementById('suggest-word').value.toUpperCase();
-            const s = document.getElementById('suggest-short').value;
-            const l = document.getElementById('suggest-long').value;
-            const text = `💡 Sugerencia de Palabra:\n* Palabra: ${w}\n* Pista: ${s}\n* Descripción: ${l}`;
-            copyAndOpenInstagram(text);
-            closeModal(suggestModal);
+            window.open("https://www.instagram.com/direct/inbox/", "_blank");
+            suggestModal.classList.add('opacity-0', 'pointer-events-none');
         });
 
         document.getElementById('bug-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const d = document.getElementById('bug-desc').value;
-            const text = `🐛 Reporte de Bug:\n${d}`;
-            copyAndOpenInstagram(text);
-            closeModal(bugModal);
+            window.open("https://www.instagram.com/direct/inbox/", "_blank");
+            bugModal.classList.add('opacity-0', 'pointer-events-none');
         });
 
-        function copyAndOpenInstagram(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showMessage("¡Copiado al portapapeles! Abriendo Instagram...", 3000);
-                setTimeout(() => {
-                    window.open("https://www.instagram.com/direct/inbox/", "_blank");
-                }, 1500);
-            }).catch(() => {
-                showMessage("No se pudo copiar automáticamente.", 2500);
-            });
-        }
-
-        // Desbloqueo del diccionario con PIN
-        document.getElementById('dic-unlock-btn').addEventListener('click', () => {
-            const pin = document.getElementById('dic-pin').value;
-            if (pin === "6464" || pin === "2026" || pin === "1234") {
-                unlockedDictionary = true;
-                document.getElementById('dic-unlock-container').classList.add('hidden');
-                renderDictionaryList();
-                showMessage("Diccionario desbloqueado con éxito", 2000);
-            } else {
-                showMessage("PIN incorrecto", 2000);
-            }
-        });
-
-        function renderDictionaryList() {
-            const container = document.getElementById('words-list-container');
-            container.innerHTML = '';
-
-            dictionary.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'bg-white/5 border border-white/10 rounded-xl p-3 flex flex-col gap-1 transition-all hover:bg-white/10';
-                
-                const header = document.createElement('div');
-                header.className = 'flex justify-between items-center';
-                
-                const wordSpan = document.createElement('span');
-                wordSpan.className = 'font-black text-teal-300 text-sm tracking-wider';
-                wordSpan.textContent = unlockedDictionary ? item.word : `${item.word[0]}*** (${item.word.length} letras)`;
-                
-                const badge = document.createElement('span');
-                badge.className = 'text-[10px] bg-teal-950 text-teal-200 px-2 py-0.5 rounded-full border border-teal-500/30';
-                badge.textContent = `${item.word.length} letras`;
-                
-                header.appendChild(wordSpan);
-                header.appendChild(badge);
-                div.appendChild(header);
-
-                const hintP = document.createElement('p');
-                hintP.className = 'text-xs text-slate-300 italic';
-                hintP.textContent = `Pista: ${item.hint}`;
-                div.appendChild(hintP);
-
-                if (unlockedDictionary) {
-                    const longP = document.createElement('p');
-                    longP.className = 'text-[11px] text-teal-100/80 mt-1 pt-1 border-t border-white/5';
-                    longP.textContent = `Desc: ${item.long}`;
-                    div.appendChild(longP);
-                }
-
-                container.appendChild(div);
-            });
-        }
-
-        // Autenticación y Cloud Sync Firebase
-        const authBtn = document.getElementById('auth-btn');
-        const userNameEl = document.getElementById('user-name');
-        const userStatusEl = document.getElementById('user-status');
-        const userAvatarEl = document.getElementById('user-avatar');
-        const statsUserLabel = document.getElementById('stats-user-label');
-
-        authBtn.addEventListener('click', async () => {
-            if (!currentUser && auth) {
-                try {
-                    const provider = new GoogleAuthProvider();
-                    await signInWithPopup(auth, provider);
-                } catch (err) {
-                    console.log("Popup bloqueado o error, usando acceso anónimo...", err);
-                    try {
-                        await signInAnonymously(auth);
-                    } catch (e) {
-                        showMessage("Modo sin conexión activado", 2000);
-                    }
-                }
-            } else if (currentUser && auth) {
-                await signOut(auth);
-            }
-        });
-
-        if (auth) {
-            onAuthStateChanged(auth, async (user) => {
-                currentUser = user;
-                if (user) {
-                    userNameEl.textContent = user.displayName || "Usuario Anónimo";
-                    userStatusEl.textContent = "Guardando en Nube";
-                    statsUserLabel.textContent = `Nube: ${user.displayName || "Usuario"}`;
-                    authBtn.innerHTML = "<span>Salir</span>";
-                    if (user.photoURL) {
-                        userAvatarEl.innerHTML = `<img src="${user.photoURL}" class="w-8 h-8 rounded-full object-cover">`;
-                    } else {
-                        userAvatarEl.textContent = (user.displayName || "U")[0].toUpperCase();
-                    }
-                    await loadCloudStats(user.uid);
-                } else {
-                    userNameEl.textContent = "Invitado";
-                    userStatusEl.textContent = "Progreso Local";
-                    statsUserLabel.textContent = "Progreso Local";
-                    authBtn.innerHTML = "<span>Acceder</span>";
-                    userAvatarEl.textContent = "👤";
-                    loadLocalStats();
-                }
-            });
-        } else {
-            loadLocalStats();
-        }
-
-        function loadLocalStats() {
-            const saved = localStorage.getItem('palabra_secreta_stats');
-            if (saved) {
-                try { stats = JSON.parse(saved); } catch(e){}
-            }
-            updateStatsModalUI();
-        }
-
-        async function saveCloudStats() {
-            updateStatsModalUI();
-            if (currentUser && db) {
-                try {
-                    await setDoc(doc(db, "users_stats", currentUser.uid), stats, { merge: true });
-                } catch (e) {
-                    console.warn("Error guardando en Firestore:", e);
-                    saveLocalStatsFallback();
-                }
-            } else {
-                saveLocalStatsFallback();
-            }
-        }
-
-        function saveLocalStatsFallback() {
-            localStorage.setItem('palabra_secreta_stats', JSON.stringify(stats));
-        }
-
-        async function loadCloudStats(uid) {
-            if (db) {
-                try {
-                    const docSnap = await getDoc(doc(db, "users_stats", uid));
-                    if (docSnap.exists()) {
-                        stats = docSnap.data();
-                    } else {
-                        loadLocalStats();
-                    }
-                } catch (e) {
-                    loadLocalStats();
-                }
-            } else {
-                loadLocalStats();
-            }
-            updateStatsModalUI();
-        }
-
-        function updateStatsModalUI() {
-            document.getElementById('stat-won').textContent = stats.won || 0;
-            document.getElementById('stat-lost').textContent = stats.lost || 0;
-            document.getElementById('stat-played').textContent = stats.played || 0;
-            const winrate = stats.played > 0 ? Math.round((stats.won / stats.played) * 100) : 0;
-            document.getElementById('stat-winrate').textContent = `${winrate}%`;
-            document.getElementById('stat-streak').textContent = stats.streak || 0;
-        }
-
-        // Ocultar pantalla de carga inicial tras 1.2 segundos
         window.addEventListener('load', () => {
             setTimeout(() => {
-                splashScreen.classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => splashScreen.remove(), 700);
-            }, 1200);
+                const splash = document.getElementById('splash-screen');
+                splash.classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => splash.remove(), 700);
+            }, 1000);
             initGame();
-            loadLocalStats();
         });
     </script>
 </body>
