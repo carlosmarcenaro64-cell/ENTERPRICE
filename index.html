@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adivina la Palabra - Con Guardado en la Nube</title>
+    <title>Adivina la Palabra - Con Guardado Local</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts Outfit -->
@@ -18,51 +18,41 @@
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-6 text-center animate-pulse">
                 PALABRA<br>SECRETA
             </h1>
-            
             <div class="flex items-center gap-2 mt-4 opacity-80 animate-bounce">
                 <span class="font-bold tracking-widest text-indigo-200 text-sm">
                     By: <span class="text-pink-400">Marcenaroc64</span>
                 </span>
-            </div>
-            
-            <div class="mt-8 flex gap-1">
-                <div class="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
-                <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
-                <div class="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style="animation-delay: 0.4s;"></div>
             </div>
         </div>
     </div>
 
     <header class="w-full max-w-md flex flex-col gap-2 py-2">
         <div class="flex flex-wrap items-center justify-between gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/10">
-            <div id="user-profile" class="flex items-center gap-2">
+            <div id="user-profile" class="flex items-center gap-2 cursor-pointer" title="Cambiar Nombre / Perfil">
                 <div id="user-avatar" class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase shadow">
                     👤
                 </div>
                 <div class="flex flex-col">
-                    <span id="user-name" class="text-xs font-bold truncate max-w-[120px] text-indigo-100">Invitado</span>
-                    <span id="user-status" class="text-[10px] text-indigo-300">Progreso Local</span>
+                    <span id="user-name" class="text-xs font-bold truncate max-w-[100px] text-indigo-100">Invitado</span>
+                    <span id="user-status" class="text-[9px] text-indigo-300">Modo Local</span>
                 </div>
             </div>
 
             <div class="flex flex-wrap justify-end items-center gap-1.5">
-                <a href="palabras.html" title="Diccionario de Palabras" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 active:scale-95 transition-all p-2 rounded-xl text-sm md:text-xs flex items-center gap-1 font-bold no-underline">
-                    📖<span class="hidden sm:inline">Diccionario</span>
+                <button id="sound-btn" title="Activar/Desactivar Sonido" class="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
+                    🔊
+                </button>
+                <button id="daily-btn" title="Modo Diario" class="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 border border-yellow-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
+                    📅<span class="hidden sm:inline">Diario</span>
+                </button>
+                <a href="palabras.html" title="Diccionario de Palabras" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold no-underline">
+                    📖
                 </a>
-                <button id="suggest-btn" title="Recomendar Palabra" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
-                    💡<span class="hidden sm:inline">Sugerir</span>
+                <button id="theme-btn" title="Cambiar Tema" class="bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 border border-pink-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs">
+                    🎨
                 </button>
-                <button id="bug-btn" title="Reportar Bug" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
-                    🐛<span class="hidden sm:inline">Bug</span>
-                </button>
-                <button id="help-btn" title="Cómo jugar" class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-sm border border-white/10">
-                    ❓
-                </button>
-                <button id="stats-btn" title="Ver Estadísticas" class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-sm border border-white/10">
+                <button id="stats-btn" title="Ver Estadísticas" class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-xs border border-white/10">
                     📊
-                </button>
-                <button id="auth-btn" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 active:scale-95 text-white font-bold text-xs px-2.5 py-2 rounded-xl shadow-md transition-all flex items-center gap-1">
-                    <span>Acceder</span>
                 </button>
             </div>
         </div>
@@ -73,16 +63,15 @@
             </h1>
             <div class="flex items-center justify-center gap-2 mt-1 flex-wrap">
                 <span class="bg-indigo-900/60 border border-indigo-400/30 text-indigo-200 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
-                    📚 <span id="total-words-count" class="font-extrabold text-yellow-300">--</span> palabras disponibles
+                    📚 <span id="total-words-count" class="font-extrabold text-yellow-300">--</span> palabras
                 </span>
                 <span class="bg-purple-900/60 border border-purple-400/30 text-purple-200 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
                     🔠 <span id="word-length-count" class="font-extrabold text-yellow-300">--</span> letras
                 </span>
-                <button id="skip-btn" title="Cambiar palabra (solo para palabras largas)" class="hidden bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-rose-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1 active:scale-95 transition-all">
+                <button id="skip-btn" title="Cambiar palabra" class="hidden bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-rose-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1 active:scale-95 transition-all">
                     ⏭️ Cambiar
                 </button>
             </div>
-            <p id="subtitle-info" class="text-xs text-indigo-200 mt-1">Adivina la palabra oculta</p>
         </div>
     </header>
 
@@ -135,164 +124,152 @@
             </div>
         </div>
 
-        <button id="restart-btn" class="hidden mt-4 bg-gradient-to-r from-pink-500 to-yellow-400 hover:opacity-95 active:scale-95 text-slate-950 font-bold px-8 py-3 rounded-xl shadow-xl transition-all tracking-wide text-sm animate-bounce">
-            ✨ Jugar Nuevamente
-        </button>
+        <div id="end-actions" class="hidden flex flex-col gap-2 w-full mt-2">
+            <button id="share-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition-all flex items-center justify-center gap-1.5">
+                📋 Copiar Resultado (Compartir)
+            </button>
+            <button id="restart-btn" class="w-full bg-gradient-to-r from-pink-500 to-yellow-400 hover:opacity-95 active:scale-95 text-slate-950 font-extrabold py-3 rounded-xl shadow-xl transition-all tracking-wide text-sm animate-bounce">
+                ✨ Siguiente Palabra
+            </button>
+        </div>
     </main>
 
+    <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-slate-900 border border-indigo-500/30 rounded-2xl w-full max-w-sm p-5 text-center shadow-2xl relative transform scale-90 transition-all duration-300">
+            <button id="close-profile-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
+            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-300 mb-1">👤 Tu Perfil</h2>
+            <p class="text-xs text-indigo-200 mb-4">Personaliza tu apodo local</p>
+            <input type="text" id="username-input" placeholder="Tu apodo..." maxlength="15" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white text-center font-bold mb-4 focus:outline-none focus:border-indigo-400">
+            <button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-lg">Guardar</button>
+        </div>
+    </div>
+
     <div id="stats-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl relative transform scale-90 transition-all duration-300" id="stats-modal-content">
+        <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl relative transform scale-90 transition-all duration-300">
             <button id="close-stats-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 mb-1">Estadísticas de Juego</h2>
-            <p id="stats-user-label" class="text-xs text-indigo-300 mb-5">Progreso Local</p>
+            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 mb-1">Estadísticas</h2>
+            <p id="stats-user-label" class="text-xs text-indigo-300 mb-5">Modo Local</p>
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
                     <span id="stat-won" class="text-2xl font-black text-emerald-400">0</span>
-                    <span class="text-[11px] text-slate-300 font-medium">Acertadas</span>
+                    <span class="text-[11px] text-slate-300">Acertadas</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
                     <span id="stat-lost" class="text-2xl font-black text-rose-400">0</span>
-                    <span class="text-[11px] text-slate-300 font-medium">Falladas</span>
+                    <span class="text-[11px] text-slate-300">Falladas</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
                     <span id="stat-played" class="text-2xl font-black text-indigo-300">0</span>
-                    <span class="text-[11px] text-slate-300 font-medium">Jugadas</span>
+                    <span class="text-[11px] text-slate-300">Jugadas</span>
                 </div>
                 <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
                     <span id="stat-winrate" class="text-2xl font-black text-amber-300">0%</span>
-                    <span class="text-[11px] text-slate-300 font-medium">% Victoria</span>
+                    <span class="text-[11px] text-slate-300">% Victoria</span>
                 </div>
             </div>
             <div class="bg-indigo-950/60 border border-indigo-500/30 p-3 rounded-xl flex justify-between items-center mb-4">
                 <span class="text-xs text-indigo-200">🔥 Racha Actual:</span>
                 <span id="stat-streak" class="text-base font-bold text-yellow-400">0</span>
             </div>
-            <button id="modal-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">Cerrar</button>
+            <button id="modal-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all">Cerrar</button>
         </div>
     </div>
 
-    <div id="help-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="help-modal-content">
-            <button id="close-help-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 mb-2 text-center">¿Cómo Jugar?</h2>
-            <p class="text-xs text-indigo-200 mb-4 text-center">Adivina la palabra oculta en 6 intentos. El color de las casillas cambiará para darte pistas.</p>
-            <div class="space-y-3 text-xs mb-5">
-                <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white shrink-0">A</div>
-                    <div>
-                        <span class="font-bold text-emerald-400 block">Verde: Correcto</span>
-                        <span class="text-slate-300 text-[11px]">La letra está en la palabra y en el lugar correcto.</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-white shrink-0">B</div>
-                    <div>
-                        <span class="font-bold text-amber-300 block">Amarillo: Otra Posición</span>
-                        <span class="text-slate-300 text-[11px]">La letra está en la palabra, pero en otra posición.</span>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                    <div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center font-bold text-white shrink-0">C</div>
-                    <div>
-                        <span class="font-bold text-slate-400 block">Gris: No Incluida</span>
-                        <span class="text-slate-300 text-[11px]">La letra no se encuentra en la palabra oculta.</span>
-                    </div>
-                </div>
-            </div>
-            <button id="modal-help-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">¡Entendido, a jugar!</button>
-        </div>
-    </div>
-
-    <div id="suggest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-amber-500/30 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="suggest-modal-content">
-            <button id="close-suggest-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-400 mb-1 text-center">💡 Recomendar Palabra</h2>
-            <form id="suggest-form" class="space-y-3 mt-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Palabra *</label>
-                    <input type="text" id="suggest-word" placeholder="Ej: ASTRONAUTA" required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white uppercase font-bold tracking-wider">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Descripción Corta (Pista) *</label>
-                    <input type="text" id="suggest-short" placeholder="Ej: Viajero espacial" required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white">
-                </div>
-                <div>
-                    <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Descripción Larga (Final) *</label>
-                    <textarea id="suggest-long" rows="2" placeholder="Ej: Persona entrenada para viajar..." required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white resize-none"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black py-2.5 rounded-xl text-xs shadow-lg transition-all active:scale-95">🚀 Enviar vía Instagram</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="bug-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-rose-500/30 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="bug-modal-content">
-            <button id="close-bug-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400 mb-1 text-center">🐛 Reportar un Fallo</h2>
-            <form id="bug-form" class="space-y-3 mt-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-rose-300 uppercase mb-1">Descripción del fallo *</label>
-                    <textarea id="bug-desc" rows="4" placeholder="Describe lo que ocurrió..." required class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white resize-none"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-pink-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg transition-all active:scale-95">📩 Reportar vía Instagram</button>
-            </form>
-        </div>
-    </div>
-
-    <footer class="w-full max-w-md flex items-center justify-between text-[11px] text-indigo-300/80 pt-2 pb-1 px-2 border-t border-white/10 mt-auto">
-        <span class="font-bold tracking-wide text-indigo-200/90">By: <span class="text-pink-400">Marcenaroc64</span></span>
-        <a href="https://www.tiktok.com/@marcenaroc64" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 bg-black/60 hover:bg-black/90 active:scale-95 border border-white/20 text-white px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all shadow-md">
-            <svg class="w-3.5 h-3.5 fill-current text-cyan-400" viewBox="0 0 24 24"><path d="M12.525 0h3.08c.12 1.052.752 1.988 1.7 2.493a4.757 4.757 0 002.595.6v3.169a8.03 8.03 0 01-3.692-.903c-.235-.126-.454-.27-.658-.432v8.92c0 3.823-3.105 6.928-6.928 6.928-3.823 0-6.928-3.105-6.928-6.928 0-3.823 3.105-6.928 6.928-6.928.324 0 .643.023.956.068v3.2a3.732 3.732 0 00-.956-.123c-2.062 0-3.732 1.67-3.732 3.732 0 2.062 1.67 3.732 3.732 3.732 2.062 0 3.732-1.67 3.732-3.732V0z"/></svg>
-            <span class="text-white">TikTok</span>
-        </a>
-    </footer>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const localDictionary = [
-            "SOL|Astro|Astro diurno","PAN|Alimento|Hecho de harina","LUZ|Claridad|Vence a las sombras","MAR|Agua|Masa de agua salada","REY|Monarca|Soberano de un reino","VOZ|Sonido|Producido por cuerdas vocales","ORO|Metal|Metal precioso amarillo","RIO|Cauce|Corriente natural de agua","PAZ|Tranquilidad|Estado sin conflictos","RED|Malla|Malla de hilos","OLA|Onda|Onda en el agua","SUR|Punto|Punto cardinal","AJO|Planta|Bulbo usado en cocina","DIA|Periodo|Iluminado por el sol","GAS|Estado|Estado fluido de la materia","LEY|Norma|Regla establecida","BAR|Local|Para tomar bebidas","BUS|Transporte|Vehículo urbano","UVA|Fruta|Para hacer vino","COL|Hortaliza|Hojas apretadas","PIE|Extremidad|Base para caminar","SAL|Condimento|Sustancia blanca","VIA|Camino|Carril de tránsito","OJO|Órgano|Órgano visual","REO|Acusado|Persona juzgada","DOS|Número|Después del uno","SIN|Preposición|Carencia de algo","CON|Preposición|Compañía de algo","POR|Preposición|Causa o motivo","QUE|Pronombre|Pronombre relativo","TAL|Adjetivo|Semejante o igual","VER|Verbo|Percibir por los ojos","DAR|Verbo|Entregar algo","SER|Verbo|Tener existencia","FIN|Término|Final de algo","MAL|Daño|Lo contrario al bien","MES|Tiempo|Doceava parte del año","ECO|Sonido|Reflejo de sonido","EGO|Psicología|Conciencia del yo","IRA|Emoción|Enojo profundo","TIO|Familiar|Hermano del padre","TIA|Familiar|Hermana de la madre","OSO|Animal|Mamífero peludo","RON|Bebida|Licor de caña","TOS|Reflejo|Expulsión de aire","USO|Acción|Acción de usar","UNO|Número|El primer número",
-            "CASA|Vivienda|Lugar donde se habita","LUNA|Satélite|Satélite natural de la Tierra","AGUA|Líquido|Vital para la vida","ROSA|Flor|Flor con espinas","ARCO|Arma|Para disparar flechas","CAFE|Bebida|Estimulante oscuro","LAPIZ|Utensilio|Para escribir en papel","LEON|Animal|Rey de la selva","PATO|Ave|Ave acuática","ROJO|Color|Color primario cálido","AZUL|Color|Color del cielo despejado","OSO|Animal|Mamífero grande","GATO|Animal|Felino doméstico","PERO|Conjunción|Conjunción adversativa","TAPA|Cubierta|Cierre de un recipiente","ROCA|Piedra|Fragmento mineral duro","VIDA|Existencia|Estado de los seres vivos","AIRE|Gas|Mezcla de gases atmosféricos","NUBE|Vapor|Acumulación de vapor suspendido","FUEGO|Calor|Proceso de combustión","HIEL|Líquido|Bilis segregada por el hígado","MARS|Planeta|Planeta rojo","LOLA|Nombre|Nombre propio femenino","BOTE|Embarcación|Embarcación pequeña","PIPA|Pipa|Para fumar tabaco","MESA|Mueble|Mueble con tablero y patas","SILL|Mueble|Asiento con respaldo","TREN|Vehículo|Transporte ferroviario","NAVE|Vehículo|Para navegar en el espacio","COCO|Fruta|Fruto de la palmera",
-            "PERRO|Animal|El mejor amigo del hombre","GABAN|Prenda|Abrigo largo con mangas","PLAYA|Costa|Arena junto al mar","LIBRO|Objeto|Conjunto de hojas encuadernadas","FUTBOL|Deporte|Deporte rey con balón","PIANO|Instrumento|Instrumento musical de teclas","TIGRE|Animal|Felino rayado de Asia","VALLE|Terreno|Llanura entre montañas","ARBOL|Planta|Planta con tronco leñoso","RADIO|Aparato|Para escuchar transmisiones","MOTOR|Máquina|Que produce movimiento","PLATO|Utensilio|Recipiente para comer","RELOJ|Objeto|Mide el paso del tiempo","MAGIA|Arte|Producción de efectos ilusorios","TORRE|Construcción|Edificio alto y estrecho",
-            "PLANETA|Cuerpo|Cuerpo celeste en órbita","MUSICA|Arte|Combinación de sonidos","TIERRA|Planeta|Nuestro hogar en el espacio","OCEANO|Agua|Gran masa de agua salada","CIELOS|Espacio|Bóveda celeste visible",
-            "LIBERTAD|Derecho|Facultad natural de obrar","ESTRELLA|Astro|Cuerpo celeste que brilla con luz propia","DIAMANTE|Mineral|Piedra preciosa cristalina",
-            "ASTRONAUTA|Profesión|Explorador del espacio exterior","UNIVERSO|Todo|La totalidad del espacio y el tiempo"
-        ];
-
-        let dictionary = localDictionary.map(item => {
-            const parts = item.split('|');
-            return { word: parts[0].toUpperCase(), hint: parts[1] || 'Sin pista', long: parts[2] || 'Sin descripción' };
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 500);
+                }
+            }, 300);
         });
 
-        let auth, db, currentUser = null;
-        try {
-            const firebaseConfig = { apiKey: "AIzaSyDummyKey", authDomain: "adivina.firebaseapp.com", projectId: "adivina" };
-            const app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-        } catch (e) {}
+        const expandedDictionary = [
+            "SOL|Astro|Astro diurno", "PAN|Alimento|Masa de harina", "LUZ|Claridad|Radiación visible",
+            "MAR|Agua|Masa de agua salada", "REY|Monarca|Soberano de un reino", "VOZ|Sonido|Cuerdas vocales",
+            "ORO|Metal|Metal precioso", "RIO|Cauce|Corriente natural", "PAZ|Tranquilidad|Armonía",
+            "CASA|Vivienda|Hogar familiar", "LUNA|Satélite|Satélite natural", "AGUA|Líquido|Vital para la vida",
+            "ROSA|Flor|Flor con espinas", "CAFE|Bebida|Estimulante oscuro", "LEON|Animal|Rey de la selva",
+            "PERRO|Animal|El mejor amigo", "PLAYA|Costa|Arena y mar", "LIBRO|Objeto|Lectura y hojas",
+            "FUTBOL|Deporte|Deporte de balón", "PIANO|Instrumento|Teclas musicales", "TIGRE|Animal|Felino rayado",
+            "ARBOL|Planta|Tronco y ramas", "RELOJ|Objeto|Mide el tiempo", "MAGIA|Arte|Ilusionismo"
+        ];
 
+        const dictionary = expandedDictionary.map(item => {
+            const parts = item.split('|');
+            return { word: parts[0].toUpperCase(), hint: parts[1] || 'Pista', long: parts[2] || 'Descripción' };
+        });
+
+        let userProfileName = localStorage.getItem('word_username') || "Invitado";
         let WORD = "", CLUE = "", LONG_DESC = "", WORD_LENGTH = 3, MAX_ATTEMPTS = 6, currentAttempt = 0, currentGuess = [], isGameOver = false;
-        let stats = { won: 0, lost: 0, played: 0, streak: 0 };
+        let soundEnabled = localStorage.getItem('word_sound') !== 'false';
+        let stats = JSON.parse(localStorage.getItem('word_stats')) || { won: 0, lost: 0, played: 0, streak: 0 };
+        let isDailyMode = false, currentThemeIndex = 0;
+        const themes = [
+            { bg: "from-indigo-950 via-purple-950 to-slate-950", name: "Cósmico" },
+            { bg: "from-emerald-950 via-teal-950 to-slate-950", name: "Esmeralda" },
+            { bg: "from-rose-950 via-red-950 to-slate-950", name: "Rubí" }
+        ];
 
         document.getElementById('total-words-count').textContent = dictionary.length;
+        document.getElementById('user-name').textContent = userProfileName;
 
-        function initGame() {
-            const wordData = dictionary[Math.floor(Math.random() * dictionary.length)];
-            WORD = wordData.word; CLUE = wordData.hint; LONG_DESC = wordData.long; WORD_LENGTH = WORD.length;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            if (type === 'key') {
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+            } else if (type === 'win') {
+                [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+                    setTimeout(() => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g); g.connect(audioCtx.destination);
+                        o.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                        g.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                        o.start(); o.stop(audioCtx.currentTime + 0.3);
+                    }, idx * 100);
+                });
+            } else if (type === 'fail') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function initGame(daily = false) {
+            isDailyMode = daily;
+            if (daily) {
+                const todayStr = new Date().toISOString().slice(0, 10);
+                let seed = 0; for(let c of todayStr) seed += c.charCodeAt(0);
+                const wordData = dictionary[seed % dictionary.length];
+                WORD = wordData.word; CLUE = wordData.hint; LONG_DESC = wordData.long;
+            } else {
+                const wordData = dictionary[Math.floor(Math.random() * dictionary.length)];
+                WORD = wordData.word; CLUE = wordData.hint; LONG_DESC = wordData.long;
+            }
+            WORD_LENGTH = WORD.length;
             document.getElementById('word-length-count').textContent = WORD_LENGTH;
-            if (WORD_LENGTH >= 6) document.getElementById('skip-btn').classList.remove('hidden');
+            if (WORD_LENGTH >= 6 && !isDailyMode) document.getElementById('skip-btn').classList.remove('hidden');
             else document.getElementById('skip-btn').classList.add('hidden');
 
             currentAttempt = 0; currentGuess = []; isGameOver = false;
             document.getElementById('restart-btn').classList.add('hidden');
-            const hintBox = document.getElementById('hint-box');
-            hintBox.classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'hidden');
-            document.getElementById('clue-text').textContent = "...";
+            document.getElementById('share-btn').parentElement.classList.add('hidden');
+            document.getElementById('hint-box').classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'hidden');
             renderBoard();
-            resetKeyboardUI();
         }
 
         function renderBoard() {
@@ -303,7 +280,7 @@
                 row.className = 'flex gap-1.5 justify-center';
                 for (let j = 0; j < WORD_LENGTH; j++) {
                     const tile = document.createElement('div');
-                    tile.className = 'w-12 h-12 md:w-14 md:h-14 border-2 border-white/20 rounded-xl flex items-center justify-center text-lg md:text-xl font-extrabold bg-white/5 transition-all duration-300 shadow-inner';
+                    tile.className = 'w-11 h-11 md:w-13 md:h-13 border-2 rounded-xl flex items-center justify-center text-lg md:text-xl font-extrabold tile-empty transition-all duration-300 shadow-inner';
                     tile.id = `tile-${i}-${j}`;
                     row.appendChild(tile);
                 }
@@ -311,79 +288,77 @@
             }
         }
 
-        function resetKeyboardUI() {
-            document.querySelectorAll('.key-btn').forEach(btn => {
-                if (btn.getAttribute('data-key') !== 'ENTER' && btn.getAttribute('data-key') !== 'BACK') {
-                    btn.className = "key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md text-white";
-                }
-            });
-        }
-
         function handleKeyPress(key) {
             if (isGameOver) return;
+            playSound('key');
             if (key === 'ENTER') {
-                submitGuess();
-            } else if (key === 'BACK') {
-                if (currentGuess.length > 0) { currentGuess.pop(); updateCurrentRow(); }
-            } else {
-                if (currentGuess.length < WORD_LENGTH) {
-                    currentGuess.push(key.toUpperCase());
-                    updateCurrentRow();
+                if (currentGuess.length < WORD_LENGTH) { showMessage("Faltan letras"); playSound('fail'); return; }
+                const guessWord = currentGuess.join('');
+                let letterCount = {};
+                for (let char of WORD) letterCount[char] = (letterCount[char] || 0) + 1;
+                const statuses = Array(WORD_LENGTH).fill('absent');
+
+                for (let i = 0; i < WORD_LENGTH; i++) {
+                    if (guessWord[i] === WORD[i]) { statuses[i] = 'correct'; letterCount[guessWord[i]]--; }
                 }
+                for (let i = 0; i < WORD_LENGTH; i++) {
+                    if (statuses[i] !== 'correct' && letterCount[guessWord[i]] > 0) {
+                        statuses[i] = 'present'; letterCount[guessWord[i]]--;
+                    }
+                }
+
+                for (let i = 0; i < WORD_LENGTH; i++) {
+                    const tile = document.getElementById(`tile-${currentAttempt}-${i}`);
+                    setTimeout(() => {
+                        tile.classList.add('flip-tile');
+                        if (statuses[i] === 'correct') tile.classList.add('tile-correct');
+                        else if (statuses[i] === 'present') tile.classList.add('tile-present');
+                        else tile.classList.add('tile-absent');
+                    }, i * 150);
+                }
+
+                setTimeout(() => {
+                    if (guessWord === WORD) {
+                        playSound('win'); endGame(true);
+                    } else {
+                        currentAttempt++; currentGuess = [];
+                        
+                        // Pista corta en el 5º intento (índice 4)
+                        if (currentAttempt === 4) {
+                            document.getElementById('clue-text').textContent = `Pista: ${CLUE}`;
+                            document.getElementById('hint-box').classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
+                        }
+                        // Pista larga (definición) en el 6º y último intento (índice 5)
+                        else if (currentAttempt === 5) {
+                            document.getElementById('clue-text').textContent = `Definición: ${LONG_DESC}`;
+                            document.getElementById('hint-box').classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
+                        }
+
+                        if (currentAttempt >= MAX_ATTEMPTS) { playSound('fail'); endGame(false); }
+                    }
+                }, WORD_LENGTH * 150 + 50);
+
+            } else if (key === 'BACK') {
+                if (currentGuess.length > 0) { currentGuess.pop(); updateRow(); }
+            } else {
+                if (currentGuess.length < WORD_LENGTH) { currentGuess.push(key.toUpperCase()); updateRow(); }
             }
         }
 
-        function updateCurrentRow() {
+        function updateRow() {
             for (let j = 0; j < WORD_LENGTH; j++) {
                 const tile = document.getElementById(`tile-${currentAttempt}-${j}`);
                 tile.textContent = j < currentGuess.length ? currentGuess[j] : '';
             }
         }
 
-        function submitGuess() {
-            if (currentGuess.length < WORD_LENGTH) { showMessage("Faltan letras"); return; }
-            const guessWord = currentGuess.join('');
-            const letterCount = {};
-            for (let char of WORD) letterCount[char] = (letterCount[char] || 0) + 1;
-            const statuses = Array(WORD_LENGTH).fill('absent');
-
-            for (let i = 0; i < WORD_LENGTH; i++) {
-                if (guessWord[i] === WORD[i]) { statuses[i] = 'correct'; letterCount[guessWord[i]]--; }
-            }
-            for (let i = 0; i < WORD_LENGTH; i++) {
-                if (statuses[i] !== 'correct') {
-                    if (letterCount[guessWord[i]] > 0) { statuses[i] = 'present'; letterCount[guessWord[i]]--; }
-                }
-            }
-
-            for (let i = 0; i < WORD_LENGTH; i++) {
-                const tile = document.getElementById(`tile-${currentAttempt}-${i}`);
-                setTimeout(() => {
-                    tile.classList.add('flip-tile');
-                    if (statuses[i] === 'correct') tile.classList.add('tile-correct');
-                    else if (statuses[i] === 'present') tile.classList.add('tile-present');
-                    else tile.classList.add('tile-absent');
-                }, i * 200);
-            }
-
-            setTimeout(() => {
-                if (guessWord === WORD) { endGame(true); }
-                else {
-                    currentAttempt++; currentGuess = [];
-                    if (currentAttempt === 4) {
-                        document.getElementById('clue-text').textContent = CLUE;
-                        document.getElementById('hint-box').classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
-                    }
-                    if (currentAttempt >= MAX_ATTEMPTS) endGame(false);
-                }
-            }, WORD_LENGTH * 200 + 50);
-        }
-
         function endGame(won) {
             isGameOver = true; stats.played++;
-            if (won) { stats.won++; stats.streak++; showMessage("¡Excelente! Adivinaste la palabra."); }
-            else { stats.lost++; stats.streak = 0; showMessage(`Fin del juego. Era: ${WORD}`); }
+            if (won) { stats.won++; stats.streak++; showMessage("¡Adivinaste la palabra!"); }
+            else { stats.lost++; stats.streak = 0; showMessage(`Era: ${WORD}`); }
+            localStorage.setItem('word_stats', JSON.stringify(stats));
             document.getElementById('restart-btn').classList.remove('hidden');
+            document.getElementById('share-btn').parentElement.classList.remove('hidden');
         }
 
         function showMessage(text) {
@@ -403,48 +378,51 @@
             if (btn && btn.getAttribute('data-key')) handleKeyPress(btn.getAttribute('data-key'));
         });
 
-        document.getElementById('restart-btn').addEventListener('click', initGame);
-        document.getElementById('skip-btn').addEventListener('click', () => { if (!isGameOver) initGame(); });
+        document.getElementById('restart-btn').addEventListener('click', () => initGame(false));
+        document.getElementById('skip-btn').addEventListener('click', () => initGame(false));
+        document.getElementById('daily-btn').addEventListener('click', () => initGame(true));
+
+        document.getElementById('sound-btn').addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('word_sound', soundEnabled);
+            document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+        });
+
+        document.getElementById('theme-btn').addEventListener('click', () => {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            document.body.className = `bg-gradient-to-br ${themes[currentThemeIndex].bg} min-h-screen text-white flex flex-col justify-between items-center p-3 select-none overflow-x-hidden`;
+        });
 
         const statsModal = document.getElementById('stats-modal');
-        const helpModal = document.getElementById('help-modal');
-        const suggestModal = document.getElementById('suggest-modal');
-        const bugModal = document.getElementById('bug-modal');
+        const profileModal = document.getElementById('profile-modal');
 
-        document.getElementById('stats-btn').addEventListener('click', () => statsModal.classList.remove('opacity-0', 'pointer-events-none'));
+        document.getElementById('stats-btn').addEventListener('click', () => {
+            document.getElementById('stat-won').textContent = stats.won;
+            document.getElementById('stat-lost').textContent = stats.lost;
+            document.getElementById('stat-played').textContent = stats.played;
+            document.getElementById('stat-winrate').textContent = stats.played ? Math.round((stats.won/stats.played)*100) + '%' : '0%';
+            document.getElementById('stat-streak').textContent = stats.streak;
+            statsModal.classList.remove('opacity-0', 'pointer-events-none');
+        });
         document.getElementById('close-stats-btn').addEventListener('click', () => statsModal.classList.add('opacity-0', 'pointer-events-none'));
         document.getElementById('modal-close-action').addEventListener('click', () => statsModal.classList.add('opacity-0', 'pointer-events-none'));
 
-        document.getElementById('help-btn').addEventListener('click', () => helpModal.classList.remove('opacity-0', 'pointer-events-none'));
-        document.getElementById('close-help-btn').addEventListener('click', () => helpModal.classList.add('opacity-0', 'pointer-events-none'));
-        document.getElementById('modal-help-close-action').addEventListener('click', () => helpModal.classList.add('opacity-0', 'pointer-events-none'));
-
-        document.getElementById('suggest-btn').addEventListener('click', () => suggestModal.classList.remove('opacity-0', 'pointer-events-none'));
-        document.getElementById('close-suggest-btn').addEventListener('click', () => suggestModal.classList.add('opacity-0', 'pointer-events-none'));
-
-        document.getElementById('bug-btn').addEventListener('click', () => bugModal.classList.remove('opacity-0', 'pointer-events-none'));
-        document.getElementById('close-bug-btn').addEventListener('click', () => bugModal.classList.add('opacity-0', 'pointer-events-none'));
-
-        document.getElementById('suggest-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            window.open("https://www.instagram.com/direct/inbox/", "_blank");
-            suggestModal.classList.add('opacity-0', 'pointer-events-none');
+        document.getElementById('user-profile').addEventListener('click', () => {
+            document.getElementById('username-input').value = userProfileName;
+            profileModal.classList.remove('opacity-0', 'pointer-events-none');
+        });
+        document.getElementById('close-profile-btn').addEventListener('click', () => profileModal.classList.add('opacity-0', 'pointer-events-none'));
+        document.getElementById('save-profile-btn').addEventListener('click', () => {
+            const newName = document.getElementById('username-input').value.trim();
+            if (newName) {
+                userProfileName = newName;
+                localStorage.setItem('word_username', userProfileName);
+                document.getElementById('user-name').textContent = userProfileName;
+                profileModal.classList.add('opacity-0', 'pointer-events-none');
+            }
         });
 
-        document.getElementById('bug-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            window.open("https://www.instagram.com/direct/inbox/", "_blank");
-            bugModal.classList.add('opacity-0', 'pointer-events-none');
-        });
-
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                splash.classList.add('opacity-0', 'pointer-events-none');
-                setTimeout(() => splash.remove(), 700);
-            }, 1000);
-            initGame();
-        });
+        initGame(false);
     </script>
 </body>
 </html>
