@@ -45,7 +45,12 @@ animation: pulseGlow 2s infinite;
 50% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.6); }
 }
 
-/* STREAMING_CHUNK:Styling tile state utility classes */
+/* STREAMING_CHUNK:Styling tile state utility classes with subtle red default */
+.tile-empty {
+background-color: rgba(225, 29, 72, 0.08) !important;
+border-color: rgba(225, 29, 72, 0.25) !important;
+}
+
 .tile-correct {
 background-color: #059669 !important;
 border-color: #059669 !important;
