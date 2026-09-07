@@ -2,427 +2,1122 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adivina la Palabra - Con Guardado Local</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <!-- Archivo de Estilos Externo Separado -->
-    <link rel="stylesheet" href="estilo.css">
-</head>
-<body class="bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950 min-h-screen text-white flex flex-col justify-between items-center p-3 select-none overflow-x-hidden">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARGIE CANDLES | Velas Artesanales Premium</title>
+    <meta name="description" content="Descubre nuestra colección exclusiva de velas artesanales. Aromas únicos, diseño elegante y relajación absoluta para tus espacios.">
+    
+    <!-- Open Graph Básico -->
+    <meta property="og:title" content="MARGIE CANDLES">
+    <meta property="og:description" content="Velas artesanales de lujo para iluminar tus sentidos.">
+    <meta property="og:type" content="website">
 
-    <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
-        <div class="flex flex-col items-center justify-center pop-animation">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-6 text-center animate-pulse">
-                PALABRA<br>SECRETA
-            </h1>
-            <div class="flex items-center gap-2 mt-4 opacity-80 animate-bounce">
-                <span class="font-bold tracking-widest text-indigo-200 text-sm">
-                    By: <span class="text-pink-400">Marcenaroc64</span>
-                </span>
-            </div>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuración Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#FDFBF7', // Fondo crema cálido
+                            beige: '#F4EBE1', // Beige secundario
+                            gold: '#C8A97E',  // Dorado elegante
+                            goldhover: '#B5956A',
+                            brown: '#4A3B32', // Texto oscuro principal
+                            dark: '#2C231F'   // Texto muy oscuro/Footer
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Lato', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Estilos Personalizados (Simulando CSS externo) -->
+    <style>
+        body { background-color: #FDFBF7; color: #4A3B32; }
+        
+        /* Utilidades para ocultar vistas (SPA Routing) */
+        .view-section { display: none; opacity: 0; transition: opacity 0.4s ease-in-out; }
+        .view-section.active { display: block; opacity: 1; }
+        .view-section.flex-active { display: flex; opacity: 1; }
+
+        /* Animaciones */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastSlide { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
+        
+        /* Hover effects */
+        .product-card { transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(74, 59, 50, 0.1); }
+        .product-img-wrapper img { transition: transform 0.5s ease; }
+        .product-card:hover .product-img-wrapper img { transform: scale(1.05); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FDFBF7; }
+        ::-webkit-scrollbar-thumb { background: #C8A97E; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4A3B32; }
+
+        /* Toast Notifications */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 100; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background-color: #2C231F; color: #FDFBF7; padding: 12px 20px; border-radius: 8px; display: flex; align-items: center; gap: 10px; animation: toastSlide 0.3s ease-out forwards; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #C8A97E;}
+        
+        /* Loader */
+        #loader { position: fixed; inset: 0; background: #FDFBF7; z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+        .spinner { width: 50px; height: 50px; border: 3px solid rgba(200, 169, 126, 0.3); border-radius: 50%; border-top-color: #C8A97E; animation: spin 1s ease-in-out infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Pantalla de carga inicial -->
+    <div id="loader">
+        <div class="text-center">
+            <div class="spinner mb-4 mx-auto"></div>
+            <h1 class="font-serif text-2xl text-brand-brown tracking-widest">MARGIE</h1>
         </div>
     </div>
 
-    <header class="w-full max-w-md flex flex-col gap-2 py-2">
-        <div class="flex flex-wrap items-center justify-between gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/10">
-            <div id="user-profile" class="flex items-center gap-2 cursor-pointer" title="Cambiar Nombre / Perfil">
-                <div id="user-avatar" class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase shadow">
-                    👤
+    <!-- Navegación -->
+    <header class="fixed w-full top-0 bg-brand-light/95 backdrop-blur-sm shadow-sm z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center md:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-brand-brown hover:text-brand-gold text-2xl focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </div>
-                <div class="flex flex-col">
-                    <span id="user-name" class="text-xs font-bold truncate max-w-[100px] text-indigo-100">Invitado</span>
-                    <span id="user-status" class="text-[9px] text-indigo-300">Modo Local</span>
-                </div>
-            </div>
 
-            <div class="flex flex-wrap justify-end items-center gap-1.5">
-                <button id="sound-btn" title="Activar/Desactivar Sonido" class="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
-                    🔊
-                </button>
-                <button id="daily-btn" title="Modo Diario" class="bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 border border-yellow-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
-                    📅<span class="hidden sm:inline">Diario</span>
-                </button>
-                <a href="palabras.html" title="Diccionario de Palabras" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold no-underline">
-                    📖
-                </a>
-                <button id="theme-btn" title="Cambiar Tema" class="bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 border border-pink-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs">
-                    🎨
-                </button>
-                <button id="stats-btn" title="Ver Estadísticas" class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-xs border border-white/10">
-                    📊
-                </button>
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center justify-center md:justify-start flex-1 md:flex-none">
+                    <a href="#" onclick="navigate('home')" class="font-serif text-3xl font-bold text-brand-brown tracking-widest hover:text-brand-gold transition-colors">
+                        MARGIE<span class="text-brand-gold text-4xl leading-none">.</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#" onclick="navigate('home')" class="text-brand-brown hover:text-brand-gold transition-colors text-sm uppercase tracking-wider font-semibold">Inicio</a>
+                    <a href="#" onclick="navigate('shop')" class="text-brand-brown hover:text-brand-gold transition-colors text-sm uppercase tracking-wider font-semibold">Tienda</a>
+                    <a href="#" onclick="navigate('shop', { filter: 'ofertas' })" class="text-brand-brown hover:text-brand-gold transition-colors text-sm uppercase tracking-wider font-semibold">Ofertas</a>
+                    <a href="#footer" class="text-brand-brown hover:text-brand-gold transition-colors text-sm uppercase tracking-wider font-semibold">Contacto</a>
+                </nav>
+
+                <!-- Icons (Search, User, Heart, Cart) -->
+                <div class="flex items-center space-x-4 md:space-x-6">
+                    <button onclick="navigate('shop')" class="text-brand-brown hover:text-brand-gold transition-colors" title="Buscar">
+                        <i class="fas fa-search text-lg"></i>
+                    </button>
+                    <button onclick="navigate('profile')" class="text-brand-brown hover:text-brand-gold transition-colors" title="Perfil">
+                        <i class="fas fa-user text-lg"></i>
+                        <span id="nav-username" class="hidden md:inline-block ml-1 text-xs font-semibold"></span>
+                    </button>
+                    <button onclick="navigate('favorites')" class="hidden md:block text-brand-brown hover:text-brand-gold transition-colors" title="Favoritos">
+                        <i class="fas fa-heart text-lg"></i>
+                        <span id="fav-count" class="absolute -mt-2 ml-1 bg-brand-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                    </button>
+                    <button onclick="navigate('cart')" class="text-brand-brown hover:text-brand-gold transition-colors relative" title="Carrito">
+                        <i class="fas fa-shopping-cart text-lg"></i>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-brand-gold text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="text-center mt-1">
-            <h1 class="text-2xl md:text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-sm">
-                PALABRA SECRETA
-            </h1>
-            <div class="flex items-center justify-center gap-2 mt-1 flex-wrap">
-                <span class="bg-indigo-900/60 border border-indigo-400/30 text-indigo-200 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
-                    📚 <span id="total-words-count" class="font-extrabold text-yellow-300">--</span> palabras
-                </span>
-                <span class="bg-purple-900/60 border border-purple-400/30 text-purple-200 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
-                    🔠 <span id="word-length-count" class="font-extrabold text-yellow-300">--</span> letras
-                </span>
-                <button id="skip-btn" title="Cambiar palabra" class="hidden bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-rose-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1 active:scale-95 transition-all">
-                    ⏭️ Cambiar
-                </button>
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-brand-light border-t border-brand-beige">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#" onclick="navigate('home'); toggleMobileMenu()" class="block px-3 py-2 text-brand-brown uppercase tracking-widest text-sm">Inicio</a>
+                <a href="#" onclick="navigate('shop'); toggleMobileMenu()" class="block px-3 py-2 text-brand-brown uppercase tracking-widest text-sm">Tienda</a>
+                <a href="#" onclick="navigate('shop', { filter: 'ofertas' }); toggleMobileMenu()" class="block px-3 py-2 text-brand-brown uppercase tracking-widest text-sm text-brand-gold">Ofertas</a>
+                <a href="#" onclick="navigate('favorites'); toggleMobileMenu()" class="block px-3 py-2 text-brand-brown uppercase tracking-widest text-sm">Favoritos</a>
             </div>
         </div>
     </header>
 
-    <main class="w-full max-w-md flex flex-col items-center gap-3 my-auto">
-        <div id="hint-box" class="bg-white/15 backdrop-blur-md border border-yellow-400/30 rounded-xl px-4 py-2 text-center text-xs md:text-sm text-yellow-200 font-medium shadow-lg w-full transition-all duration-500 opacity-0 scale-95 pointer-events-none hidden">
-            🔮 <span class="font-bold">Pista:</span> <span id="clue-text" class="italic">...</span>
-        </div>
+    <!-- Espaciador para nav fija -->
+    <div class="h-20"></div>
 
-        <div id="board" class="w-full mx-auto flex flex-col gap-1.5 justify-center items-center px-2"></div>
+    <!-- MAIN CONTENT CONTAINER (SPA Views) -->
+    <main class="flex-grow">
 
-        <div id="message-container" class="h-8 flex items-center justify-center mt-2 z-10">
-            <span id="game-message" class="text-xs md:text-sm font-semibold px-4 py-2 rounded-xl bg-slate-900/90 backdrop-blur border border-pink-500/30 text-pink-300 opacity-0 transition-opacity duration-300 shadow-lg pointer-events-none"></span>
-        </div>
-
-        <div id="keyboard" class="w-full flex flex-col gap-1.5 max-w-md px-1 mt-2">
-            <div class="flex justify-center gap-1 w-full">
-                <button data-key="Q" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Q</button>
-                <button data-key="W" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">W</button>
-                <button data-key="E" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">E</button>
-                <button data-key="R" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">R</button>
-                <button data-key="T" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">T</button>
-                <button data-key="Y" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Y</button>
-                <button data-key="U" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">U</button>
-                <button data-key="I" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">I</button>
-                <button data-key="O" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">O</button>
-                <button data-key="P" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">P</button>
+        <!-- ================= VISTA: INICIO (HOME) ================= -->
+        <section id="view-home" class="view-section active animate-fade-in">
+            <!-- Hero Section -->
+            <div class="relative h-[80vh] flex items-center justify-center bg-brand-dark overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1920&q=80" alt="" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                <div class="relative z-10 text-center px-4 max-w-3xl mx-auto animate-slide-up">
+                    <p class="text-brand-gold uppercase tracking-[0.3em] mb-4 text-sm font-semibold">Artesanía & Luz</p>
+                    <h1 class="font-serif text-5xl md:text-7xl text-white mb-6 leading-tight">Ilumina tus <br>momentos.</h1>
+                    <p class="text-gray-200 text-lg md:text-xl mb-10 font-light max-w-xl mx-auto">Velas de soja vertidas a mano, diseñadas para transformar tus espacios en santuarios de paz y elegancia.</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button onclick="navigate('shop')" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Comprar Ahora</button>
+                        <button onclick="navigate('shop', { sort: 'new' })" class="bg-transparent border border-white text-white hover:bg-white hover:text-brand-dark px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Ver Colección</button>
+                    </div>
+                </div>
             </div>
-            <div class="flex justify-center gap-1 w-full px-3">
-                <button data-key="A" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">A</button>
-                <button data-key="S" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">S</button>
-                <button data-key="D" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">D</button>
-                <button data-key="F" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">F</button>
-                <button data-key="G" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">G</button>
-                <button data-key="H" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">H</button>
-                <button data-key="J" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">J</button>
-                <button data-key="K" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">K</button>
-                <button data-key="L" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">L</button>
-                <button data-key="Ñ" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Ñ</button>
-            </div>
-            <div class="flex justify-center gap-1 w-full">
-                <button data-key="ENTER" class="key-btn flex-[1.5] bg-indigo-600 hover:bg-indigo-500 active:scale-90 transition-all font-bold py-3 rounded-lg text-[10px] md:text-xs shadow-md">ENTER</button>
-                <button data-key="Z" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Z</button>
-                <button data-key="X" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">X</button>
-                <button data-key="C" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">C</button>
-                <button data-key="V" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">V</button>
-                <button data-key="B" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">B</button>
-                <button data-key="N" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">N</button>
-                <button data-key="M" class="key-btn flex-1 bg-white/25 hover:bg-white/35 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">M</button>
-                <button data-key="BACK" class="key-btn flex-[1.5] bg-rose-600 hover:bg-rose-500 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">⌫</button>
-            </div>
-        </div>
 
-        <div id="end-actions" class="hidden flex flex-col gap-2 w-full mt-2">
-            <button id="share-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold py-2.5 rounded-xl text-xs shadow-lg transition-all flex items-center justify-center gap-1.5">
-                📋 Copiar Resultado (Compartir)
-            </button>
-            <button id="restart-btn" class="w-full bg-gradient-to-r from-pink-500 to-yellow-400 hover:opacity-95 active:scale-95 text-slate-950 font-extrabold py-3 rounded-xl shadow-xl transition-all tracking-wide text-sm animate-bounce">
-                ✨ Siguiente Palabra
-            </button>
-        </div>
+            <!-- Categorías Destacadas -->
+            <div class="max-w-7xl mx-auto px-4 py-20">
+                <div class="text-center mb-12">
+                    <h2 class="font-serif text-3xl md:text-4xl text-brand-brown mb-4">Descubre Nuestras Esencias</h2>
+                    <div class="w-16 h-0.5 bg-brand-gold mx-auto"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Cat 1 -->
+                    <div class="relative h-96 group cursor-pointer overflow-hidden rounded-md" onclick="navigate('shop', { category: 'Relajación' })">
+                        <img src="https://images.unsplash.com/photo-1596433809252-2591e3e7f2aa?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="">
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+                            <h3 class="font-serif text-3xl mb-2">Relajación</h3>
+                            <span class="border-b border-transparent group-hover:border-white transition-colors pb-1 uppercase tracking-wider text-sm">Ver Productos</span>
+                        </div>
+                    </div>
+                    <!-- Cat 2 -->
+                    <div class="relative h-96 group cursor-pointer overflow-hidden rounded-md" onclick="navigate('shop', { category: 'Cítricos' })">
+                        <img src="https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="[Image of Naranja]">
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+                            <h3 class="font-serif text-3xl mb-2">Energía</h3>
+                            <span class="border-b border-transparent group-hover:border-white transition-colors pb-1 uppercase tracking-wider text-sm">Ver Productos</span>
+                        </div>
+                    </div>
+                    <!-- Cat 3 -->
+                    <div class="relative h-96 group cursor-pointer overflow-hidden rounded-md" onclick="navigate('shop', { category: 'Dulces' })">
+                        <img src="https://images.unsplash.com/photo-1610992015732-2449b76344bc?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="">
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors"></div>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+                            <h3 class="font-serif text-3xl mb-2">Cálidos</h3>
+                            <span class="border-b border-transparent group-hover:border-white transition-colors pb-1 uppercase tracking-wider text-sm">Ver Productos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Más Vendidos -->
+            <div class="bg-brand-beige py-20">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="text-center mb-12">
+                        <h2 class="font-serif text-3xl md:text-4xl text-brand-brown mb-4">Favoritos de Margie</h2>
+                        <div class="w-16 h-0.5 bg-brand-gold mx-auto"></div>
+                    </div>
+                    <!-- Contenedor dinámico de productos destacados -->
+                    <div id="featured-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <!-- Renderizado por JS -->
+                    </div>
+                    <div class="text-center mt-12">
+                        <button onclick="navigate('shop')" class="text-brand-brown border-b border-brand-brown hover:text-brand-gold hover:border-brand-gold pb-1 uppercase tracking-wider font-semibold transition-colors">Ver catálogo completo</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Promoción Banner -->
+            <div class="py-20 max-w-7xl mx-auto px-4">
+                <div class="bg-brand-brown rounded-xl overflow-hidden flex flex-col md:flex-row items-center">
+                    <div class="w-full md:w-1/2 p-12 text-center md:text-left">
+                        <span class="bg-brand-gold text-white text-xs font-bold px-3 py-1 uppercase tracking-widest rounded-sm mb-6 inline-block">Oferta Especial</span>
+                        <h2 class="font-serif text-3xl md:text-5xl text-brand-light mb-4">Colección de Temporada</h2>
+                        <p class="text-brand-beige/80 mb-8 font-light">Lleva la calidez a tu hogar con un 20% de descuento en aromas seleccionados de nuestra línea de invierno.</p>
+                        <button onclick="navigate('shop', { filter: 'ofertas' })" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors">Aprovechar Oferta</button>
+                    </div>
+                    <div class="w-full md:w-1/2 h-64 md:h-[400px]">
+                        <img src="https://images.unsplash.com/photo-1542848529-6537604f86d6?auto=format&fit=crop&w=800&q=80" alt="" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VISTA: TIENDA (CATÁLOGO) ================= -->
+        <section id="view-shop" class="view-section py-10 max-w-7xl mx-auto px-4 min-h-screen">
+            <div class="text-center mb-10">
+                <h1 class="font-serif text-4xl text-brand-brown mb-2">Nuestra Colección</h1>
+                <p class="text-gray-500">Encuentra la luz perfecta para tu espacio.</p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Filtros Sidebar -->
+                <aside class="w-full lg:w-1/4">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-brand-beige sticky top-24">
+                        <div class="mb-6">
+                            <h3 class="font-serif text-xl mb-3 text-brand-brown">Buscar</h3>
+                            <div class="relative">
+                                <input type="text" id="search-input" placeholder="Ej: Vainilla..." class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:border-brand-gold">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="font-serif text-xl mb-3 text-brand-brown">Categorías</h3>
+                            <ul class="space-y-2 text-sm text-gray-600" id="category-filters">
+                                <li><label class="flex items-center gap-2 cursor-pointer hover:text-brand-gold"><input type="radio" name="cat" value="all" checked class="accent-brand-gold"> Todas</label></li>
+                                <!-- Generado por JS -->
+                            </ul>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="font-serif text-xl mb-3 text-brand-brown">Ordenar por</h3>
+                            <select id="sort-select" class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:border-brand-gold text-sm text-gray-600">
+                                <option value="default">Destacados</option>
+                                <option value="price-asc">Precio: Menor a Mayor</option>
+                                <option value="price-desc">Precio: Mayor a Menor</option>
+                                <option value="new">Más recientes</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <button id="btn-show-offers" class="w-full bg-brand-light border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-white py-2 rounded-md transition-colors text-sm font-bold uppercase tracking-wider">Ver solo Ofertas</button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Grid de Productos -->
+                <div class="w-full lg:w-3/4">
+                    <div id="shop-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Renderizado por JS -->
+                    </div>
+                    <div id="no-products-msg" class="hidden text-center py-20 text-gray-500">
+                        <i class="fas fa-search text-4xl mb-4 text-brand-beige"></i>
+                        <p>No se encontraron productos con esos filtros.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VISTA: DETALLE DE PRODUCTO ================= -->
+        <section id="view-product" class="view-section py-10 max-w-7xl mx-auto px-4 min-h-[70vh]">
+            <button onclick="navigate('shop')" class="text-brand-brown hover:text-brand-gold mb-8 flex items-center gap-2 transition-colors"><i class="fas fa-arrow-left"></i> Volver a la tienda</button>
+            <div id="product-detail-container" class="bg-white rounded-xl shadow-sm border border-brand-beige overflow-hidden">
+                <!-- Renderizado por JS -->
+            </div>
+        </section>
+
+        <!-- ================= VISTA: CARRITO ================= -->
+        <section id="view-cart" class="view-section py-10 max-w-7xl mx-auto px-4 min-h-[70vh]">
+            <h1 class="font-serif text-3xl md:text-4xl text-brand-brown mb-8 border-b pb-4">Tu Carrito</h1>
+            
+            <div id="empty-cart-msg" class="text-center py-20 hidden">
+                <i class="fas fa-shopping-bag text-6xl text-brand-beige mb-4"></i>
+                <h2 class="text-2xl font-serif text-brand-brown mb-4">Tu carrito está vacío</h2>
+                <button onclick="navigate('shop')" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold">Ir a la tienda</button>
+            </div>
+
+            <div id="cart-content" class="flex flex-col lg:flex-row gap-8">
+                <!-- Lista de items -->
+                <div class="w-full lg:w-2/3">
+                    <div id="cart-items-container" class="space-y-4">
+                        <!-- Renderizado por JS -->
+                    </div>
+                </div>
+                <!-- Resumen -->
+                <div class="w-full lg:w-1/3">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-brand-beige sticky top-24">
+                        <h3 class="font-serif text-xl text-brand-brown mb-4 border-b pb-2">Resumen del Pedido</h3>
+                        <div class="space-y-3 text-sm text-gray-600 mb-4 pb-4 border-b">
+                            <div class="flex justify-between"><span>Subtotal:</span> <span id="cart-subtotal">$0.00</span></div>
+                            <div class="flex justify-between text-brand-gold"><span>Descuento:</span> <span id="cart-discount">-$0.00</span></div>
+                        </div>
+                        <div class="flex justify-between text-lg font-bold text-brand-brown mb-6">
+                            <span>Total:</span> <span id="cart-total">$0.00</span>
+                        </div>
+                        <button onclick="navigate('checkout')" class="w-full bg-brand-gold hover:bg-brand-goldhover text-white px-4 py-3 rounded-sm uppercase tracking-wider text-sm font-bold transition-colors flex items-center justify-center gap-2">
+                            Proceder al Pago <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button onclick="emptyCart()" class="w-full mt-3 text-red-500 hover:text-red-700 text-sm transition-colors">Vaciar carrito</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VISTA: CHECKOUT ================= -->
+        <section id="view-checkout" class="view-section py-10 max-w-4xl mx-auto px-4 min-h-[70vh]">
+            <button onclick="navigate('cart')" class="text-brand-brown hover:text-brand-gold mb-6 flex items-center gap-2 transition-colors text-sm"><i class="fas fa-arrow-left"></i> Volver al carrito</button>
+            <h1 class="font-serif text-3xl text-brand-brown mb-8">Finalizar Compra</h1>
+
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-brand-beige">
+                <form id="checkout-form" onsubmit="handleCheckout(event)">
+                    <!-- Info Personal -->
+                    <h3 class="font-serif text-xl text-brand-brown mb-4 border-b pb-2">Información de Envío</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <div><label class="block text-sm text-gray-600 mb-1">Nombre</label><input type="text" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none"></div>
+                        <div><label class="block text-sm text-gray-600 mb-1">Apellido</label><input type="text" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none"></div>
+                        <div><label class="block text-sm text-gray-600 mb-1">Correo Electrónico</label><input type="email" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none"></div>
+                        <div><label class="block text-sm text-gray-600 mb-1">Teléfono</label><input type="tel" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none"></div>
+                        <div class="md:col-span-2"><label class="block text-sm text-gray-600 mb-1">Dirección Completa</label><input type="text" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none" placeholder="Calle, número, municipio, departamento..."></div>
+                    </div>
+
+                    <!-- Pago -->
+                    <h3 class="font-serif text-xl text-brand-brown mb-4 border-b pb-2 mt-8">Método de Pago</h3>
+                    <div class="space-y-3 mb-8">
+                        <label class="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-brand-light">
+                            <input type="radio" name="payment" value="transfer" checked class="accent-brand-gold"> <span>Transferencia Bancaria</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-brand-light">
+                            <input type="radio" name="payment" value="cod" class="accent-brand-gold"> <span>Pago contra entrega (Efectivo)</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-brand-light opacity-60">
+                            <input type="radio" name="payment" value="card" disabled class="accent-brand-gold"> <span>Tarjeta de Crédito/Débito (Simulado en Demo)</span>
+                        </label>
+                    </div>
+
+                    <div class="bg-brand-light p-4 rounded mb-6 text-sm text-gray-600 flex justify-between items-center border border-brand-beige">
+                        <span>Total a pagar:</span>
+                        <span id="checkout-total" class="font-bold text-brand-brown text-lg"></span>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand-gold hover:bg-brand-goldhover text-white px-4 py-4 rounded-sm uppercase tracking-wider font-bold transition-colors">Confirmar Pedido</button>
+                    
+                    <p class="text-xs text-center text-gray-400 mt-4">*Este es un entorno de simulación (SPA estática). Ningún dato de pago real es procesado.</p>
+                </form>
+            </div>
+        </section>
+
+        <!-- ================= VISTA: CONFIRMACIÓN ================= -->
+        <section id="view-success" class="view-section py-20 max-w-2xl mx-auto px-4 text-center min-h-[70vh]">
+            <div class="bg-white p-10 rounded-xl shadow-sm border border-brand-beige">
+                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check text-4xl text-green-500"></i>
+                </div>
+                <h1 class="font-serif text-3xl text-brand-brown mb-2">¡Pedido realizado con éxito!</h1>
+                <p class="text-gray-600 mb-6">Gracias por tu compra. Hemos simulado la creación de tu pedido.</p>
+                <div class="bg-brand-light p-4 rounded mb-8 inline-block">
+                    <span class="text-sm text-gray-500 block mb-1">Número de pedido:</span>
+                    <strong class="text-xl text-brand-brown tracking-widest" id="order-number"></strong>
+                </div>
+                <div>
+                    <button onclick="navigate('home')" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold">Volver al inicio</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VISTA: PERFIL / AUTH ================= -->
+        <section id="view-profile" class="view-section py-10 max-w-xl mx-auto px-4 min-h-[70vh]">
+            
+            <!-- Estado Desconectado (Formularios) -->
+            <div id="auth-forms" class="bg-white p-8 rounded-xl shadow-sm border border-brand-beige">
+                <div class="flex justify-center gap-8 border-b mb-6">
+                    <button id="tab-login" onclick="switchAuthTab('login')" class="pb-2 border-b-2 border-brand-gold text-brand-brown font-serif text-lg">Iniciar Sesión</button>
+                    <button id="tab-register" onclick="switchAuthTab('register')" class="pb-2 border-b-2 border-transparent text-gray-400 font-serif text-lg hover:text-brand-brown">Crear Cuenta</button>
+                </div>
+
+                <div class="bg-yellow-50 text-yellow-800 text-xs p-3 rounded mb-4 border border-yellow-200">
+                    <i class="fas fa-info-circle mr-1"></i> Sistema simulado con <code>localStorage</code>. No use contraseñas reales.
+                </div>
+
+                <!-- Login Form -->
+                <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div><label class="block text-sm text-gray-600 mb-1">Usuario / Email</label><input type="text" id="login-email" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none" value="demo@margie.com"></div>
+                    <div><label class="block text-sm text-gray-600 mb-1">Contraseña</label><input type="password" id="login-pass" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none" value="123456"></div>
+                    <button type="submit" class="w-full bg-brand-gold hover:bg-brand-goldhover text-white px-4 py-3 rounded-sm uppercase tracking-wider text-sm font-bold">Entrar</button>
+                </form>
+
+                <!-- Register Form (Hidden by default) -->
+                <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                    <div><label class="block text-sm text-gray-600 mb-1">Nombre</label><input type="text" id="reg-name" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none"></div>
+                    <div><label class="block text-sm text-gray-600 mb-1">Email</label><input type="email" id="reg-email" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none"></div>
+                    <div><label class="block text-sm text-gray-600 mb-1">Contraseña</label><input type="password" id="reg-pass" required class="w-full p-2 border border-gray-200 rounded focus:border-brand-gold focus:outline-none"></div>
+                    <button type="submit" class="w-full bg-brand-brown hover:bg-brand-dark text-white px-4 py-3 rounded-sm uppercase tracking-wider text-sm font-bold">Registrarse</button>
+                </form>
+            </div>
+
+            <!-- Estado Conectado (Perfil) -->
+            <div id="profile-dashboard" class="hidden bg-white p-8 rounded-xl shadow-sm border border-brand-beige text-center">
+                <div class="w-24 h-24 bg-brand-beige rounded-full mx-auto flex items-center justify-center text-4xl text-brand-gold mb-4">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h2 class="font-serif text-3xl text-brand-brown mb-1" id="profile-name">Nombre de Usuario</h2>
+                <p class="text-gray-500 mb-8" id="profile-email">correo@ejemplo.com</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="border rounded p-4 cursor-pointer hover:bg-brand-light transition" onclick="navigate('favorites')">
+                        <i class="fas fa-heart text-brand-gold text-2xl mb-2"></i>
+                        <h4 class="font-bold text-brand-brown">Favoritos</h4>
+                    </div>
+                    <div class="border rounded p-4 opacity-50 cursor-not-allowed" title="Funcionalidad no implementada en demo">
+                        <i class="fas fa-box text-gray-400 text-2xl mb-2"></i>
+                        <h4 class="font-bold text-gray-600">Mis Pedidos</h4>
+                    </div>
+                </div>
+
+                <button onclick="handleLogout()" class="text-red-500 hover:text-red-700 font-bold text-sm uppercase tracking-wider border border-red-500 hover:bg-red-50 px-6 py-2 rounded transition-colors">Cerrar Sesión</button>
+            </div>
+        </section>
+
+        <!-- ================= VISTA: FAVORITOS ================= -->
+        <section id="view-favorites" class="view-section py-10 max-w-7xl mx-auto px-4 min-h-[70vh]">
+            <h1 class="font-serif text-3xl md:text-4xl text-brand-brown mb-8 border-b pb-4">Tus Favoritos ❤️</h1>
+            
+            <div id="empty-fav-msg" class="text-center py-20 hidden">
+                <i class="far fa-heart text-6xl text-brand-beige mb-4"></i>
+                <h2 class="text-2xl font-serif text-brand-brown mb-4">Aún no tienes favoritos</h2>
+                <button onclick="navigate('shop')" class="bg-brand-gold hover:bg-brand-goldhover text-white px-8 py-3 rounded-sm uppercase tracking-wider text-sm font-bold">Explorar tienda</button>
+            </div>
+
+            <div id="fav-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Renderizado por JS -->
+            </div>
+        </section>
+
     </main>
 
-    <div id="profile-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-indigo-500/30 rounded-2xl w-full max-w-sm p-5 text-center shadow-2xl relative transform scale-90 transition-all duration-300">
-            <button id="close-profile-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-300 mb-1">👤 Tu Perfil</h2>
-            <p class="text-xs text-indigo-200 mb-4">Personaliza tu apodo local</p>
-            <input type="text" id="username-input" placeholder="Tu apodo..." maxlength="15" class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white text-center font-bold mb-4 focus:outline-none focus:border-indigo-400">
-            <button id="save-profile-btn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-lg">Guardar</button>
-        </div>
-    </div>
-
-    <div id="stats-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl relative transform scale-90 transition-all duration-300">
-            <button id="close-stats-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 mb-1">Estadísticas</h2>
-            <p id="stats-user-label" class="text-xs text-indigo-300 mb-5">Modo Local</p>
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-won" class="text-2xl font-black text-emerald-400">0</span>
-                    <span class="text-[11px] text-slate-300">Acertadas</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-lost" class="text-2xl font-black text-rose-400">0</span>
-                    <span class="text-[11px] text-slate-300">Falladas</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-played" class="text-2xl font-black text-indigo-300">0</span>
-                    <span class="text-[11px] text-slate-300">Jugadas</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-winrate" class="text-2xl font-black text-amber-300">0%</span>
-                    <span class="text-[11px] text-slate-300">% Victoria</span>
+    <!-- Footer -->
+    <footer id="footer" class="bg-brand-dark text-white pt-16 pb-8 border-t-4 border-brand-gold">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+            <div>
+                <h2 class="font-serif text-3xl font-bold tracking-widest mb-4">MARGIE<span class="text-brand-gold">.</span></h2>
+                <p class="text-gray-400 text-sm mb-6">Artesanía, luz y aromas que transforman tus espacios. Hechas a mano con cera de soja 100% natural.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-facebook text-xl"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-brand-gold transition-colors"><i class="fab fa-pinterest text-xl"></i></a>
                 </div>
             </div>
-            <div class="bg-indigo-950/60 border border-indigo-500/30 p-3 rounded-xl flex justify-between items-center mb-4">
-                <span class="text-xs text-indigo-200">🔥 Racha Actual:</span>
-                <span id="stat-streak" class="text-base font-bold text-yellow-400">0</span>
+            <div>
+                <h3 class="font-serif text-xl mb-4 text-brand-gold">Enlaces Rápidos</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" onclick="navigate('home')" class="hover:text-white transition-colors">Inicio</a></li>
+                    <li><a href="#" onclick="navigate('shop')" class="hover:text-white transition-colors">Tienda</a></li>
+                    <li><a href="#" onclick="navigate('profile')" class="hover:text-white transition-colors">Mi Cuenta</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Sobre Nosotros</a></li>
+                </ul>
             </div>
-            <button id="modal-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all">Cerrar</button>
+            <div>
+                <h3 class="font-serif text-xl mb-4 text-brand-gold">Atención al Cliente</h3>
+                <ul class="space-y-2 text-sm text-gray-400">
+                    <li><a href="#" class="hover:text-white transition-colors">Preguntas Frecuentes</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Política de Envíos</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Devoluciones</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Cuidados de tu vela</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-serif text-xl mb-4 text-brand-gold">Contacto</h3>
+                <ul class="space-y-3 text-sm text-gray-400">
+                    <li><i class="fas fa-envelope mr-2 text-brand-gold"></i> hola@margiecandles.demo</li>
+                    <li><i class="fas fa-phone mr-2 text-brand-gold"></i> +503 2222-0000</li>
+                    <li><i class="fab fa-whatsapp mr-2 text-brand-gold"></i> +503 7000-0000</li>
+                    <li class="mt-4"><span class="block text-brand-gold mb-1">Horarios:</span> Lunes a Viernes: 9am - 5pm</li>
+                </ul>
+            </div>
         </div>
-    </div>
+        <div class="max-w-7xl mx-auto px-4 pt-8 border-t border-gray-800 text-center text-sm text-gray-500">
+            <p>&copy; 2026 MARGIE CANDLES. Todos los derechos reservados.</p>
+            <p class="mt-1 text-xs">Proyecto de demostración (SPA estática) para GitHub Pages.</p>
+        </div>
+    </footer>
 
+    <!-- Botón WhatsApp Flotante -->
+    <a href="https://wa.me/50370000000?text=Hola%20MARGIE,%20necesito%20informaci%C3%B3n" id="whatsapp-btn" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-lg hover:bg-green-600 transition-colors z-40 hover:scale-110 transform duration-200">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Contenedor de Toasts (Notificaciones) -->
+    <div id="toast-container"></div>
+
+    <!-- ========================================== -->
+    <!-- LOGICA JAVASCRIPT (SPA, Estado, Productos) -->
+    <!-- ========================================== -->
     <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if (splash) {
-                    splash.style.opacity = '0';
-                    setTimeout(() => splash.remove(), 500);
-                }
-            }, 300);
-        });
+        /**
+         * Jarvis Note: 
+         * Señor Carlos, aquí comienza el corazón lógico del sistema.
+         * En un proyecto tradicional Node.js, esto se dividiría en múltiples archivos en /js/.
+         * Por restricciones estructurales y eficiencia, se ha integrado impecablemente aquí.
+         */
 
-        const expandedDictionary = [
-            "SOL|Astro|Astro diurno", "PAN|Alimento|Masa de harina", "LUZ|Claridad|Radiación visible",
-            "MAR|Agua|Masa de agua salada", "REY|Monarca|Soberano de un reino", "VOZ|Sonido|Cuerdas vocales",
-            "ORO|Metal|Metal precioso", "RIO|Cauce|Corriente natural", "PAZ|Tranquilidad|Armonía",
-            "CASA|Vivienda|Hogar familiar", "LUNA|Satélite|Satélite natural", "AGUA|Líquido|Vital para la vida",
-            "ROSA|Flor|Flor con espinas", "CAFE|Bebida|Estimulante oscuro", "LEON|Animal|Rey de la selva",
-            "PERRO|Animal|El mejor amigo", "PLAYA|Costa|Arena y mar", "LIBRO|Objeto|Lectura y hojas",
-            "FUTBOL|Deporte|Deporte de balón", "PIANO|Instrumento|Teclas musicales", "TIGRE|Animal|Felino rayado",
-            "ARBOL|Planta|Tronco y ramas", "RELOJ|Objeto|Mide el tiempo", "MAGIA|Arte|Ilusionismo"
+        // --- 1. BASE DE DATOS DE PRODUCTOS (Simulada) ---
+        const productos = [
+            { id: 1, name: "Vela de Vainilla Francesa", price: 25.00, oldPrice: null, category: "Dulces", aroma: "Vainilla, Caramelo, Mantequilla", size: "250g", stock: 15, rating: 5, isNew: false, image: "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=500&q=80", desc: "Clásica y reconfortante. Llena tu espacio con el aroma dulce y cálido de la vainilla auténtica." },
+            { id: 2, name: "Lavanda & Manzanilla", price: 22.00, oldPrice: 28.00, category: "Relajación", aroma: "Lavanda, Manzanilla, Sándalo", size: "250g", stock: 20, rating: 4.8, isNew: false, image: "https://images.unsplash.com/photo-1596433809252-2591e3e7f2aa?auto=format&fit=crop&w=500&q=80", desc: "Diseñada para apaciguar la mente. Ideal para encender antes de dormir o durante un baño relajante." },
+            { id: 3, name: "Cítricos de Sicilia", price: 24.00, oldPrice: null, category: "Cítricos", aroma: "Naranja dulce, Pomelo, Limón", size: "200g", stock: 10, rating: 4.5, isNew: true, image: "https://images.unsplash.com/photo-1605651202774-7d573fd3f12d?auto=format&fit=crop&w=500&q=80", desc: "Energía pura embotellada. Un estallido cítrico que revitaliza cualquier habitación." },
+            { id: 4, name: "Café Tostado & Avellana", price: 26.00, oldPrice: null, category: "Dulces", aroma: "Café expreso, Avellana tostada", size: "300g", stock: 5, rating: 4.9, isNew: false, image: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?auto=format&fit=crop&w=500&q=80", desc: "Para los amantes de las mañanas. El aroma robusto del café recién hecho." },
+            { id: 5, name: "Frutos Rojos del Bosque", price: 23.00, oldPrice: 30.00, category: "Frutales", aroma: "Fresa, Mora, Frambuesa", size: "250g", stock: 12, rating: 4.2, isNew: false, image: "https://images.unsplash.com/photo-1606314781498-89c09d3b0366?auto=format&fit=crop&w=500&q=80", desc: "Intensa, dulce y vibrante. Perfecta para ambientar tardes de lectura." },
+            { id: 6, name: "Jardín de Rosas", price: 30.00, oldPrice: null, category: "Florales", aroma: "Rosa Damascena, Peonía", size: "250g", stock: 8, rating: 4.7, isNew: true, image: "https://images.unsplash.com/photo-1530932029707-857e3f60f607?auto=format&fit=crop&w=500&q=80", desc: "Romántica y sofisticada. La esencia pura de un jardín en primavera." },
+            { id: 7, name: "Noche de Jazmín", price: 28.00, oldPrice: null, category: "Florales", aroma: "Jazmín, Ylang Ylang", size: "200g", stock: 15, rating: 4.6, isNew: false, image: "https://images.unsplash.com/photo-1544976722-40995ba1a8d0?auto=format&fit=crop&w=500&q=80", desc: "Misteriosa y cautivadora, perfecta para cenas elegantes o meditación." },
+            { id: 8, name: "Ámbar y Sándalo", price: 35.00, oldPrice: 45.00, category: "Amaderados", aroma: "Sándalo hindú, Ámbar gris", size: "350g", stock: 7, rating: 5, isNew: false, image: "https://images.unsplash.com/photo-1602928321679-560bb453f190?auto=format&fit=crop&w=500&q=80", desc: "Nuestra vela más premium. Notas profundas, terrosas y sumamente elegantes." },
+            { id: 9, name: "Canela y Manzana", price: 22.00, oldPrice: null, category: "Especias", aroma: "Canela, Manzana horneada", size: "250g", stock: 25, rating: 4.4, isNew: false, image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?auto=format&fit=crop&w=500&q=80", desc: "El aroma tradicional del hogar. Cálida y nostálgica." },
+            { id: 10, name: "Coco Tropical", price: 24.00, oldPrice: null, category: "Frutales", aroma: "Coco cremoso, Vainilla", size: "250g", stock: 14, rating: 4.5, isNew: true, image: "https://images.unsplash.com/photo-1623512270960-e41bf5289f64?auto=format&fit=crop&w=500&q=80", desc: "Un escape instantáneo a la playa. Dulce y relajante." },
+            { id: 11, name: "Chocolate Intenso", price: 25.00, oldPrice: 32.00, category: "Dulces", aroma: "Cacao puro, Crema", size: "250g", stock: 9, rating: 4.8, isNew: false, image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=500&q=80", desc: "Un capricho olfativo sin calorías. Irresistible." },
+            { id: 12, name: "Magia de Navidad", price: 32.00, oldPrice: 40.00, category: "Especias", aroma: "Pino, Clavo, Naranja", size: "300g", stock: 30, rating: 5, isNew: false, image: "https://images.unsplash.com/photo-1543363136-3fdb62e11be5?auto=format&fit=crop&w=500&q=80", desc: "Edición especial de temporada. El espíritu festivo en un frasco." },
+            { id: 13, name: "Té Verde Zen", price: 24.00, oldPrice: null, category: "Relajación", aroma: "Té verde matcha, Bambú", size: "200g", stock: 18, rating: 4.3, isNew: false, image: "https://images.unsplash.com/photo-1620917670397-a4a5402a3c6c?auto=format&fit=crop&w=500&q=80", desc: "Aroma limpio, fresco y purificador." },
+            { id: 14, name: "Madera de Cedro", price: 29.00, oldPrice: null, category: "Amaderados", aroma: "Cedro silvestre, Vetiver", size: "250g", stock: 11, rating: 4.6, isNew: false, image: "https://images.unsplash.com/photo-1608518608316-c774659baf20?auto=format&fit=crop&w=500&q=80", desc: "Un paseo por el bosque lluvioso. Masculina y sofisticada." },
+            { id: 15, name: "Margie Personalizada", price: 45.00, oldPrice: null, category: "Premium", aroma: "A elección", size: "400g", stock: 99, rating: 5, isNew: true, image: "https://images.unsplash.com/photo-1599427382103-3bb8ccecdb3b?auto=format&fit=crop&w=500&q=80", desc: "Creamos tu vela soñada. Elige el envase, el aroma y la etiqueta personalizada." }
         ];
 
-        const dictionary = expandedDictionary.map(item => {
-            const parts = item.split('|');
-            return { word: parts[0].toUpperCase(), hint: parts[1] || 'Pista', long: parts[2] || 'Descripción' };
-        });
+        // --- 2. GESTIÓN DEL ESTADO (Simulando un framework reactivo y Backend local) ---
+        let state = {
+            cart: JSON.parse(localStorage.getItem('margie_cart')) || [],
+            user: JSON.parse(localStorage.getItem('margie_user')) || null,
+            favorites: JSON.parse(localStorage.getItem('margie_favorites')) || [],
+            currentView: 'home',
+            currentProduct: null,
+            shopFilters: { query: '', category: 'all', sort: 'default', offersOnly: false }
+        };
 
-        let userProfileName = localStorage.getItem('word_username') || "Invitado";
-        let WORD = "", CLUE = "", LONG_DESC = "", WORD_LENGTH = 3, MAX_ATTEMPTS = 6, currentAttempt = 0, currentGuess = [], isGameOver = false;
-        let soundEnabled = localStorage.getItem('word_sound') !== 'false';
-        let stats = JSON.parse(localStorage.getItem('word_stats')) || { won: 0, lost: 0, played: 0, streak: 0 };
-        let isDailyMode = false, currentThemeIndex = 0;
-        const themes = [
-            { bg: "from-indigo-950 via-purple-950 to-slate-950", name: "Cósmico" },
-            { bg: "from-emerald-950 via-teal-950 to-slate-950", name: "Esmeralda" },
-            { bg: "from-rose-950 via-red-950 to-slate-950", name: "Rubí" }
-        ];
-
-        document.getElementById('total-words-count').textContent = dictionary.length;
-        document.getElementById('user-name').textContent = userProfileName;
-
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            if (!soundEnabled) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            if (type === 'key') {
-                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
-            } else if (type === 'win') {
-                [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
-                    setTimeout(() => {
-                        const o = audioCtx.createOscillator();
-                        const g = audioCtx.createGain();
-                        o.connect(g); g.connect(audioCtx.destination);
-                        o.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                        g.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                        g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-                        o.start(); o.stop(audioCtx.currentTime + 0.3);
-                    }, idx * 100);
-                });
-            } else if (type === 'fail') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-            }
+        function saveState() {
+            localStorage.setItem('margie_cart', JSON.stringify(state.cart));
+            localStorage.setItem('margie_user', JSON.stringify(state.user));
+            localStorage.setItem('margie_favorites', JSON.stringify(state.favorites));
+            updateUI();
         }
 
-        function initGame(daily = false) {
-            isDailyMode = daily;
-            if (daily) {
-                const todayStr = new Date().toISOString().slice(0, 10);
-                let seed = 0; for(let c of todayStr) seed += c.charCodeAt(0);
-                const wordData = dictionary[seed % dictionary.length];
-                WORD = wordData.word; CLUE = wordData.hint; LONG_DESC = wordData.long;
+        // --- 3. ENRUTADOR SPA (Single Page Application Routing) ---
+        function navigate(viewId, params = null) {
+            // Ocultar todas las vistas
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active', 'flex-active', 'animate-fade-in');
+            });
+            
+            // Scrollear al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const targetView = document.getElementById(`view-${viewId}`);
+            if(targetView) {
+                targetView.classList.add('active', 'animate-fade-in');
+                state.currentView = viewId;
+            }
+
+            // Lógica específica por vista
+            if (viewId === 'shop') {
+                if (params && params.category) { state.shopFilters.category = params.category; document.querySelector(`input[name="cat"][value="${params.category}"]`)?.click(); }
+                if (params && params.sort) { state.shopFilters.sort = params.sort; document.getElementById('sort-select').value = params.sort; }
+                if (params && params.filter === 'ofertas') { state.shopFilters.offersOnly = true; } else { state.shopFilters.offersOnly = false;}
+                
+                document.getElementById('search-input').value = state.shopFilters.query;
+                renderShop();
+            }
+            if (viewId === 'product' && params && params.id) {
+                state.currentProduct = productos.find(p => p.id === params.id);
+                renderProductDetail();
+            }
+            if (viewId === 'cart') { renderCartView(); }
+            if (viewId === 'checkout') {
+                if(state.cart.length === 0) return navigate('cart');
+                renderCheckoutView();
+            }
+            if (viewId === 'profile') { renderProfileView(); }
+            if (viewId === 'favorites') { renderFavoritesView(); }
+        }
+
+        // --- 4. RENDERIZADO DE COMPONENTES DE UI ---
+        
+        function updateUI() {
+            // Badge Carrito
+            const cartTotalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cart-count').innerText = cartTotalItems;
+            
+            // Badge Favoritos
+            const favBadge = document.getElementById('fav-count');
+            favBadge.innerText = state.favorites.length;
+            if(state.favorites.length > 0) { favBadge.classList.remove('hidden'); } else { favBadge.classList.add('hidden'); }
+
+            // Usuario Nav
+            const navUser = document.getElementById('nav-username');
+            if (state.user) {
+                navUser.innerText = state.user.name.split(' ')[0]; // Solo primer nombre
+                navUser.classList.remove('hidden');
             } else {
-                const wordData = dictionary[Math.floor(Math.random() * dictionary.length)];
-                WORD = wordData.word; CLUE = wordData.hint; LONG_DESC = wordData.long;
+                navUser.innerText = '';
+                navUser.classList.add('hidden');
             }
-            WORD_LENGTH = WORD.length;
-            document.getElementById('word-length-count').textContent = WORD_LENGTH;
-            if (WORD_LENGTH >= 6 && !isDailyMode) document.getElementById('skip-btn').classList.remove('hidden');
-            else document.getElementById('skip-btn').classList.add('hidden');
 
-            currentAttempt = 0; currentGuess = []; isGameOver = false;
-            document.getElementById('restart-btn').classList.add('hidden');
-            document.getElementById('share-btn').parentElement.classList.add('hidden');
-            document.getElementById('hint-box').classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'hidden');
-            renderBoard();
+            // WhatsApp dinámico
+            updateWhatsAppLink();
         }
 
-        function renderBoard() {
-            const boardEl = document.getElementById('board');
-            boardEl.innerHTML = '';
-            for (let i = 0; i < MAX_ATTEMPTS; i++) {
-                const row = document.createElement('div');
-                row.className = 'flex gap-1.5 justify-center';
-                for (let j = 0; j < WORD_LENGTH; j++) {
-                    const tile = document.createElement('div');
-                    tile.className = 'w-11 h-11 md:w-13 md:h-13 border-2 rounded-xl flex items-center justify-center text-lg md:text-xl font-extrabold tile-empty transition-all duration-300 shadow-inner';
-                    tile.id = `tile-${i}-${j}`;
-                    row.appendChild(tile);
-                }
-                boardEl.appendChild(row);
+        function createProductCardHTML(product) {
+            const hasOffer = product.oldPrice !== null;
+            const discount = hasOffer ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
+            const isFav = state.favorites.includes(product.id);
+
+            return `
+                <div class="product-card bg-white rounded-lg shadow-sm border border-brand-beige overflow-hidden relative group">
+                    ${hasOffer ? `<div class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded z-10 uppercase">-${discount}% Oferta</div>` : ''}
+                    ${product.isNew ? `<div class="absolute top-3 left-3 bg-brand-gold text-white text-[10px] font-bold px-2 py-1 rounded z-10 uppercase">Nuevo</div>` : ''}
+                    
+                    <button onclick="toggleFavorite(${product.id}, event)" class="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-lg hover:bg-white transition-colors ${isFav ? 'text-red-500' : 'text-gray-300 hover:text-red-500'}">
+                        <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
+                    </button>
+
+                    <div class="product-img-wrapper h-64 overflow-hidden cursor-pointer bg-brand-light" onclick="navigate('product', {id: ${product.id}})">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <div class="p-5 text-center">
+                        <span class="text-xs text-brand-gold uppercase tracking-widest mb-1 block">${product.category}</span>
+                        <h3 class="font-serif text-lg text-brand-brown mb-2 cursor-pointer hover:text-brand-gold transition-colors line-clamp-1" onclick="navigate('product', {id: ${product.id}})">${product.name}</h3>
+                        <div class="flex justify-center items-center gap-2 mb-4 text-sm">
+                            ${hasOffer ? `<span class="text-gray-400 line-through">$${product.oldPrice.toFixed(2)}</span>` : ''}
+                            <span class="font-bold text-brand-brown text-lg">$${product.price.toFixed(2)}</span>
+                        </div>
+                        <button onclick="addToCart(${product.id})" class="w-full bg-brand-light border border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-white py-2 rounded transition-colors text-sm font-bold uppercase tracking-wider">
+                            Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Render Home ---
+        function renderHome() {
+            // Destacados (top 4 mejores rating o hardcodeados)
+            const featured = productos.sort((a, b) => b.rating - a.rating).slice(0, 4);
+            const container = document.getElementById('featured-products-container');
+            container.innerHTML = featured.map(p => createProductCardHTML(p)).join('');
+        }
+
+        // --- Render Shop ---
+        function renderShop() {
+            const container = document.getElementById('shop-products-container');
+            const noProductsMsg = document.getElementById('no-products-msg');
+            const offerBtn = document.getElementById('btn-show-offers');
+
+            // Actualizar UI de botón de ofertas
+            if (state.shopFilters.offersOnly) {
+                offerBtn.classList.replace('bg-brand-light', 'bg-brand-gold');
+                offerBtn.classList.replace('text-brand-gold', 'text-white');
+                offerBtn.innerText = "Quitar filtro de ofertas";
+            } else {
+                offerBtn.classList.replace('bg-brand-gold', 'bg-brand-light');
+                offerBtn.classList.replace('text-white', 'text-brand-gold');
+                offerBtn.innerText = "Ver solo Ofertas";
+            }
+
+            // Aplicar filtros
+            let filtered = productos.filter(p => {
+                const matchCat = state.shopFilters.category === 'all' || p.category === state.shopFilters.category;
+                const matchQuery = p.name.toLowerCase().includes(state.shopFilters.query.toLowerCase()) || p.aroma.toLowerCase().includes(state.shopFilters.query.toLowerCase());
+                const matchOffer = state.shopFilters.offersOnly ? p.oldPrice !== null : true;
+                return matchCat && matchQuery && matchOffer;
+            });
+
+            // Aplicar ordenamiento
+            if (state.shopFilters.sort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+            if (state.shopFilters.sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+            if (state.shopFilters.sort === 'new') filtered.sort((a, b) => (a.isNew === b.isNew) ? 0 : a.isNew ? -1 : 1);
+
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                noProductsMsg.classList.remove('hidden');
+            } else {
+                noProductsMsg.classList.add('hidden');
+                // Agregar clase de animación a las cards para efecto en cascada visual
+                container.innerHTML = filtered.map((p, i) => {
+                    const cardHtml = createProductCardHTML(p);
+                    // Inyectar clase animate-slide-up al div padre generado
+                    return cardHtml.replace('product-card', `product-card animate-slide-up bg-white`);
+                }).join('');
             }
         }
 
-        function handleKeyPress(key) {
-            if (isGameOver) return;
-            playSound('key');
-            if (key === 'ENTER') {
-                if (currentGuess.length < WORD_LENGTH) { showMessage("Faltan letras"); playSound('fail'); return; }
-                const guessWord = currentGuess.join('');
-                let letterCount = {};
-                for (let char of WORD) letterCount[char] = (letterCount[char] || 0) + 1;
-                const statuses = Array(WORD_LENGTH).fill('absent');
+        // --- Render Detail ---
+        function renderProductDetail() {
+            const p = state.currentProduct;
+            if(!p) return navigate('shop');
 
-                for (let i = 0; i < WORD_LENGTH; i++) {
-                    if (guessWord[i] === WORD[i]) { statuses[i] = 'correct'; letterCount[guessWord[i]]--; }
-                }
-                for (let i = 0; i < WORD_LENGTH; i++) {
-                    if (statuses[i] !== 'correct' && letterCount[guessWord[i]] > 0) {
-                        statuses[i] = 'present'; letterCount[guessWord[i]]--;
-                    }
-                }
+            const container = document.getElementById('product-detail-container');
+            const isFav = state.favorites.includes(p.id);
+            const hasOffer = p.oldPrice !== null;
+            const discount = hasOffer ? Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100) : 0;
 
-                for (let i = 0; i < WORD_LENGTH; i++) {
-                    const tile = document.getElementById(`tile-${currentAttempt}-${i}`);
-                    setTimeout(() => {
-                        tile.classList.add('flip-tile');
-                        if (statuses[i] === 'correct') tile.classList.add('tile-correct');
-                        else if (statuses[i] === 'present') tile.classList.add('tile-present');
-                        else tile.classList.add('tile-absent');
-                    }, i * 150);
-                }
+            // Renderizar estrellas
+            let starsHtml = '';
+            for(let i=1; i<=5; i++) {
+                if(i <= Math.floor(p.rating)) starsHtml += '<i class="fas fa-star text-brand-gold"></i>';
+                else if(i - 0.5 === p.rating) starsHtml += '<i class="fas fa-star-half-alt text-brand-gold"></i>';
+                else starsHtml += '<i class="far fa-star text-brand-gold"></i>';
+            }
 
-                setTimeout(() => {
-                    if (guessWord === WORD) {
-                        playSound('win'); endGame(true);
-                    } else {
-                        currentAttempt++; currentGuess = [];
+            container.innerHTML = `
+                <div class="flex flex-col md:flex-row">
+                    <div class="w-full md:w-1/2 bg-brand-light relative">
+                        ${hasOffer ? `<div class="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-3 py-1 rounded z-10 uppercase">-${discount}%</div>` : ''}
+                        <img src="${p.image}" alt="${p.name}" class="w-full h-[400px] md:h-[600px] object-cover">
+                    </div>
+                    <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative">
+                        <button onclick="toggleFavorite(${p.id}, event)" class="absolute top-8 right-8 text-2xl ${isFav ? 'text-red-500' : 'text-gray-300 hover:text-red-500'} transition-colors">
+                            <i class="fa${isFav ? 's' : 'r'} fa-heart"></i>
+                        </button>
                         
-                        // Pista corta en el 5º intento (índice 4)
-                        if (currentAttempt === 4) {
-                            document.getElementById('clue-text').textContent = `Pista: ${CLUE}`;
-                            document.getElementById('hint-box').classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
-                        }
-                        // Pista larga (definición) en el 6º y último intento (índice 5)
-                        else if (currentAttempt === 5) {
-                            document.getElementById('clue-text').textContent = `Definición: ${LONG_DESC}`;
-                            document.getElementById('hint-box').classList.remove('hidden', 'opacity-0', 'scale-95', 'pointer-events-none');
-                        }
+                        <span class="text-sm text-brand-gold uppercase tracking-widest mb-2 block">${p.category}</span>
+                        <h1 class="font-serif text-3xl md:text-5xl text-brand-brown mb-4">${p.name}</h1>
+                        
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="flex text-sm">${starsHtml}</div>
+                            <span class="text-sm text-gray-500">(${p.rating})</span>
+                        </div>
 
-                        if (currentAttempt >= MAX_ATTEMPTS) { playSound('fail'); endGame(false); }
-                    }
-                }, WORD_LENGTH * 150 + 50);
+                        <div class="flex items-end gap-3 mb-8">
+                            <span class="font-bold text-brand-brown text-4xl">$${p.price.toFixed(2)}</span>
+                            ${hasOffer ? `<span class="text-gray-400 line-through text-xl mb-1">$${p.oldPrice.toFixed(2)}</span>` : ''}
+                        </div>
 
-            } else if (key === 'BACK') {
-                if (currentGuess.length > 0) { currentGuess.pop(); updateRow(); }
+                        <p class="text-gray-600 mb-8 leading-relaxed">${p.desc}</p>
+
+                        <div class="grid grid-cols-2 gap-4 mb-8 bg-brand-light p-4 rounded border border-brand-beige">
+                            <div><span class="block text-xs text-gray-400 uppercase">Aroma principal</span><span class="text-brand-brown font-semibold text-sm">${p.aroma}</span></div>
+                            <div><span class="block text-xs text-gray-400 uppercase">Tamaño</span><span class="text-brand-brown font-semibold text-sm">${p.size}</span></div>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div class="flex border border-gray-300 rounded w-full sm:w-32 h-12">
+                                <button onclick="changeDetailQty(-1)" class="w-10 flex items-center justify-center hover:bg-gray-100 transition-colors">-</button>
+                                <input type="number" id="detail-qty" value="1" min="1" max="${p.stock}" class="w-full text-center focus:outline-none font-bold text-brand-brown appearance-none" readonly>
+                                <button onclick="changeDetailQty(1)" class="w-10 flex items-center justify-center hover:bg-gray-100 transition-colors">+</button>
+                            </div>
+                            <button onclick="addDetailToCart(${p.id})" class="flex-1 bg-brand-gold hover:bg-brand-goldhover text-white h-12 rounded uppercase tracking-wider text-sm font-bold transition-colors shadow-md">
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4"><i class="fas fa-check-circle text-green-500 mr-1"></i> ${p.stock} unidades en stock.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function changeDetailQty(delta) {
+            const input = document.getElementById('detail-qty');
+            let val = parseInt(input.value) + delta;
+            if(val >= 1 && val <= state.currentProduct.stock) {
+                input.value = val;
+            }
+        }
+
+        // --- Render Cart ---
+        function renderCartView() {
+            const container = document.getElementById('cart-items-container');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            const cartContent = document.getElementById('cart-content');
+
+            if (state.cart.length === 0) {
+                cartContent.classList.add('hidden');
+                emptyMsg.classList.remove('hidden');
             } else {
-                if (currentGuess.length < WORD_LENGTH) { currentGuess.push(key.toUpperCase()); updateRow(); }
+                emptyMsg.classList.add('hidden');
+                cartContent.classList.remove('hidden');
+                cartContent.classList.add('flex'); // Es lg:flex-row
+
+                let subtotal = 0;
+                let originalTotal = 0;
+
+                container.innerHTML = state.cart.map((item, index) => {
+                    const prod = productos.find(p => p.id === item.productId);
+                    if(!prod) return '';
+                    
+                    const itemTotal = prod.price * item.quantity;
+                    const itemOriginalTotal = (prod.oldPrice || prod.price) * item.quantity;
+                    subtotal += itemTotal;
+                    originalTotal += itemOriginalTotal;
+
+                    return `
+                        <div class="flex flex-col sm:flex-row items-center gap-4 bg-white p-4 rounded-lg shadow-sm border border-brand-beige relative animate-fade-in" style="animation-delay: ${index * 0.1}s">
+                            <button onclick="removeFromCart(${item.productId})" class="absolute top-2 right-2 text-gray-400 hover:text-red-500 p-2"><i class="fas fa-times"></i></button>
+                            <img src="${prod.image}" alt="${prod.name}" class="w-24 h-24 object-cover rounded">
+                            <div class="flex-1 text-center sm:text-left">
+                                <h4 class="font-serif text-lg text-brand-brown">${prod.name}</h4>
+                                <p class="text-xs text-brand-gold mb-2">${prod.size}</p>
+                                <div class="font-bold text-brand-brown">$${prod.price.toFixed(2)}</div>
+                            </div>
+                            <div class="flex items-center border border-gray-300 rounded overflow-hidden">
+                                <button onclick="updateCartQty(${item.productId}, -1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100">-</button>
+                                <span class="w-10 text-center font-bold text-sm">${item.quantity}</span>
+                                <button onclick="updateCartQty(${item.productId}, 1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100">+</button>
+                            </div>
+                            <div class="w-24 text-right font-bold text-lg text-brand-brown hidden sm:block">
+                                $${itemTotal.toFixed(2)}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                const discount = originalTotal - subtotal;
+                document.getElementById('cart-subtotal').innerText = `$${originalTotal.toFixed(2)}`;
+                document.getElementById('cart-discount').innerText = `-$${discount.toFixed(2)}`;
+                document.getElementById('cart-total').innerText = `$${subtotal.toFixed(2)}`;
             }
         }
 
-        function updateRow() {
-            for (let j = 0; j < WORD_LENGTH; j++) {
-                const tile = document.getElementById(`tile-${currentAttempt}-${j}`);
-                tile.textContent = j < currentGuess.length ? currentGuess[j] : '';
+        // --- Render Checkout ---
+        function renderCheckoutView() {
+            let total = state.cart.reduce((sum, item) => {
+                const prod = productos.find(p => p.id === item.productId);
+                return sum + (prod.price * item.quantity);
+            }, 0);
+            document.getElementById('checkout-total').innerText = `$${total.toFixed(2)}`;
+            
+            // Autocompletar si hay user
+            if(state.user) {
+                const names = state.user.name.split(' ');
+                document.querySelector('#checkout-form input[type="text"]').value = names[0] || '';
+                document.querySelectorAll('#checkout-form input[type="text"]')[1].value = names.slice(1).join(' ') || '';
+                document.querySelector('#checkout-form input[type="email"]').value = state.user.email;
             }
         }
 
-        function endGame(won) {
-            isGameOver = true; stats.played++;
-            if (won) { stats.won++; stats.streak++; showMessage("¡Adivinaste la palabra!"); }
-            else { stats.lost++; stats.streak = 0; showMessage(`Era: ${WORD}`); }
-            localStorage.setItem('word_stats', JSON.stringify(stats));
-            document.getElementById('restart-btn').classList.remove('hidden');
-            document.getElementById('share-btn').parentElement.classList.remove('hidden');
-        }
+        // --- Render Favorites ---
+        function renderFavoritesView() {
+            const container = document.getElementById('fav-products-container');
+            const emptyMsg = document.getElementById('empty-fav-msg');
 
-        function showMessage(text) {
-            const msg = document.getElementById('game-message');
-            msg.textContent = text; msg.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => msg.classList.add('opacity-0', 'pointer-events-none'), 3000);
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') handleKeyPress('ENTER');
-            else if (e.key === 'Backspace') handleKeyPress('BACK');
-            else if (/^[a-zA-ZñÑ]$/.test(e.key)) handleKeyPress(e.key.toUpperCase());
-        });
-
-        document.getElementById('keyboard').addEventListener('click', (e) => {
-            const btn = e.target.closest('button');
-            if (btn && btn.getAttribute('data-key')) handleKeyPress(btn.getAttribute('data-key'));
-        });
-
-        document.getElementById('restart-btn').addEventListener('click', () => initGame(false));
-        document.getElementById('skip-btn').addEventListener('click', () => initGame(false));
-        document.getElementById('daily-btn').addEventListener('click', () => initGame(true));
-
-        document.getElementById('sound-btn').addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            localStorage.setItem('word_sound', soundEnabled);
-            document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
-        });
-
-        document.getElementById('theme-btn').addEventListener('click', () => {
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            document.body.className = `bg-gradient-to-br ${themes[currentThemeIndex].bg} min-h-screen text-white flex flex-col justify-between items-center p-3 select-none overflow-x-hidden`;
-        });
-
-        const statsModal = document.getElementById('stats-modal');
-        const profileModal = document.getElementById('profile-modal');
-
-        document.getElementById('stats-btn').addEventListener('click', () => {
-            document.getElementById('stat-won').textContent = stats.won;
-            document.getElementById('stat-lost').textContent = stats.lost;
-            document.getElementById('stat-played').textContent = stats.played;
-            document.getElementById('stat-winrate').textContent = stats.played ? Math.round((stats.won/stats.played)*100) + '%' : '0%';
-            document.getElementById('stat-streak').textContent = stats.streak;
-            statsModal.classList.remove('opacity-0', 'pointer-events-none');
-        });
-        document.getElementById('close-stats-btn').addEventListener('click', () => statsModal.classList.add('opacity-0', 'pointer-events-none'));
-        document.getElementById('modal-close-action').addEventListener('click', () => statsModal.classList.add('opacity-0', 'pointer-events-none'));
-
-        document.getElementById('user-profile').addEventListener('click', () => {
-            document.getElementById('username-input').value = userProfileName;
-            profileModal.classList.remove('opacity-0', 'pointer-events-none');
-        });
-        document.getElementById('close-profile-btn').addEventListener('click', () => profileModal.classList.add('opacity-0', 'pointer-events-none'));
-        document.getElementById('save-profile-btn').addEventListener('click', () => {
-            const newName = document.getElementById('username-input').value.trim();
-            if (newName) {
-                userProfileName = newName;
-                localStorage.setItem('word_username', userProfileName);
-                document.getElementById('user-name').textContent = userProfileName;
-                profileModal.classList.add('opacity-0', 'pointer-events-none');
+            if (state.favorites.length === 0) {
+                container.innerHTML = '';
+                emptyMsg.classList.remove('hidden');
+            } else {
+                emptyMsg.classList.add('hidden');
+                const favProds = productos.filter(p => state.favorites.includes(p.id));
+                container.innerHTML = favProds.map(p => createProductCardHTML(p)).join('');
             }
+        }
+
+        // --- Render Profile ---
+        function renderProfileView() {
+            const formsDiv = document.getElementById('auth-forms');
+            const dashboardDiv = document.getElementById('profile-dashboard');
+            
+            if (state.user) {
+                formsDiv.classList.add('hidden');
+                dashboardDiv.classList.remove('hidden');
+                document.getElementById('profile-name').innerText = state.user.name;
+                document.getElementById('profile-email').innerText = state.user.email;
+            } else {
+                dashboardDiv.classList.add('hidden');
+                formsDiv.classList.remove('hidden');
+                switchAuthTab('login'); // Por defecto login
+            }
+        }
+
+        function switchAuthTab(tab) {
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+
+            if (tab === 'login') {
+                formLogin.classList.remove('hidden');
+                formRegister.classList.add('hidden');
+                tabLogin.classList.add('border-brand-gold', 'text-brand-brown');
+                tabLogin.classList.remove('border-transparent', 'text-gray-400');
+                tabRegister.classList.add('border-transparent', 'text-gray-400');
+                tabRegister.classList.remove('border-brand-gold', 'text-brand-brown');
+            } else {
+                formRegister.classList.remove('hidden');
+                formLogin.classList.add('hidden');
+                tabRegister.classList.add('border-brand-gold', 'text-brand-brown');
+                tabRegister.classList.remove('border-transparent', 'text-gray-400');
+                tabLogin.classList.add('border-transparent', 'text-gray-400');
+                tabLogin.classList.remove('border-brand-gold', 'text-brand-brown');
+            }
+        }
+
+
+        // --- 5. LOGICA DE ACCIONES (Cart, Auth, Fav) ---
+        
+        function addToCart(productId, qty = 1) {
+            const exist = state.cart.find(item => item.productId === productId);
+            if (exist) { exist.quantity += qty; } 
+            else { state.cart.push({ productId, quantity: qty }); }
+            saveState();
+            showToast("Producto agregado al carrito 🛒");
+        }
+
+        function addDetailToCart(productId) {
+            const qty = parseInt(document.getElementById('detail-qty').value);
+            addToCart(productId, qty);
+        }
+
+        function updateCartQty(productId, delta) {
+            const item = state.cart.find(i => i.productId === productId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) removeFromCart(productId);
+                else { saveState(); renderCartView(); }
+            }
+        }
+
+        function removeFromCart(productId) {
+            state.cart = state.cart.filter(i => i.productId !== productId);
+            saveState();
+            renderCartView();
+            showToast("Producto eliminado");
+        }
+
+        function emptyCart() {
+            if(confirm("¿Seguro que deseas vaciar el carrito?")) {
+                state.cart = [];
+                saveState();
+                renderCartView();
+            }
+        }
+
+        function toggleFavorite(productId, event) {
+            if(event) event.stopPropagation(); // Evitar click en la card
+            const index = state.favorites.indexOf(productId);
+            if (index > -1) {
+                state.favorites.splice(index, 1);
+                showToast("Eliminado de favoritos");
+            } else {
+                state.favorites.push(productId);
+                showToast("❤️ Agregado a favoritos");
+            }
+            saveState();
+            
+            // Re-renderizar si estamos en vistas que dependen de esto
+            if(state.currentView === 'shop') renderShop();
+            if(state.currentView === 'home') renderHome();
+            if(state.currentView === 'product') renderProductDetail();
+            if(state.currentView === 'favorites') renderFavoritesView();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            // Simulacion simple (acepta cualquiera para el demo)
+            state.user = { name: email.split('@')[0], email: email };
+            saveState();
+            showToast("¡Bienvenido de nuevo!");
+            navigate('profile');
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            state.user = { name, email };
+            saveState();
+            showToast("¡Cuenta creada con éxito!");
+            navigate('profile');
+        }
+
+        function handleLogout() {
+            state.user = null;
+            saveState();
+            navigate('home');
+            showToast("Sesión cerrada");
+        }
+
+        function handleCheckout(e) {
+            e.preventDefault();
+            // Simular proceso de carga y éxito
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Generar ID de pedido
+                const orderId = 'MARG-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                document.getElementById('order-number').innerText = orderId;
+                
+                // Limpiar carrito
+                state.cart = [];
+                saveState();
+                
+                // Mostrar éxito
+                navigate('success');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 1500);
+        }
+
+        // --- 6. UTILIDADES (UI Helpers, Filtros) ---
+
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'toastSlide 0.3s ease-in reverse forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function updateWhatsAppLink() {
+            const btn = document.getElementById('whatsapp-btn');
+            const baseNumber = "50370000000"; // Número de ejemplo
+            let text = "Hola MARGIE, me gustaría hacer una consulta.";
+            
+            if (state.cart.length > 0) {
+                text = "Hola MARGIE, quiero comprar los siguientes productos:\n";
+                state.cart.forEach(item => {
+                    const p = productos.find(prod => prod.id === item.productId);
+                    if(p) text += `- ${item.quantity}x ${p.name}\n`;
+                });
+            }
+            
+            btn.href = `https://wa.me/${baseNumber}?text=${encodeURIComponent(text)}`;
+        }
+
+        // Generar filtros de categoría dinámicamente
+        function setupFilters() {
+            const cats = [...new Set(productos.map(p => p.category))];
+            const catContainer = document.getElementById('category-filters');
+            
+            cats.forEach(c => {
+                const li = document.createElement('li');
+                li.innerHTML = `<label class="flex items-center gap-2 cursor-pointer hover:text-brand-gold"><input type="radio" name="cat" value="${c}" class="accent-brand-gold"> ${c}</label>`;
+                catContainer.appendChild(li);
+            });
+
+            // Listeners
+            catContainer.addEventListener('change', (e) => {
+                if(e.target.name === 'cat') { state.shopFilters.category = e.target.value; renderShop(); }
+            });
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                state.shopFilters.query = e.target.value; renderShop();
+            });
+            document.getElementById('sort-select').addEventListener('change', (e) => {
+                state.shopFilters.sort = e.target.value; renderShop();
+            });
+            document.getElementById('btn-show-offers').addEventListener('click', () => {
+                state.shopFilters.offersOnly = !state.shopFilters.offersOnly; renderShop();
+            });
+        }
+
+        // Efecto scroll nav
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) { nav.classList.add('shadow-md'); } 
+            else { nav.classList.remove('shadow-md'); }
         });
 
-        initGame(false);
+        // --- 7. INICIALIZACIÓN (Boot) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupFilters();
+            renderHome();
+            updateUI();
+            
+            // Simular carga para elegancia
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 800); // Pequeña demora para apreciar el logo
+        });
+
     </script>
 </body>
 </html>
