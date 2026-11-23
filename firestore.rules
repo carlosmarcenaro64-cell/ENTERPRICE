@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email.lower() == 'carlosmarcenaro64@gmail.com';
+    }
+    function userProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    function activeClient() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userProfile().active == true
+        && userProfile().clientId is string;
+    }
+    function ownsClient(clientId) {
+      return activeClient() && userProfile().clientId == clientId;
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create, update, delete: if isAdmin();
+    }
+    match /clients/{clientId} {
+      allow read: if isAdmin() || ownsClient(clientId);
+      allow create, update, delete: if isAdmin();
+    }
+    match /cuotas/{cuotaId} {
+      allow read: if isAdmin() || (resource.data.clientId is string && ownsClient(resource.data.clientId));
+      allow create, update, delete: if isAdmin();
+    }
+    match /recibos/{reciboId} {
+      allow read: if isAdmin() || (resource.data.clientId is string && ownsClient(resource.data.clientId));
+      allow create, update, delete: if isAdmin();
+    }
+    match /pagos/{pagoId} {
+      allow read: if isAdmin() || (resource.data.clientId is string && ownsClient(resource.data.clientId));
+      allow create, update, delete: if isAdmin();
+    }
+    match /payment_reports/{reportId} {
+      allow read: if isAdmin() || (resource.data.clientId is string && ownsClient(resource.data.clientId));
+      allow create: if activeClient()
+        && request.resource.data.clientId == userProfile().clientId
+        && request.resource.data.status == 'pending'
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0
+        && request.resource.data.amount <= 1000000
+        && request.resource.data.createdBy == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+    match /settings/{document=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+  }
+}
