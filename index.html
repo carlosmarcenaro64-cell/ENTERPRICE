@@ -18,7 +18,7 @@
 </main></div><div id="toast" class="toast hidden"></div>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+import{getAuth,GoogleAuthProvider,signInWithRedirect,getRedirectResult,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 import{getFirestore,collection,doc,addDoc,setDoc,getDoc,getDocs,query,where,serverTimestamp,updateDoc,runTransaction}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 const cfg={apiKey:"AIzaSyC-zlh3PUk5gge9RmPns6KdYzhP5xQtpo8",authDomain:"enterprice-161a1.firebaseapp.com",projectId:"enterprice-161a1",storageBucket:"enterprice-161a1.firebasestorage.app",messagingSenderId:"866359821761",appId:"1:866359821761:web:2e8684ec044e3ad9e01b40"};
 const ADMINS=["carlosmarcenaro64@gmail.com","carlosmarcenaro2@gmail.com"],app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
@@ -31,13 +31,37 @@ function table(headers,rows){return rows.length?`<div class="tablewrap"><table><
 function state(r){if(Number(r.paidAmount||0)>=Number(r.amount||0))return'<span class="badge paid">Pagado</span>';if(Number(r.paidAmount||0)>0)return'<span class="badge">Abono parcial</span>';return r.dueDate<today()?'<span class="badge" style="background:#ffebeb;color:#b33">Vencido</span>':'<span class="badge">Pendiente</span>'}
 function go(v){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));$("v-"+v).classList.add("active");document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.v===v))}
 $("nav").onclick=e=>{const b=e.target.closest("[data-v]");if(b)go(b.dataset.v)};document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
-$("loginbtn").onclick=async()=>{try{$("loginmsg").textContent="Conectando con Google…";await signInWithPopup(auth,provider)}catch(e){$("loginmsg").textContent=e.code||e.message}};
-onAuthStateChanged(auth,async u=>{user=u;if(!u){$("login").classList.remove("hidden");$("app").classList.add("hidden");$("userhead").textContent="Control de cuotas y recibos";return}
-admin=ADMINS.includes((u.email||"").toLowerCase());try{if(admin)profile={role:"admin"};else{let us=await getDoc(doc(db,"users",u.uid));if(!us.exists()){let q=await getDocs(query(collection(db,"clients"),where("email","==",u.email.toLowerCase())));if(!q.empty){let c=q.docs[0];if(c.data().active!==false){await setDoc(doc(db,"users",u.uid),{email:u.email.toLowerCase(),role:"client",clientId:c.id,active:true,createdAt:serverTimestamp()});us=await getDoc(doc(db,"users",u.uid))}}}profile=us.exists()?us.data():null}
-if(!admin&&!(profile?.active&&profile.clientId))throw new Error("Tu correo aún no está vinculado a un cliente activo. Contacta al administrador.");
-$("login").classList.add("hidden");$("app").classList.remove("hidden");$("userhead").textContent=u.email+" · Cerrar sesión";$("userhead").style.cursor="pointer";$("userhead").onclick=()=>signOut(auth);
-if(admin){$("nav").classList.remove("hidden");await refresh();go("dash")}else{$("nav").classList.add("hidden");go("client");await refreshClient()}
-}catch(e){$("login").classList.remove("hidden");$("app").classList.add("hidden");$("loginmsg").textContent=e.message}});
+$("loginbtn").onclick=async()=>{try{$("loginbtn").disabled=true;$("loginmsg").textContent="Redirigiendo a Google…";await signInWithRedirect(auth,provider)}catch(e){$("loginbtn").disabled=false;$("loginmsg").textContent=`No se pudo iniciar sesión (${e.code||"error"}): ${e.message||"Intenta nuevamente."}`}};
+getRedirectResult(auth).catch(e=>{$("loginbtn").disabled=false;$("loginmsg").textContent=`Google/Firebase: ${e.code||"error"} — ${e.message||"No se pudo completar el acceso."}`});
+onAuthStateChanged(auth,async u=>{user=u;if(!u){profile=null;admin=false;$("loginbtn").disabled=false;$("login").classList.remove("hidden");$("app").classList.add("hidden");$("userhead").textContent="Control de cuotas y recibos";return}
+admin=ADMINS.includes((u.email||"").toLowerCase())&&u.emailVerified===true;
+try{
+ if(admin){profile={role:"admin",active:true}}
+ else{
+   if(!u.email||!u.emailVerified)throw new Error("Google debe entregar un correo verificado para autorizar el acceso.");
+   const email=u.email.toLowerCase();
+   let us=await getDoc(doc(db,"users",u.uid));
+   if(!us.exists()){
+     // El cliente solo puede localizar su propio registro por correo.
+     const matches=await getDocs(query(collection(db,"clients"),where("email","==",email)));
+     if(matches.empty)throw new Error("Este correo no está registrado. Contacta al administrador.");
+     const c=matches.docs[0];
+     if(c.data().active!==true)throw new Error("Tu cuenta está desactivada. Contacta al administrador.");
+     // La regla de Firestore valida UID, correo, rol y clientId antes de permitir este alta.
+     await setDoc(doc(db,"users",u.uid),{email,role:"client",clientId:c.id,active:true,createdAt:serverTimestamp()});
+     us=await getDoc(doc(db,"users",u.uid));
+   }
+   profile=us.exists()?us.data():null;
+ }
+ if(!admin&&!(profile?.active===true&&profile.role==="client"&&typeof profile.clientId==="string"))throw new Error("Tu perfil no está autorizado o está desactivado. Contacta al administrador.");
+ $("login").classList.add("hidden");$("app").classList.remove("hidden");$("userhead").textContent=u.email+" · Cerrar sesión";$("userhead").style.cursor="pointer";$("userhead").onclick=()=>signOut(auth);
+ if(admin){$("nav").classList.remove("hidden");await refresh();go("dash")}else{$("nav").classList.add("hidden");go("client");await refreshClient()}
+}catch(e){
+ $("login").classList.remove("hidden");$("app").classList.add("hidden");
+ const detail=e.code?`${e.code}: ${e.message}`:e.message;
+ $("loginmsg").textContent=detail;
+ await signOut(auth).catch(()=>{});
+}});
 async function refresh(){const names=["clients","recibos","pagos","payment_reports"],snap=await Promise.all(names.map(n=>getDocs(collection(db,n))));[clients,receipts,payments,reports]=snap.map(s=>s.docs.map(d=>({id:d.id,...d.data()})));render()}
 function render(){const paid=payments.reduce((s,p)=>s+Number(p.amount||0),0),due=receipts.reduce((s,r)=>s+Math.max(0,Number(r.amount)-Number(r.paidAmount||0)),0),issued=receipts.reduce((s,r)=>s+Number(r.amount||0),0);$("s-clients").textContent=clients.length;$("s-receipts").textContent=receipts.length;$("s-paid").textContent=fmt(paid);$("s-due").textContent=fmt(due);$("recent").innerHTML=table(["Recibo","Cliente","Vence","Importe","Estado"],receipts.slice(-8).reverse().map(r=>`<tr><td>${esc(r.number)}</td><td>${esc(r.clientName)}</td><td>${esc(r.dueDate)}</td><td>${fmt(r.amount)}</td><td>${state(r)}</td></tr>`));
 const term=$("csearch").value.toLowerCase();$("clients").innerHTML=table(["Cliente","Correo Google","Teléfono","Cuota mensual","Estado","Acciones"],clients.filter(c=>(c.name||"").toLowerCase().includes(term)||(c.email||"").includes(term)).map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.email)}</td><td>${esc(c.phone)}</td><td>${fmt(c.monthlyAmount)}</td><td>${c.active===false?"Desactivado":"Activo"}</td><td><button class="btn alt" data-edit="${c.id}">Editar</button> <button class="btn alt" data-toggle="${c.id}">${c.active===false?"Activar":"Desactivar"}</button></td></tr>`));
