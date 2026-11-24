@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+ match /databases/{database}/documents {
+  function signedIn(){return request.auth != null;}
+  function isAdmin(){return signedIn() && request.auth.token.email_verified == true && request.auth.token.email in ['carlosmarcenaro64@gmail.com','carlosmarcenaro2@gmail.com'];}
+  function hasProfile(){return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));}
+  function profile(){return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;}
+  function owns(clientId){return hasProfile() && profile().active == true && profile().clientId == clientId;}
+  match /users/{uid}{
+   allow read:if signedIn()&&(request.auth.uid==uid||isAdmin());
+   allow create:if isAdmin()||(signedIn()&&request.auth.uid==uid&&request.resource.data.email==request.auth.token.email&&request.resource.data.role=='client'&&request.resource.data.active==true&&request.resource.data.clientId is string&&exists(/databases/$(database)/documents/clients/$(request.resource.data.clientId))&&get(/databases/$(database)/documents/clients/$(request.resource.data.clientId)).data.email==request.auth.token.email&&get(/databases/$(database)/documents/clients/$(request.resource.data.clientId)).data.active==true);
+   allow update,delete:if isAdmin();
+  }
+  match /clients/{id}{
+   allow read:if isAdmin()||owns(id)||(signedIn()&&resource.data.email==request.auth.token.email);
+   allow create,update,delete:if isAdmin();
+  }
+  match /recibos/{id}{allow read:if isAdmin()||owns(resource.data.clientId);allow create,update,delete:if isAdmin();}
+  match /pagos/{id}{allow read:if isAdmin()||owns(resource.data.clientId);allow create,update,delete:if isAdmin();}
+  match /payment_reports/{id}{
+   allow read:if isAdmin()||owns(resource.data.clientId);
+   allow create:if hasProfile()&&profile().active==true&&request.resource.data.clientId==profile().clientId&&request.resource.data.status=='pending'&&request.resource.data.amount is number&&request.resource.data.amount>0&&request.resource.data.createdBy==request.auth.uid;
+   allow update,delete:if isAdmin();
+  }
+  match /settings/{doc=**}{allow read:if signedIn();allow write:if isAdmin();}
+  match /audit_logs/{id}{allow read:if isAdmin();allow write:if false;}
+ }
+}
