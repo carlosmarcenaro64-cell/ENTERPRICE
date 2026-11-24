@@ -5,7 +5,7 @@ service firebase.storage {
     function isAdmin() {
       return signedIn()
         && request.auth.token.email_verified == true
-        && request.auth.token.email.lower() == 'carlosmarcenaro64@gmail.com';
+        && request.auth.token.email.lower() in ['carlosmarcenaro64@gmail.com','carlosmarcenaro2@gmail.com'];
     }
     match /payment-reports/{uid}/{fileName} {
       allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);

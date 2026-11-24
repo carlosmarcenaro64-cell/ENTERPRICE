@@ -5,7 +5,13 @@ service cloud.firestore {
   function isAdmin(){return signedIn() && request.auth.token.email_verified == true && request.auth.token.email in ['carlosmarcenaro64@gmail.com','carlosmarcenaro2@gmail.com'];}
   function hasProfile(){return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));}
   function profile(){return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;}
-  function owns(clientId){return hasProfile() && profile().active == true && profile().clientId == clientId;}
+  function owns(clientId){
+   return hasProfile()
+    && profile().active == true
+    && profile().clientId == clientId
+    && exists(/databases/$(database)/documents/clients/$(clientId))
+    && get(/databases/$(database)/documents/clients/$(clientId)).data.active == true;
+  }
   match /users/{uid}{
    allow read:if signedIn()&&(request.auth.uid==uid||isAdmin());
    allow create:if isAdmin()||(signedIn()&&request.auth.uid==uid&&request.resource.data.email==request.auth.token.email&&request.resource.data.role=='client'&&request.resource.data.active==true&&request.resource.data.clientId is string&&exists(/databases/$(database)/documents/clients/$(request.resource.data.clientId))&&get(/databases/$(database)/documents/clients/$(request.resource.data.clientId)).data.email==request.auth.token.email&&get(/databases/$(database)/documents/clients/$(request.resource.data.clientId)).data.active==true);
@@ -19,7 +25,20 @@ service cloud.firestore {
   match /pagos/{id}{allow read:if isAdmin()||owns(resource.data.clientId);allow create,update,delete:if isAdmin();}
   match /payment_reports/{id}{
    allow read:if isAdmin()||owns(resource.data.clientId);
-   allow create:if hasProfile()&&profile().active==true&&request.resource.data.clientId==profile().clientId&&request.resource.data.status=='pending'&&request.resource.data.amount is number&&request.resource.data.amount>0&&request.resource.data.createdBy==request.auth.uid;
+   allow create:if hasProfile()
+    && profile().active == true
+    && request.resource.data.clientId == profile().clientId
+    && owns(request.resource.data.clientId)
+    && request.resource.data.status == 'pending'
+    && request.resource.data.amount is number
+    && request.resource.data.amount > 0
+    && request.resource.data.createdBy == request.auth.uid
+    && exists(/databases/$(database)/documents/recibos/$(request.resource.data.receiptId))
+    && get(/databases/$(database)/documents/recibos/$(request.resource.data.receiptId)).data.clientId == profile().clientId
+    && request.resource.data.amount <= (
+      get(/databases/$(database)/documents/recibos/$(request.resource.data.receiptId)).data.amount
+      - get(/databases/$(database)/documents/recibos/$(request.resource.data.receiptId)).data.paidAmount
+    );
    allow update,delete:if isAdmin();
   }
   match /settings/{doc=**}{allow read:if signedIn();allow write:if isAdmin();}

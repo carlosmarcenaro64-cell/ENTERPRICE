@@ -1,7 +1,9 @@
 import "./style.css";
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db, googleProvider, ADMIN_EMAIL } from "./firebase.js";
+import { auth, db, googleProvider } from "./firebase.js";
+
+const ADMIN_EMAILS = ["carlosmarcenaro64@gmail.com", "carlosmarcenaro2@gmail.com"];
 
 const loginButton = document.querySelector("#google-login");
 const logoutButton = document.querySelector("#logout");
@@ -38,7 +40,7 @@ onAuthStateChanged(auth, async (user) => {
   welcome.textContent = `Hola, ${user.displayName || user.email}`;
   message.textContent = "";
 
-  const isAdmin = user.email?.toLowerCase() === ADMIN_EMAIL;
+  const isAdmin = ADMIN_EMAILS.includes(user.email?.toLowerCase());
   if (isAdmin) {
     roleContent.innerHTML = `
       <div class="notice success"><strong>Acceso administrativo reconocido.</strong>
